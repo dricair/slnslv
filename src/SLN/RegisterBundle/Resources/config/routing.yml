@@ -1,0 +1,6 @@
+sln_register_homepage:
+  pattern: /
+  defaults: { _controller: SLNRegisterBundle:Member:index }
+  requirements:
+    _method:  GET
+
