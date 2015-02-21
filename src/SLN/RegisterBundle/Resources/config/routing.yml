@@ -1,6 +1,21 @@
-sln_register_homepage:
+SLNRegisterBundle_homepage:
   pattern: /
   defaults: { _controller: SLNRegisterBundle:Member:index }
   requirements:
     _method:  GET
+
+SLNRegisterBundle_about:
+  pattern:  /about
+  defaults: { _controller: SLNRegisterBundle:Misc:about }
+  requirements:
+    _method:  GET
+
+SLNRegisterBundle_contact:
+  pattern:  /contact
+  defaults: { _controller: SLNRegisterBundle:Misc:contact }
+  requirements:
+    _method:  GET
+
+
+
 

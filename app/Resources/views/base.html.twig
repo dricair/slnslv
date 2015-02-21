@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html"; charset=utf-8" />
-  <title>{% block title %}symblog{% endblock %} - symblog</title>
+  <title>{% block title %}Inscriptions{% endblock %} - Stade Laurentin Natation</title>
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
@@ -21,17 +21,17 @@
         {% block navigation %}
           <nav>
             <ul class="navigation">
-              <li><a href="#">Home</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Contact</a></li>
+              <li><a href="{{ path('SLNRegisterBundle_homepage') }}">Home</a></li>
+              <li><a href="{{ path('SLNRegisterBundle_about') }}">A propos de...</a></li>
+              <li><a href="{{ path('SLNRegisterBundle_contact') }}">Contact</a></li>
             </ul>
           </nav>
         {% endblock %}
       </div>
 
       <hgroup>
-        <h2>{% block blog_title %}<a href="#">symblog</a>{% endblock %}</h2>
-        <h3>{% block blog_tagline %}<a href="#">creating a blog in Symfony2</a>{% endblock %}</h3>
+        <h2>{% block blog_title %}<a href="http://stadelaurentinnatation.fr/">Stade Laurentin Natation</a>{% endblock %}</h2>
+        <h3>{% block blog_tagline %}<a href="{{ path('SLNRegisterBundle_homepage') }}">Inscription au club</a>{% endblock %}</h3>
       </hgroup>
     </header>
 
@@ -44,7 +44,7 @@
 
     <div id="footer">
       {% block footer %}
-         Symfony2 blog tutorial - created by <a href="https://github.com/dsyph3r">dsyph3r</a>
+         Site d'inscription - Créé par Cédric Airaud
       {% endblock %}
     </div>
   </section>
