@@ -14,7 +14,7 @@ SLNRegisterBundle_contact:
   pattern:  /contact
   defaults: { _controller: SLNRegisterBundle:Misc:contact }
   requirements:
-    _method:  GET
+    _method:  GET|POST
 
 
 

@@ -7,5 +7,24 @@
         <h1>Contacter le Stade Laurentin Natation</h1>
     </header>
 
+    {% for flashMessage in app.session.flashbag.get('blogger-notice') %}
+    <div class="blogger-notice">
+      {{ flashMessage }}
+    </div>
+    {% endfor %}
+
     <p>Want to contact SLN?</p>
+
+    <form action="{{ path('SLNRegisterBundle_contact') }}" method="post" {{ form_enctype(form) }} class="register">
+        {{ form_errors(form) }}
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.subject) }}
+        {{ form_row(form.body) }}
+
+        {{ form_rest(form) }}
+
+        <input type="submit" value="Submit" />
+    </form>    
 {% endblock %}
