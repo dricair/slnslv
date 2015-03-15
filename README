@@ -1,0 +1,9 @@
+Creer la database:
+php app/console doctrine:database:create
+
+Mettre à jour les setters/getters des entitées:
+php app/console doctrine:generate:entities SLN
+
+Mettre à jour les tables:
+php app/console doctrine:schema:create
+

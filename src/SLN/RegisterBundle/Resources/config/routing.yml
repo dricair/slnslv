@@ -16,6 +16,15 @@ SLNRegisterBundle_contact:
   requirements:
     _method:  GET|POST
 
+SLNRegisterBundle_licensee_show:
+  pattern: /licensee/{id}
+  defaults: { _controller: SLNRegisterBundle:Licensee:show }
+  requirements:
+    _method:  GET
+    id: \d+
+
+
+
 
 
 
