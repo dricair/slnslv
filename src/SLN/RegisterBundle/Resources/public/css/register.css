@@ -1,12 +1,37 @@
 .register-notice { text-align: center; padding: 10px; background: #DFF2BF; border: 1px solid; color: #4F8A10; margin-bottom: 10px; }
-form.register { font-size: 16px; }
-form.register div { clear: left; margin-bottom: 10px; }
-form.register label { float: left; margin-right: 10px; text-align: right; width: 100px; font-weight: bold; vertical-align: top; padding-top: 10px; }
+
+h1.register { font-size: 18px; font-weight: bold; margin-top: 10px; }
+form.register { font-size: 14px; }
+form.register div { clear: left; margin-bottom: 10px; min-height: 26px; } 
+form.register div div { clear: none; display: inline-block; }
+form.register label { display: inline-block; margin-right: 10px; text-align: right; width: 200px; font-weight: bold; vertical-align: top; padding-top: 10px; }
 form.register input[type="text"],
-form.register input[type="email"]
-    { width: 500px; line-height: 26px; font-size: 20px; min-height: 26px; }
-form.register textarea { width: 500px; height: 150px; line-height: 26px; font-size: 20px; }
-form.register input[type="submit"] { margin-left: 110px; width: 508px; line-height: 26px; font-size: 20px; min-height: 26px; }
+form.register input[type="email"],
+form.register input[type="password"] { display: inline-block; width: 300px; line-height: 20px; min-height: 20px; }
+form.register input[type="checkbox"] { display: inline-block; margin-top: 10px; }
+form.register textarea { display: inline-block; width: 300px; height: 150px; line-height: 26px; }
+form.register input[type="submit"] { margin-left: 220px; width: 312px; line-height: 20px; min-height: 20px; }
 form.register ul li { color: #ff0000; margin-bottom: 5px; }
+form.register fieldset { width: 95%; border: 1px solid white; padding: 10px; background-color: #a8caff; margin-bottom: 20px; }
+form.register legend { border: 1px solid white; padding: 10px; background-color: #a8caff; font-weight: bold; color: white; }
+form.register .help { margin-top: 20px; margin-bottom: 2px; margin-left: 20px; }
+
+a.btn { display: inline-block; width: 90%; text-align: center; vertical-align: middle; border: 1px solid grey; 
+        white-space: no-wrap; padding: 6px 12px; border-radius: 5px; background: white; }
+a.btn:hover { background: transparent; }
+
+table.register { width: 100%; border: 1px solid white; padding: 10px; text-align: left; }
+table.register th { font-weight: bold; color: white; background-color: #a8caff; padding: 10px; }
+table.register td { padding: 10px; }
+table.register tr.odd { background-color: lightgrey; }
+table.register tr.even {  }
+
+#register_choice table { width: 100%; border: 0px; }
+#register_choice .left, 
+#register_choice .right { width: 45%; border: 1px solid white; padding: 10px; padding-left: 30px; background-color: #a8caff; }
+#register_choice .middle { width: 10%; }
+#register_choice th { font-weight: bold; color: white; }
+#register_choice li { margin-bottom: 10px; }
+#register_choice .bottom td { padding-top: 20px; padding-bottom: 20px; text-align: center; }
 
 

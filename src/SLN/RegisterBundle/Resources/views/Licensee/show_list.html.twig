@@ -1,0 +1,19 @@
+<table class="register">
+<tr>
+  <th>Nom</th>
+  <th>Prénom</th>
+  <th>Date de naissance</th>
+  <th>Numéro de licence</th>
+  <th>Actions</th>
+</tr>
+{% for licensee in licensees %}
+<tr class="{{ cycle(['odd', 'even'], loop.index0)}}">
+  <td>{{ licensee.nom }}</td>
+  <td>{{ licensee.prenom }}</td>
+  <td>{{ licensee.naissance|date('d/m/Y') }}</td>
+  <td>{{ licensee.iuf }}</td>
+  <td>&nbsp;</td>
+</tr>
+{% endfor %}
+</table>
+

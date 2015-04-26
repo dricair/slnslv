@@ -6,4 +6,12 @@ php app/console doctrine:generate:entities SLN
 
 Mettre à jour les tables:
 php app/console doctrine:schema:create
+php app/console doctrine:schema:update --force
+
+Migrations:
+php app/console doctrine:migrations:diff
+php app/console doctrine:migrations:migrate
+
+Installer les "assets" (Fichiers statiques)
+php app/console assets:install web --symlink
 

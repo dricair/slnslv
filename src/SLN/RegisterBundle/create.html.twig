@@ -1,0 +1,9 @@
+{% extends 'SLNRegisterBundle::layout.html.twig' %}
+
+{% block title %}Ajouter un licencié{% endblock %}
+
+{% block body %}
+<h1>Ajouter un licencié</h1>
+
+  {% include 'SLNRegisterBundle:Licensee:form.html.twig' with { 'form': form } %}
+{% endblock %}

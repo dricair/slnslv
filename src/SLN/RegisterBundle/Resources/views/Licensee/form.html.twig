@@ -1,0 +1,27 @@
+<form action="{{ path('SLNRegisterBundle_licensee_create', {'user_id': app.user.id}) }}" method="post" {{ form_enctype(form) }} class="register">
+  {{ form_errors(form) }}
+
+  <fieldset>
+    <legend>Identité</legend>
+    {{ form_row(form.sexe) }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.prenom) }}
+    {{ form_row(form.naissance) }}
+
+    <p class='help'>En cas de renouvellement, indiquez le numéro de licence (IUF), si vous le connaissez:</p>
+    {{ form_row(form.iuf) }}
+  </fieldset>
+
+  <fieldset>
+    <legend>Autorisations</legend>
+    <p class='help'>J’accepte que les résultats sportifs, le nom  ainsi que la photo (podium, photo de groupe...) de mon enfant puissent apparaître 
+       sur le site internet  du club ou de documents destinés à la recherche de sponsors pour le club.</p>
+    {{ form_row(form.autorisation_photos) }}
+    <p>
+  </fieldset>
+  
+  {{ form_rest(form) }}
+  <div>
+    <input type="submit" value="{{ 'Envoyer' }}" />
+  </div>
+</form>

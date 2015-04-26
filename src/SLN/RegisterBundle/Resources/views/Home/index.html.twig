@@ -1,0 +1,10 @@
+{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+  {% include 'SLNRegisterBundle:Home:index_show.html.twig' %}
+
+{% else %}
+
+  {% include 'SLNRegisterBundle:Home:index_login.html.twig' %}
+
+{% endif %}
+

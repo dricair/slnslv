@@ -1,0 +1,56 @@
+{% extends 'SLNRegisterBundle::layout.html.twig' %}
+
+{% block title %}Inscription au club{% endblock %}
+
+{% block body %}
+
+<h1>S'inscrire au club</h1>
+
+<p>Cette page détaille le processus d'inscription au club en ligne. Si vous n'avez pas la possibilité d'effectuer cette inscription, vous devrez passer 
+   au bureau de l'association.</p>
+
+<p>Choisissez le type d'inscription que vous souhaitez réaliser:</p>
+
+<div id='register_choice'>
+  <table id='register_choice'>
+  <tr>
+    <th class='left'>Réinscription</th>
+    <th class='middle'>&nbsp;</th>
+    <th class='right'>Première inscription</th>
+  <tr>
+  <tr>
+    <td class='left'>
+      <ol>
+        <li><a href="{{ path('fos_user_security_login') }}">Connectez-vous</a> à <b>votre espace</b>. Si vous avez perdu 
+            vos identifiants de connection, des formulaires existent 
+            pour retrouver <a href="{{ path('fos_user_resetting_request') }}" title=''>votre mot de passe</a></li>
+        <li><b>Vérifiez</b> vos informations personnelles en allant dans la section <b>Mon compte</b></li>
+        <li><b>Inscrivez</b> vos enfants ou vous-même aux activités</li>
+        <li><b>Imprimez</b> la ou les fiches d'inscription, <b>joignez</b> le règlements et les documents demandés, et faites parvenir le tout au 
+            bureau de l'association</li>
+      </ol>
+    </td>
+  
+    <td class='middle'>&nbsp;</td>
+  
+    <td class='right'>
+      <ol>
+        <li><a href="{{ path('fos_user_registration_register') }}">Créez un compte</a>. Pour inscrire un enfant, vous devez 
+            d'abord créer le compte pour le <b>représentant légal</b></li>
+        <li><b>Activez votre compte</b> avec l'email qui vous a été envoyé</li>
+        <li>Connectez-vous au site avec les identifiants choisis</li>
+        <li><b>Inscrivez</b> vos enfants ou vous-même aux activités</li>
+        <li><b>Imprimez</b> la ou les fiches d'inscription, <b>joignez</b> le règlements et les documents demandés, et faites parvenir le tout au 
+            bureau de l'association</li>
+      </ol>
+    </td>
+  </tr>
+  <tr class='bottom'>
+    <td><a href="{{ path('fos_user_security_login') }}" class='btn'>Formulaire de connection</a></td>
+    <td>&nbsp;</td>
+    <td><a href="{{ path('fos_user_registration_register') }}" class='btn'>Formulaire d'inscription</a></td>
+  </table>
+</div>
+
+{% endblock %}
+

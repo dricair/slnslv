@@ -1,5 +1,11 @@
 SLNRegisterBundle_homepage:
   pattern: /
+  defaults: { _controller: SLNRegisterBundle:Home:index }
+  requirements:
+    _method:  GET
+
+SLNRegisterBundle_member:
+  pattern: /member
   defaults: { _controller: SLNRegisterBundle:Member:index }
   requirements:
     _method:  GET
@@ -22,6 +28,13 @@ SLNRegisterBundle_licensee_show:
   requirements:
     _method:  GET
     id: \d+
+
+SLNRegisterBundle_licensee_create:
+  pattern: /licensee/create/{user_id}
+  defaults: { _controller: SLNRegisterBundle:Licensee:create }
+  requirements:
+    _method:  POST
+    user_id: \d+
 
 
 
