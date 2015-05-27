@@ -1,0 +1,50 @@
+<form action="{{ path('SLNRegisterBundle_groupe_edit', {'id': id}) }}" method="post" {{ form_enctype(form) }} class="register">
+  {{ form_errors(form) }}
+
+  <fieldset>
+    <legend>Description</legend>
+    {{ form_row(form.nom) }}
+    {{ form_row(form.categorie) }}
+  </fieldset>
+
+  <fieldset>
+    <legend>Horaires</legend>
+
+{% set tr_open='<tr><td>' %}
+{% set tr_close='</tr></td>' %}
+{% set td='</td><td>' %}
+
+    <div class='add-row'>
+    <table class='register'>
+    <thead>
+    <tr>
+      <th>Jour</th><th>Début</th><th>Fin</th><th>Description</th><th>Action</th>
+    </tr>
+    </thead>
+    <tbody data-prototype='
+{{ tr_open|e }}{{ form_widget(form.horaires.vars.prototype.jour)|e }} {{ form_widget(form.horaires.vars.prototype.jour)|e }}
+     {{ td|e }}{{ form_widget(form.horaires.vars.prototype.debut)|e }} {{ form_widget(form.horaires.vars.prototype.debut)|e }}
+     {{ td|e }}{{ form_widget(form.horaires.vars.prototype.fin)|e }} {{ form_widget(form.horaires.vars.prototype.fin)|e }}
+     {{ td|e }}{{ form_widget(form.horaires.vars.prototype.description)|e }} {{ form_widget(form.horaires.vars.prototype.description)|e }}
+     {{ td|e }}{{ tr_close|e }}'>
+    {% for horaire in form.horaires %}
+    <tr>
+      <td>{{ form_widget(horaire.jour) }} {{ form_errors(horaire.jour) }}</td>
+      <td>{{ form_widget(horaire.debut) }} {{ form_errors(horaire.debut) }}</td>
+      <td>{{ form_widget(horaire.fin) }} {{ form_errors(horaire.fin) }}</td>
+      <td>{{ form_widget(horaire.description) }} {{ form_errors(horaire.description) }}</td>
+      <td></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    </div>
+  </fieldset>
+  
+  {{ form_rest(form) }}
+  <div>
+    <input type="submit" value="{{ 'Envoyer' }}" />
+  </div>
+</form>
+
+     

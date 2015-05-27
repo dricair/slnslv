@@ -36,7 +36,25 @@ SLNRegisterBundle_licensee_create:
     _method:  POST
     user_id: \d+
 
+SLNRegisterBundle_groupe_create:
+  pattern: /groupe/create/
+  defaults: { _controller: SLNRegisterBundle:Groupe:edit }
+  requirements:
+    _method:  GET|POST
 
+SLNRegisterBundle_groupe_edit:
+  pattern: /groupe/edit/{id}
+  defaults: { _controller: SLNRegisterBundle:Groupe:edit }
+  requirements:
+    _method:  GET|POST
+    id: \d+
+
+SLNRegisterBundle_groupe_show:
+  pattern: /groupe/show/{id}
+  defaults: { _controller: SLNRegisterBundle:Groupe:show }
+  requirements:
+    _method:  GET|POST
+    id: \d+
 
 
 

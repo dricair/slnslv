@@ -6,9 +6,10 @@ form.register div { clear: left; margin-bottom: 10px; min-height: 26px; }
 form.register div div { clear: none; display: inline-block; }
 form.register label { display: inline-block; margin-right: 10px; text-align: right; width: 200px; font-weight: bold; vertical-align: top; padding-top: 10px; }
 form.register input[type="text"],
+form.register input[type="time"],
 form.register input[type="email"],
 form.register input[type="password"] { display: inline-block; width: 300px; line-height: 20px; min-height: 20px; }
-form.register input[type="checkbox"] { display: inline-block; margin-top: 10px; }
+form.register input[type="time"] { width: 100px; }
 form.register textarea { display: inline-block; width: 300px; height: 150px; line-height: 26px; }
 form.register input[type="submit"] { margin-left: 220px; width: 312px; line-height: 20px; min-height: 20px; }
 form.register ul li { color: #ff0000; margin-bottom: 5px; }
@@ -19,6 +20,8 @@ form.register .help { margin-top: 20px; margin-bottom: 2px; margin-left: 20px; }
 a.btn { display: inline-block; width: 90%; text-align: center; vertical-align: middle; border: 1px solid grey; 
         white-space: no-wrap; padding: 6px 12px; border-radius: 5px; background: white; }
 a.btn:hover { background: transparent; }
+
+form.register a.add_row_link { padding-left: 18px; background: url(../images/icon_addrow.gif) no-repeat left center; }
 
 table.register { width: 100%; border: 1px solid white; padding: 10px; text-align: left; }
 table.register th { font-weight: bold; color: white; background-color: #a8caff; padding: 10px; }

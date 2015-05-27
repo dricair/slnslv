@@ -1,0 +1,17 @@
+{% extends 'SLNRegisterBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/slnregister/js/groupe.js') }}"></script>
+
+    <script type="text/javascript">
+    </script>
+{% endblock %}
+
+{% block body %}
+<h1>{{ title }}</h1>
+
+  {% include 'SLNRegisterBundle:Groupe:form.html.twig' with { 'form': form } %}
+{% endblock %}

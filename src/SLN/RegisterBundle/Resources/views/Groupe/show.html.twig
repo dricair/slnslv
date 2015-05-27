@@ -1,0 +1,27 @@
+{% extends 'SLNRegisterBundle::layout.html.twig' %}
+
+{% block title %}Liste des groupes de natation{% endblock %}
+
+{% block body %}
+<h1>Groupe de natation: {{ groupe.nom }}</h1>
+
+<p><a href="{{ path('SLNRegisterBundle_groupe_edit', {id: groupe.getId}) }}">Modifier ce groupe</a></p>
+
+<p>Pour le groupe <b>{{ groupe.nom }}</b>, les horaires sont les suivants:
+
+<table class='register'>
+<thead>
+<tr>
+  <th>Jour</th><th>Heure de début</th><th>Heure de fin</th><th>Description</th>
+<tr>
+</thead>
+{% for horaire in groupe.getFormatedHoraires %}
+<tr class='{{ cycle(['odd', 'even'], loop.index0)}}'>
+  <td>{{ horaire.getJour }}</td><td>{{ horaire.getDebut }}</td><td>{{ horaire.getFin }}</td><td>{{ horaire.description }}</td>
+</tr>
+{% endfor %}
+</table>
+  
+{% endblock %}
+  
+  

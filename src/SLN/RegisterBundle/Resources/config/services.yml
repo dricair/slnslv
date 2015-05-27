@@ -3,6 +3,10 @@ services:
         class: SLN\RegisterBundle\Form\Type\RegistrationFormType
         tags:
             - {name: form.type, alias: sln_user_registration}
+    sln_register.form.type.horaire:
+        class: SLN\RegisterBundle\Form\Type\HoraireType
+        tags:
+            - { name: form.type, alias: horaire }
 #    sln_register.example:
 #        class: SLN\RegisterBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]

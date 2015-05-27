@@ -4,7 +4,7 @@ namespace SLN\RegisterBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use SLN\RegisterBundle\Entity\Horaire;
 
 class Horaire {
     public $jour;
@@ -18,6 +18,21 @@ class Horaire {
         $this->fin = $fin;
         $this->description = $description;
     }
+
+    public static function getJours() {
+        return array(0 => "lundi",
+                     1 => "mardi",
+                     2 => "mercredi",
+                     3 => "jeudi",
+                     4 => "vendredi",
+                     5 => "samedi",
+                     6 => "dimanche");
+    }
+
+    public function getJour() { return $this->getjours()[$this->jour]; }
+
+    public function getDebut() { return date("H:i", $this->debut); }
+    public function getFin() { return date("H:i", $this->fin); }
 }
 
 
@@ -49,6 +64,17 @@ class Horaire {
     protected $nom;
 
     /**
+     * @ORM\Column(type="string", length=300)
+     * @Assert\Length(
+     *     max="300",
+     *     maxMessage="La description est trop longue.",
+     *     groups={"Registration", "Profile"}
+     * )
+     */
+    protected $description;
+     
+
+    /**
      * @ORM\Column(type="integer")
     @Assert\Choice(callback = "getCategories", message="Merci de sélectionner la catégorie", groups={"Registration", "Profile"})
      */
@@ -73,12 +99,22 @@ class Horaire {
     // TODO: Tarifs
 
 
+    /*
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $updated;
+
     public function __construct() {
         $this->setCreated(new \DateTime());
         $this->setUpdated(new \DateTime());
 
         $this->licensees = new ArrayCollection();
-        $this->horaires = Array();
+        $this->horaires = Array((array)new Horaire(), (array)new Horaire());
     }
 
     /**
@@ -89,6 +125,29 @@ class Horaire {
        $this->setUpdated(new \DateTime());
     }
 
+    /**
+     * Add a new Horaire
+     */
+    public function addHoraire($horaire) {
+        $this->horaires[] = $horaire;
+    }
+
+    /** 
+      * Remove an horaire
+      */
+    public function removeHoraire($horaire) {
+        $index = -1;
+        foreach ($this->horaires as $i => $h) {
+            if ($h['jour'] == $horaire['jour'] and
+                $h['debut'] == $horaire['debut'] and
+                $h['fin'] == $horaire['fin'] and
+                $h['description'] == $horaire['description']) 
+                $index = $i;
+        };
+
+        if ($index != -1)
+            unset($this->horaires[$index]);
+    }
  
     /**
      * Get id
@@ -180,6 +239,92 @@ class Horaire {
     }
 
     /**
+     * Get horaires
+     *
+     * @return array 
+     */
+    public function getHoraires() {
+        return $this->horaires;
+    }
+
+    public function getFormatedHoraires() {
+        $ret = array();
+        foreach ($this->horaires as $horaire) {
+            $ret[] = new Horaire($horaire['jour'], $horaire['debut'], $horaire['fin'], $horaire['description']);
+        }
+        return $ret;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return Licensee
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     * @return Groupe
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime 
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Groupe
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
      * Set horaires
      *
      * @param array $horaires
@@ -190,15 +335,5 @@ class Horaire {
         $this->horaires = $horaires;
 
         return $this;
-    }
-
-    /**
-     * Get horaires
-     *
-     * @return array 
-     */
-    public function getHoraires()
-    {
-        return $this->horaires;
     }
 }

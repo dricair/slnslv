@@ -1,0 +1,80 @@
+<?php
+
+namespace SLN\RegisterBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use SLN\RegisterBundle\Entity\Groupe;
+use SLN\RegisterBundle\Form\GroupeType;
+
+/**
+ * Groupe controller.
+ */
+class GroupeController extends Controller {
+    
+    /**
+     * Show the list of groupes
+     */
+    public function listAction() {
+        return $this->render('SLNRegisterBundle:Groupe:list.html.twig');
+    }
+
+    /**
+     * Create a groupe
+     */
+    public function editAction($id=0) {
+        if ($id == 0) {
+            $groupe = new Groupe();
+        } else {
+          $em = $this->getDoctrine()->getEntityManager();
+          $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
+
+          if (!$groupe) {
+              throw $this->createNotFoundException('Ce groupe n\'existe pas dans la base de données.');
+          }
+        }
+
+        $request = $this->getRequest();
+        $form    = $this->createForm(new GroupeType(), $groupe);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()
+                   ->getEntityManager();
+            $em->persist($groupe);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('SLNRegisterBundle_groupe_show', array(
+                'id' => $groupe->getId()
+            )));
+        }
+
+        return $this->render('SLNRegisterBundle:Groupe:edit.html.twig', array(
+            'groupe' => $groupe,
+            'form'   => $form->createView(),
+            'title'  => $id == 0 ? "Ajouter un groupe" : "Editer ce groupe",
+            'id'     => $id
+        ));
+    }
+
+    /**
+     * Show and modify a groupe
+     */
+    public function showAction($id, $licensees=False) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
+
+        if (!$groupe) {
+            throw $this->createNotFoundException('Ce groupe n\'existe pas dans la base de données.');
+        }
+
+        return $this->render('SLNRegisterBundle:Groupe:show.html.twig', array(
+          'groupe' => $groupe));
+    }
+
+
+
+
+
+}
+
