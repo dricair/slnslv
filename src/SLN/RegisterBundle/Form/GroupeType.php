@@ -16,6 +16,7 @@ class GroupeType extends AbstractType
             ->add('nom')
             ->add('categorie', 'choice', array(
                   'choices' => Groupe::getCategories(),))
+            ->add('description', 'textarea')
             ->add('horaires', 'collection', array(
                   'type' => new HoraireType(),
                   'prototype' => true,

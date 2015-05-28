@@ -3,7 +3,7 @@ $( document ).ready(function() {
   var addLink = '<a href="#" class="add_row_link">Ajouter une ligne</a>';
   var delLink = '<a href="#" class="del_row_link">Supprimer</a>';
   var div = $('div.add-row');
-  link = $(addLink);
+  var link = $(addLink);
   div.append(link);
 
   var $tbody = div.find('table tbody');

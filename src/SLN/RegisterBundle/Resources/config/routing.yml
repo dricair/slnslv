@@ -49,6 +49,13 @@ SLNRegisterBundle_groupe_edit:
     _method:  GET|POST
     id: \d+
 
+SLNRegisterBundle_groupe_delete:
+  pattern: /groupe/delete/{id}
+  defaults: { _controller: SLNRegisterBundle:Groupe:delete }
+  requirements:
+    _method:  GET|POST
+    id: \d+
+
 SLNRegisterBundle_groupe_show:
   pattern: /groupe/show/{id}
   defaults: { _controller: SLNRegisterBundle:Groupe:show }
@@ -56,6 +63,11 @@ SLNRegisterBundle_groupe_show:
     _method:  GET|POST
     id: \d+
 
+SLNRegisterBundle_groupe_list:
+  pattern: /groupe/list
+  defaults: { _controller: SLNRegisterBundle:Groupe:list }
+  requirements:
+    _method:  GET|POST
 
 
 

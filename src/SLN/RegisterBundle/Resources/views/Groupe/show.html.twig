@@ -1,10 +1,11 @@
 {% extends 'SLNRegisterBundle::layout.html.twig' %}
 
-{% block title %}Liste des groupes de natation{% endblock %}
+{% block title %}Groupe {{ groupe.nom }}{% endblock %}
 
 {% block body %}
 <h1>Groupe de natation: {{ groupe.nom }}</h1>
 
+<p><a href="{{ path('SLNRegisterBundle_groupe_list') }}">Liste des groupes</a></p>
 <p><a href="{{ path('SLNRegisterBundle_groupe_edit', {id: groupe.getId}) }}">Modifier ce groupe</a></p>
 
 <p>Pour le groupe <b>{{ groupe.nom }}</b>, les horaires sont les suivants:

@@ -13,13 +13,6 @@ use SLN\RegisterBundle\Form\GroupeType;
 class GroupeController extends Controller {
     
     /**
-     * Show the list of groupes
-     */
-    public function listAction() {
-        return $this->render('SLNRegisterBundle:Groupe:list.html.twig');
-    }
-
-    /**
      * Create a groupe
      */
     public function editAction($id=0) {
@@ -72,6 +65,32 @@ class GroupeController extends Controller {
           'groupe' => $groupe));
     }
 
+
+    public function deleteAction($id) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
+
+        if (!$groupe) {
+            throw $this->createNotFoundException('Ce groupe n\'existe pas dans la base de données.');
+        }
+
+        $em->remove($groupe);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('SLNRegisterBundle_groupe_list'));
+    }
+
+
+    /**
+     * List of the groups
+     */
+    public function listAction() {
+        $em = $this->getDoctrine()->getEntityManager();
+        $groupes = $em->getRepository('SLNRegisterBundle:Groupe')->findAll();
+
+        return $this->render('SLNRegisterBundle:Groupe:list.html.twig', array(
+          'groupes' => $groupes));
+    }
 
 
 
