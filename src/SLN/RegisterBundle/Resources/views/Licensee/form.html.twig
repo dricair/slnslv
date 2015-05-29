@@ -1,4 +1,5 @@
-<form action="{{ path('SLNRegisterBundle_licensee_create', {'user_id': app.user.id}) }}" method="post" {{ form_enctype(form) }} class="register">
+<form action="{% if id == 0 %} {{ path('SLNRegisterBundle_licensee_create', {'user_id': user_id}) }}
+              {% else %} {{ path('SLNRegisterBundle_licensee_edit', {'id': id}) }} {% endif %}" method="post" {{ form_enctype(form) }} class="register">
   {{ form_errors(form) }}
 
   <fieldset>

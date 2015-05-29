@@ -31,10 +31,24 @@ SLNRegisterBundle_licensee_show:
 
 SLNRegisterBundle_licensee_create:
   pattern: /licensee/create/{user_id}
-  defaults: { _controller: SLNRegisterBundle:Licensee:create }
+  defaults: { _controller: SLNRegisterBundle:Licensee:create, id:0 }
   requirements:
-    _method:  POST
+    _method:  GET|POST
     user_id: \d+
+
+SLNRegisterBundle_licensee_edit:
+  pattern: /licensee/edit/{id}
+  defaults: { _controller: SLNRegisterBundle:Licensee:edit }
+  requirements:
+    _method:  GET|POST
+    id: \d+
+
+SLNRegisterBundle_licensee_delete:
+  pattern: /licensee/delete/{id}
+  defaults: { _controller: SLNRegisterBundle:Licensee:delete }
+  requirements:
+    _method:  GET
+    id: \d+
 
 SLNRegisterBundle_groupe_create:
   pattern: /groupe/create/
@@ -53,7 +67,7 @@ SLNRegisterBundle_groupe_delete:
   pattern: /groupe/delete/{id}
   defaults: { _controller: SLNRegisterBundle:Groupe:delete }
   requirements:
-    _method:  GET|POST
+    _method:  GET
     id: \d+
 
 SLNRegisterBundle_groupe_show:

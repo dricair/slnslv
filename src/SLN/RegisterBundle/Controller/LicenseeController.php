@@ -3,6 +3,7 @@
 namespace SLN\RegisterBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Form\LicenseeType;
@@ -31,28 +32,23 @@ class LicenseeController extends Controller
     }
 
     /**
-     * Form to create a new licensee
+     * Form to create a new licensee or edit an existing one
      */
-    public function newAction($user_id) {
-        $user = $this->getUserFromID($user_id);
+    public function editAction($id, $user_id=0, $inside_page=FALSE) {
+        if ($id == 0) {
+            $user = $this->getUserFromID($user_id);
+            $licensee = new Licensee();
+            $licensee->setUser($user);
+        } else {
+          $em = $this->getDoctrine()->getEntityManager();
+          $licensee = $em->getRepository('SLNRegisterBundle:Licensee')->find($id);
+          $user = $this->getUserFromID($licensee->getUser()->getId());
 
-        $licensee = new Licensee();
-        $licensee->setUser($user);
-        $form = $this->createForm(new LicenseeType(), $licensee);
+          if (!$licensee) {
+              throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
+          }
+        }
 
-        return $this->render('SLNRegisterBundle:Licensee:form.html.twig', array(
-            'licensee' => $licensee,
-            'form' => $form->createView()));
-    }
-
-    /**
-     * Receive data from the form
-     */
-    public function createAction($user_id) {
-        $user = $this->getUserFromID($user_id);
-
-        $licensee = new Licensee();
-        $licensee->setUser($user);
         $request = $this->getRequest();
         $form    = $this->createForm(new LicenseeType(), $licensee);
         $form->handleRequest($request);
@@ -64,14 +60,17 @@ class LicenseeController extends Controller
             $em->flush();
 
             return $this->redirect($this->generateUrl('SLNRegisterBundle_homepage', array(
-                '#licensee-' . $licensee->getId()
+               '#licensee-' . $licensee->getId()
             )));
         }
-
-        return $this->render('SLNRegisterBundle:Licensee:create.html.twig', array(
+ 
+        return $this->render($inside_page ? 'SLNRegisterBundle:Licensee:form.html.twig' :
+                                            'SLNRegisterBundle:Licensee:edit.html.twig', array(
             'licensee' => $licensee,
-            'form'    => $form->createView()
-        ));
+            'form' => $form->createView(),
+            'title' => $id == 0 ? "Ajouter un licencié" : "Modifier un licencié",
+            'id' => $id,
+            'user_id' => $user_id));
     }
 
 
@@ -92,7 +91,7 @@ class LicenseeController extends Controller
 
         if ($user->getId() != $currentUser->getId()) {
             // TODO: check that user is current user or a staff user.
-            return $this->createAccessDeniedException("L'accès à cette page n'est pas autorisé");
+            throw new AccessDeniedException();
         }
 
         return $user;

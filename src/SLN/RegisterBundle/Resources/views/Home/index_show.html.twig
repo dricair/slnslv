@@ -13,15 +13,17 @@
 
   {% endif %}
 
+  <!--
   <h1>Inscriptions à renouveler</h1>
 
   <p>Ces inscriptions ont été activées les années précédentes mais ne sont plus valide pour cette saison. Vous pouvez choisir de les 
      renouveller.</p>
+  -->
 
   <h1>Ajouter une inscription</h1>
 
   <p>Ajouter une inscription pour vous-même ou un de vos enfants. Vous avez la possibilité d'en ajouter plusieurs sur cet espace.</p>
 
-  {{ render(controller('SLNRegisterBundle:Licensee:new', { 'user_id': app.user.id })) }}
+  {{ render(controller('SLNRegisterBundle:Licensee:edit', { 'id': 0, 'user_id': app.user.id, 'inside_page': TRUE })) }}
 
 {% endblock %}

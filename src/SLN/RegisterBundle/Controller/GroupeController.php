@@ -43,10 +43,11 @@ class GroupeController extends Controller {
         }
 
         return $this->render('SLNRegisterBundle:Groupe:edit.html.twig', array(
-            'groupe' => $groupe,
-            'form'   => $form->createView(),
-            'title'  => $id == 0 ? "Ajouter un groupe" : "Editer ce groupe",
-            'id'     => $id
+            'groupe'  => $groupe,
+            'form'    => $form->createView(),
+            'title'   => $id == 0 ? "Ajouter un groupe" : "Editer ce groupe",
+            'id'      => $id,
+            'user_id' => $user_id
         ));
     }
 

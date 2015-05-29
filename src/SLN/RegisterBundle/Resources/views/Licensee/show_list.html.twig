@@ -3,7 +3,7 @@
   <th>Nom</th>
   <th>Prénom</th>
   <th>Date de naissance</th>
-  <th>Numéro de licence</th>
+  <th>Groupe</th>
   <th>Actions</th>
 </tr>
 {% for licensee in licensees %}
@@ -12,7 +12,13 @@
   <td>{{ licensee.prenom }}</td>
   <td>{{ licensee.naissance|date('d/m/Y') }}</td>
   <td>{{ licensee.iuf }}</td>
-  <td>&nbsp;</td>
+  <td>
+    <a href="{{ path('SLNRegisterBundle_licensee_edit', {id: licensee.getId}) }}">
+      <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}" alt='Modifier ce licencié'></a>
+    <a href="{{ path('SLNRegisterBundle_licensee_delete', {id: licensee.getId}) }}"
+         onclick="return confirm('Etes-vous sûr de vouloir effacer le licencié {{ licensee.prenom }} {{ licensee.nom }} ?');">
+      <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif') }}" alt='Supprimer ce licencié'>
+  </td>
 </tr>
 {% endfor %}
 </table>
