@@ -23,11 +23,11 @@
     {% if not loop.last %}<br/>{% endif %}
   {% endfor %}
   </td>
-  <td><a href="{{ path('SLNRegisterBundle_groupe_edit', {id: groupe.getId}) }}">
-      <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}" alt='Modifier ce groupe'></a>
-      <a href="{{ path('SLNRegisterBundle_groupe_delete', {id: groupe.getId}) }}"
+  <td><a href="{{ path('SLNRegisterBundle_groupe_edit', {id: groupe.getId}) }}" title='Modifier ce groupe'>
+      <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}"></a>
+      <a href="{{ path('SLNRegisterBundle_groupe_delete', {id: groupe.getId}) }}" title='Supprimer ce groupe'
          onclick="return confirm('Etes-vous sûr de vouloir effacer le groupe {{ groupe.nom }} ?');">
-      <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif') }}" alt='Supprimer ce groupe'></a>
+      <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif') }}"></a>
    </td>
 </tr>
 {% endfor %}
