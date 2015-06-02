@@ -14,6 +14,19 @@
   </fieldset>
 
   <fieldset>
+    <legend>Groupe de natation</legend>
+    <p>Sélectionnez le groupe de natation si vous le connaissez.</p>
+    <p class="note">Les entraineurs peuvent changer les groupes de natation en fonction du niveau</p>
+
+    {{ form_row(form.groupe) }}
+
+    <div id='groupe-description' data-function="{{ path('api_get_group', {'id': '__id__'}) }}">
+      <div class='description'></div>
+      <div class='horaires'></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
     <legend>Autorisations</legend>
     <p class='help'>J’accepte que les résultats sportifs, le nom  ainsi que la photo (podium, photo de groupe...) de mon enfant puissent apparaître 
        sur le site internet  du club ou de documents destinés à la recherche de sponsors pour le club.</p>

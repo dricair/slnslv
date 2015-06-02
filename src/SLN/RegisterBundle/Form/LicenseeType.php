@@ -17,6 +17,7 @@ class LicenseeType extends AbstractType
             ->add('naissance', 'date', array('years' => range(date('Y')-100, date('Y')-3)))
             ->add('sexe', 'choice', array(
                   'choices' => Licensee::getGenders(),))
+            ->add('groupe', null, array("group_by" => 'categorieName'))
             ->add('iuf')
             ->add('autorisation_photos')
         ;

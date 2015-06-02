@@ -1,0 +1,5 @@
+groups:
+    type: rest
+    resource: "SLNRegisterBundle:GroupeRest"
+    name_prefix: api_
+

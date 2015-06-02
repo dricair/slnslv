@@ -10,7 +10,7 @@ form.register input[type="time"],
 form.register input[type="email"],
 form.register input[type="password"] { display: inline-block; width: 300px; line-height: 20px; min-height: 20px; }
 form.register input[type="time"] { width: 100px; }
-form.register textarea { display: inline-block; width: 300px; height: 150px; line-height: 26px; }
+form.register textarea { display: inline-block; width: 300px; height: 150px; line-height: 16px; }
 form.register input[type="submit"] { margin-left: 220px; width: 312px; line-height: 20px; min-height: 20px; }
 form.register ul li { color: #ff0000; margin-bottom: 5px; }
 form.register fieldset { width: 95%; border: 1px solid white; padding: 10px; background-color: #a8caff; margin-bottom: 20px; }
@@ -36,5 +36,9 @@ table.register tr.even {  }
 #register_choice th { font-weight: bold; color: white; }
 #register_choice li { margin-bottom: 10px; }
 #register_choice .bottom td { padding-top: 20px; padding-bottom: 20px; text-align: center; }
+
+#groupe-description { width: 100%; border: 1px black }
+#groupe-description .description { width: 50% }
+#groupe-description .title { font-weight: bold }
 
 

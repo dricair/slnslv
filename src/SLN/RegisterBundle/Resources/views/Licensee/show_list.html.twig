@@ -11,7 +11,7 @@
   <td>{{ licensee.nom }}</td>
   <td>{{ licensee.prenom }}</td>
   <td>{{ licensee.naissance|date('d/m/Y') }}</td>
-  <td>{{ licensee.iuf }}</td>
+  <td>{% if licensee.groupe %} {{ licensee.groupe.nom }} {% else %} Pas de groupe sélectionné.{% endif %}</td>
   <td>
     <a href="{{ path('SLNRegisterBundle_licensee_edit', {id: licensee.getId}) }}" title='Modifier ce licencié'>
       <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}"></a>

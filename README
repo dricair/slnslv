@@ -15,3 +15,5 @@ php app/console doctrine:migrations:migrate
 Installer les "assets" (Fichiers statiques)
 php app/console assets:install web --symlink
 
+Lister les routes:
+app/console router:debug

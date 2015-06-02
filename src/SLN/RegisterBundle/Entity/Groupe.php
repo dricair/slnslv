@@ -4,6 +4,11 @@ namespace SLN\RegisterBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\ExclusionPolicy,
+    JMS\Serializer\Annotation\Expose,
+    JMS\Serializer\Annotation\Groups,
+    JMS\Serializer\Annotation\VirtualProperty;
+
 use SLN\RegisterBundle\Entity\Horaire;
 
 class Horaire {
@@ -40,12 +45,14 @@ class Horaire {
  * @ORM\Entity(repositoryClass="SLN\RegisterBundle\Entity\Repository\GroupeRepository")
  * @ORM\Table(name="groupe")
  * @ORM\HasLifecycleCallbacks()
+ * @ExclusionPolicy("all")
  */
  class Groupe {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     protected $id;
 
@@ -60,6 +67,7 @@ class Horaire {
      *     maxMessage="Le nom est trop long.",
      *     groups={"Registration", "Profile"}
      * )
+     * @Expose
      */
     protected $nom;
 
@@ -70,13 +78,14 @@ class Horaire {
      *     maxMessage="La description est trop longue.",
      *     groups={"Registration", "Profile"}
      * )
+     * @Expose
      */
     protected $description;
      
 
     /**
      * @ORM\Column(type="integer")
-    @Assert\Choice(callback = "getCategories", message="Merci de sélectionner la catégorie", groups={"Registration", "Profile"})
+     * @Assert\Choice(callback = "getCategories", message="Merci de sélectionner la catégorie", groups={"Registration", "Profile"})
      */
     protected $categorie;
     
@@ -97,6 +106,10 @@ class Horaire {
     protected $horaires;
 
     // TODO: Tarifs
+
+    public function __toString() {
+        return $this->nom;
+    }
 
 
     /*
@@ -206,6 +219,14 @@ class Horaire {
     }
 
     /**
+     * Get categorie name
+     * @VirtualProperty
+     */
+    public function getCategorieName() {
+        return $this->getCategories()[$this->categorie];
+    }
+
+    /**
      * Add licensees
      *
      * @param \SLN\RegisterBundle\Entity\Licensee $licensees
@@ -251,6 +272,22 @@ class Horaire {
         $ret = array();
         foreach ($this->horaires as $horaire) {
             $ret[] = new Horaire($horaire['jour'], $horaire['debut'], $horaire['fin'], $horaire['description']);
+        }
+        return $ret;
+    }
+
+    /**
+      * Virtual property for horaires
+      * 'jour' is reported as a string, 'debut' and 'fin' as formatted times
+      * @VirtualProperty
+      */
+    public function horaireList() {
+        $ret = array();
+        foreach($this->getFormatedHoraires() as $horaire) {
+            $ret[] = array("jour" => $horaire->getJour(),
+                           "debut" => $horaire->getDebut(),
+                           "fin" => $horaire->getFin(),
+                           "description" => $horaire->description);
         }
         return $ret;
     }

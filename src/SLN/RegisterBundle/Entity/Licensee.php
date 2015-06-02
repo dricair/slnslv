@@ -523,4 +523,5 @@ use Symfony\Component\Validator\Constraints as Assert;
     {
         return $this->groupe;
     }
+
 }

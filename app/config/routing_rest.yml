@@ -1,0 +1,4 @@
+Rest_SLNRegisterBundle:
+    type: rest
+    resource: "@SLNRegisterBundle/Resources/config/routing_rest.yml"
+

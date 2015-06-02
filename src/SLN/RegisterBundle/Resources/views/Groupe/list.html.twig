@@ -7,21 +7,24 @@
 
 <p><a href="{{ path('SLNRegisterBundle_groupe_create') }}">Ajouter un groupe</a></p>
 
+{% for category_name,groupes in groupes_by_categories %}
+<h2>{{ category_name }}</h2>
+
 <table class='register'>
 <thead>
 <tr>
   <th>Nom</th><th>Description</th><th>Horaires</th><th>Action</th>
 <tr>
 </thead>
-{% for groupe in groupes %}
+  {% for groupe in groupes %}
 <tr class='{{ cycle(['odd', 'even'], loop.index0)}}'>
   <td>{{ groupe.nom }}</td>
   <td>{{ groupe.description | nl2br }}</td>
   <td>
-  {% for horaire in groupe.getFormatedHoraires %}
-    {{ horaire.getJour }},&nbsp;de&nbsp;{{ horaire.getDebut }}&nbsp;à&nbsp;{{ horaire.getFin }}&nbsp;({{ horaire.description }})
-    {% if not loop.last %}<br/>{% endif %}
-  {% endfor %}
+    {% for horaire in groupe.getFormatedHoraires %}
+      {{ horaire.getJour }},&nbsp;de&nbsp;{{ horaire.getDebut }}&nbsp;à&nbsp;{{ horaire.getFin }}&nbsp;({{ horaire.description }})
+      {% if not loop.last %}<br/>{% endif %}
+    {% endfor %}
   </td>
   <td><a href="{{ path('SLNRegisterBundle_groupe_edit', {id: groupe.getId}) }}" title='Modifier ce groupe'>
       <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}"></a>
@@ -30,8 +33,9 @@
       <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif') }}"></a>
    </td>
 </tr>
-{% endfor %}
+  {% endfor %}
 </table>
+{% endfor %}
 
 {% endblock %}
 

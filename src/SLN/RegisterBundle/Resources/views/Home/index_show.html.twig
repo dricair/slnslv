@@ -27,3 +27,12 @@
   {{ render(controller('SLNRegisterBundle:Licensee:edit', { 'id': 0, 'user_id': app.user.id, 'inside_page': TRUE })) }}
 
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/slnregister/js/licensee.js') }}"></script>
+    <script type="text/javascript">
+      $( document ).ready(function() { setup_group_description(); });
+    </script>
+{% endblock %}
+

@@ -22,7 +22,7 @@ class GroupeController extends Controller {
           $em = $this->getDoctrine()->getEntityManager();
           $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
 
-          if (!$groupe) {
+          if (!is_object($groupe)) {
               throw $this->createNotFoundException('Ce groupe n\'existe pas dans la base de données.');
           }
         }
@@ -46,8 +46,7 @@ class GroupeController extends Controller {
             'groupe'  => $groupe,
             'form'    => $form->createView(),
             'title'   => $id == 0 ? "Ajouter un groupe" : "Editer ce groupe",
-            'id'      => $id,
-            'user_id' => $user_id
+            'id'      => $id
         ));
     }
 
@@ -89,8 +88,15 @@ class GroupeController extends Controller {
         $em = $this->getDoctrine()->getEntityManager();
         $groupes = $em->getRepository('SLNRegisterBundle:Groupe')->findAll();
 
+        $groupes_by_categories = [];
+        foreach ($groupes as $groupe) {
+            if (!array_key_exists($groupe->getCategorieName(), $groupes_by_categories))
+                $groupes_by_categories[$groupe->getCategorieName()] = [];
+            $groupes_by_categories[$groupe->getCategorieName()][] = $groupe;
+        }
+
         return $this->render('SLNRegisterBundle:Groupe:list.html.twig', array(
-          'groupes' => $groupes));
+          'groupes_by_categories' => $groupes_by_categories));
     }
 
 
