@@ -1,0 +1,20 @@
+<table class='register'>
+<tr>
+  <th>Nom</th>
+  <th>Prenom</th>
+  <th>Email</th>
+  <th>Tél. domicile</th>
+  <th>Tél. portable</th>
+</tr>
+
+{% for member in members %}
+<tr class="{{ cycle(['odd', 'even'], loop.index0) }}">
+  <td>{{ member.nom }}</td>
+  <td>{{ member.prenom }}</td>
+  <td><a href='mailto:{{ member.email }}'>{{ member.email }}</a></td>
+  <td>{{ member.telDomicile }}</td>
+  <td>{{ member.telPortable }}</td>
+</tr>
+{% endfor %}
+</table>
+

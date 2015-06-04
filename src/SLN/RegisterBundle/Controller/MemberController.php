@@ -7,14 +7,36 @@ use SLN\RegisterBundle\Entity\User;
 
 class MemberController extends Controller
 {
-    public function indexAction()
+    /*
+     * List the members
+     */
+    public function listAction()
     {
+        $members = $this->getRepository()->getAll();
+
+        return $this->render('SLNRegisterBundle:Member:list.html.twig', array('members' => $members));
+    }
+
+    /*
+     * Permits changing the roles for the users
+     */
+    public function roleAction()
+    {
+        $members = $this->getRepository()->getAll();
+
+        return $this->render('SLNRegisterBundle:Member:list_role.html.twig', array('members' => $members));
+    }
+
+
+
+    /*
+     * Get the repository for users
+     *
+     * @return Repository
+     */
+    protected function getRepository() {
         $em = $this->getDoctrine()
                    ->getEntityManager();
-
-        $members = $em->getRepository('SLNRegisterBundle:User')
-                      ->getAll();
-
-        return $this->render('SLNRegisterBundle:Member:index.html.twig', array('members' => $members));
+        return $em->getRepository('SLNRegisterBundle:User');
     }
 }

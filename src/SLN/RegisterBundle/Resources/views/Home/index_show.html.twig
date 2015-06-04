@@ -7,7 +7,9 @@
   {% if activeLicensees %}
   <h1>Inscriptions en cours</h1>
 
-  <p>Voici la liste des inscriptions actives pour vous-même ou vos enfants</p>
+  <p>Voici la liste des inscriptions actives pour vous-même ou vos enfants.</p>
+  <p>Vous pouvez les modifier en cliquant sur le bouton <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}" title='Modifier'/>, 
+     ou supprimer en cliquant sur le bouton <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif')}}" title='Supprimer'/>.</p>
 
   {% include 'SLNRegisterBundle:Licensee:show_list.html.twig' with { 'licensees': activeLicensees } %}
 
@@ -22,7 +24,7 @@
 
   <h1>Ajouter une inscription</h1>
 
-  <p>Ajouter une inscription pour vous-même ou un de vos enfants. Vous avez la possibilité d'en ajouter plusieurs sur cet espace.</p>
+  <p>Ajoutez une inscription pour vous-même ou un de vos enfants. Vous avez la possibilité d'en ajouter plusieurs sur cet espace.</p>
 
   {{ render(controller('SLNRegisterBundle:Licensee:edit', { 'id': 0, 'user_id': app.user.id, 'inside_page': TRUE })) }}
 

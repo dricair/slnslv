@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+use SLN\RegisterBundle\Entity\Licensee;
+
 /**
  * @ORM\Entity(repositoryClass="SLN\RegisterBundle\Entity\Repository\UserRepository")
  * @ORM\Table(name="sln_user")
@@ -372,10 +374,10 @@ class User extends BaseUser
     /**
      * Add licensees
      *
-     * @param \SLN\RegisterBundle\Entity\Licensees $licensees
+     * @param Licensee $licensees
      * @return User
      */
-    public function addLicensee(\SLN\RegisterBundle\Entity\Licensees $licensees)
+    public function addLicensee(Licensee $licensees)
     {
         $this->licensees[] = $licensees;
 
@@ -385,9 +387,9 @@ class User extends BaseUser
     /**
      * Remove licensees
      *
-     * @param \SLN\RegisterBundle\Entity\Licensees $licensees
+     * @param Licensee $licensees
      */
-    public function removeLicensee(\SLN\RegisterBundle\Entity\Licensees $licensees)
+    public function removeLicensee(Licensee $licensees)
     {
         $this->licensees->removeElement($licensees);
     }

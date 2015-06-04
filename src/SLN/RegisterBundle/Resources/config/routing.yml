@@ -4,12 +4,6 @@ SLNRegisterBundle_homepage:
   requirements:
     _method:  GET
 
-SLNRegisterBundle_member:
-  pattern: /member
-  defaults: { _controller: SLNRegisterBundle:Member:index }
-  requirements:
-    _method:  GET
-
 SLNRegisterBundle_about:
   pattern:  /about
   defaults: { _controller: SLNRegisterBundle:Misc:about }
@@ -29,6 +23,13 @@ SLNRegisterBundle_licensee_show:
     _method:  GET
     id: \d+
 
+
+#
+# User pages
+# ==========
+#
+# Create and edit licensees
+# -------------------------
 SLNRegisterBundle_licensee_create:
   pattern: /licensee/create/{user_id}
   defaults: { _controller: SLNRegisterBundle:Licensee:create, id:0 }
@@ -50,38 +51,66 @@ SLNRegisterBundle_licensee_delete:
     _method:  GET
     id: \d+
 
+
+#
+# Administrator pages
+# ===================
+#
+# Create and edit groupes
+# -----------------------
 SLNRegisterBundle_groupe_create:
-  pattern: /groupe/create/
+  pattern: /admin/groupe/create/
   defaults: { _controller: SLNRegisterBundle:Groupe:edit }
   requirements:
     _method:  GET|POST
 
 SLNRegisterBundle_groupe_edit:
-  pattern: /groupe/edit/{id}
+  pattern: /admin/groupe/edit/{id}
   defaults: { _controller: SLNRegisterBundle:Groupe:edit }
   requirements:
     _method:  GET|POST
     id: \d+
 
 SLNRegisterBundle_groupe_delete:
-  pattern: /groupe/delete/{id}
+  pattern: /admin/groupe/delete/{id}
   defaults: { _controller: SLNRegisterBundle:Groupe:delete }
   requirements:
     _method:  GET
     id: \d+
 
 SLNRegisterBundle_groupe_show:
-  pattern: /groupe/show/{id}
+  pattern: /admin/groupe/show/{id}
   defaults: { _controller: SLNRegisterBundle:Groupe:show }
   requirements:
     _method:  GET|POST
     id: \d+
 
 SLNRegisterBundle_groupe_list:
-  pattern: /groupe/list
+  pattern: /admin/groupe/list
   defaults: { _controller: SLNRegisterBundle:Groupe:list }
   requirements:
     _method:  GET|POST
+
+#
+# Create and edit members
+# -----------------------
+SLNRegisterBundle_member_list:
+  pattern: /admin/member/list
+  defaults: { _controller: SLNRegisterBundle:Member:list }
+  requirements:
+    _method:  GET
+
+SLNRegisterBundle_member_role:
+  pattern: /admin/member/role
+  defaults: { _controller: SLNRegisterBundle:Member:list }
+  requirements:
+    _method:  GET
+
+SLNRegisterBundle_member_show:
+  pattern: /admin/member/show
+  defaults: { _controller: SLNRegisterBundle:Member:list }
+  requirements:
+    _method:  GET
 
 
 
