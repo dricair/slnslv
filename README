@@ -17,3 +17,7 @@ php app/console assets:install web --symlink
 
 Lister les routes:
 app/console router:debug
+
+Vider les caches:
+php app/console cache:clear
+php app/console cache:clear --env=prod
