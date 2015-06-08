@@ -13,3 +13,6 @@
 /composer.phar
 composer.lock
 *.swp
+*~
+mail.log
+
