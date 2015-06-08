@@ -13,8 +13,6 @@ class RegistrationFormType extends AbstractType
         // add your custom field
         $builder->add('nom')
                 ->add('prenom')
-                ->add('titre', 'choice', array(
-                  'choices' => User::getTitres(),))
                 ->add('adresse')
                 ->add('code_postal')
                 ->add('ville')

@@ -54,16 +54,6 @@ class User extends BaseUser
     protected $prenom;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\Choice(callback = "getTitre", message="Merci de sélectionner une valeur", groups={"Registration", "Profile"})
-     */
-    protected $titre;
-    
-    public static function getTitres() {
-        return array(0 => "Mme", 1 => "M.");
-    }
-
-    /**
      * @ORM\Column(type="text", length=300)
      *
      @Assert\NotBlank(message="Merci d'entrer votre adresse.", groups={"Registration", "Profile"})

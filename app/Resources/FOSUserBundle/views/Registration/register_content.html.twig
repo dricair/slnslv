@@ -4,7 +4,7 @@
 
 <p>Ce formulaire permet de créer un compte membre au <a href='http://stadelaurentinnatation.fr/'>Stade Laurentin Natation</a>.
    Une fois créé et validé, vous pourrez accéder aux pages d'inscription.</p>
-<p>Pour inscrire un <b>enfant</b>, vous devez d'abord créer un compte au nom du <b>représentant légal</b>, puis vous connecter
+<p>Pour inscrire un <b>enfant</b>, vous devez d'abord créer un compte au nom du <underline>représentant légal</underline>, puis vous connecter
    pour inscrire votre enfant.</p>
 
 <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="register">
@@ -12,7 +12,6 @@
 
   <fieldset>
     <legend>Identité</legend>
-    {{ form_row(form.titre) }}
     {{ form_row(form.nom) }}
     {{ form_row(form.prenom) }}
   </fieldset>

@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     /**
      * @ORM\Column(type="string", length=100)
      *
-     @Assert\NotBlank(message="Merci d'entrer un prénom.", groups={"Registration", "Profile"})
+     * @Assert\NotBlank(message="Merci d'entrer un prénom.", groups={"Registration", "Profile"})
      * @Assert\Length(
      *     min=3,
      *     max="100",
@@ -48,7 +48,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
     /**
      * @ORM\Column(type="integer")
-    @Assert\Choice(callback = "getGenders", message="Merci de sélectionner une valeur", groups={"Registration", "Profile"})
+     * @Assert\Choice(callback = "getGenders", message="Merci de sélectionner une valeur", groups={"Registration", "Profile"})
      */
     protected $sexe;
     
