@@ -55,12 +55,12 @@ class User extends BaseUser
 
     /**
      * @ORM\Column(type="integer")
-    @Assert\Choice(callback = "getGenders", message="Merci de sélectionner une valeur", groups={"Registration", "Profile"})
+     * @Assert\Choice(callback = "getTitre", message="Merci de sélectionner une valeur", groups={"Registration", "Profile"})
      */
-    protected $sexe;
+    protected $titre;
     
-    public static function getGenders() {
-        return array(0 => "Homme", 1 => "Femme");
+    public static function getTitres() {
+        return array(0 => "Mme", 1 => "M.");
     }
 
     /**
@@ -303,26 +303,26 @@ class User extends BaseUser
     }
 
     /**
-     * Set sexe
+     * Set titre
      *
-     * @param integer $sexe
+     * @param integer $titre
      * @return User
      */
-    public function setSexe($sexe)
+    public function setTitre($titre)
     {
-        $this->sexe = $sexe;
+        $this->titre = $titre;
 
         return $this;
     }
 
     /**
-     * Get sexe
+     * Get titre
      *
      * @return integer 
      */
-    public function getSexe()
+    public function getTitre()
     {
-        return $this->sexe;
+        return $this->titre;
     }
 
     /**
