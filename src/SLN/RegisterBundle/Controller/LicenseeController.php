@@ -75,6 +75,27 @@ class LicenseeController extends Controller
 
 
     /**
+      * Delete a licensee from a user
+      */
+    public function deleteAction($id) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $licensee = $em->getRepository('SLNRegisterBundle:Licensee')->find($id);
+        $user = $this->getUserFromID($licensee->getUser()->getId());
+
+        if (!$licensee) {
+            throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
+        }
+
+        $user->removeLicensee($licensee);
+        $em->remove($licensee);
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('SLNRegisterBundle_homepage'));
+    }
+
+
+    /**
      * Get user from ID. If user is not current ID or a user with staff role, 
      * raise an exception
      */

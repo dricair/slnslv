@@ -34,7 +34,7 @@ class Horaire {
                      6 => "dimanche");
     }
 
-    public function getJour() { return $this->getjours()[$this->jour]; }
+    public function getJour() { $jours = $this->getjours(); return $jours[$this->jour]; }
 
     public function getDebut() { return date("H:i", $this->debut); }
     public function getFin() { return date("H:i", $this->fin); }
@@ -223,7 +223,8 @@ class Horaire {
      * @VirtualProperty
      */
     public function getCategorieName() {
-        return $this->getCategories()[$this->categorie];
+        $categories = $this->getCategories();
+        return $categories[$this->categorie];
     }
 
     /**

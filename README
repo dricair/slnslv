@@ -21,3 +21,7 @@ app/console router:debug
 Vider les caches:
 php app/console cache:clear
 php app/console cache:clear --env=prod
+
+Vérifier la sécurité et mise à jour
+app/console security:check
+composer update

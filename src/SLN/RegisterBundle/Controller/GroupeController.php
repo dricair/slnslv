@@ -88,10 +88,10 @@ class GroupeController extends Controller {
         $em = $this->getDoctrine()->getEntityManager();
         $groupes = $em->getRepository('SLNRegisterBundle:Groupe')->findAll();
 
-        $groupes_by_categories = [];
+        $groupes_by_categories = array();
         foreach ($groupes as $groupe) {
             if (!array_key_exists($groupe->getCategorieName(), $groupes_by_categories))
-                $groupes_by_categories[$groupe->getCategorieName()] = [];
+                $groupes_by_categories[$groupe->getCategorieName()] = array();
             $groupes_by_categories[$groupe->getCategorieName()][] = $groupe;
         }
 

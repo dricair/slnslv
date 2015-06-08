@@ -31,7 +31,7 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     globals:
-        project_version: %project_version%
+        version: 0.1
 
 # Assetic Configuration
 assetic:
@@ -83,6 +83,13 @@ fos_user:
     registration:
         form:
             type: sln_user_registration
+        confirmation:
+            from_email:
+                address:    "slnslv@free.fr"
+                sender_name: "admin"
+            enabled: false
+
+
 
 sensio_framework_extra:
     view:
