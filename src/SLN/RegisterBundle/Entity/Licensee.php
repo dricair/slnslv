@@ -76,6 +76,16 @@ use Symfony\Component\Validator\Constraints as Assert;
     /**
      * @ORM\Column(type="boolean")
      */
+    protected $officiel;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $bureau;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
     protected $inscription_ok;
 
     /**
@@ -129,8 +139,11 @@ use Symfony\Component\Validator\Constraints as Assert;
     {
         $this->setCreated(new \DateTime());
         $this->setUpdated(new \DateTime());
+        $this->setNaissance(new \DateTime("2000-01-01"));
         $this->setAutorisationPhotos(True);
         $this->setInscriptionOk(False);
+        $this->setBureau(false);
+        $this->setOfficiel(false);
         $this->setPhotoOk(False);
         $this->setCertificatOk(False);
         $this->setAttestationOk(False);
@@ -524,4 +537,50 @@ use Symfony\Component\Validator\Constraints as Assert;
         return $this->groupe;
     }
 
+
+    /**
+     * Set officiel
+     *
+     * @param boolean $officiel
+     * @return Licensee
+     */
+    public function setOfficiel($officiel)
+    {
+        $this->officiel = $officiel;
+
+        return $this;
+    }
+
+    /**
+     * Get officiel
+     *
+     * @return boolean 
+     */
+    public function getOfficiel()
+    {
+        return $this->officiel;
+    }
+
+    /**
+     * Set bureau
+     *
+     * @param boolean $bureau
+     * @return Licensee
+     */
+    public function setBureau($bureau)
+    {
+        $this->bureau = $bureau;
+
+        return $this;
+    }
+
+    /**
+     * Get bureau
+     *
+     * @return boolean 
+     */
+    public function getBureau()
+    {
+        return $this->bureau;
+    }
 }

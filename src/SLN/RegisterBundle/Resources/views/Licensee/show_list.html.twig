@@ -11,13 +11,16 @@
   <td>{{ licensee.nom }}</td>
   <td>{{ licensee.prenom }}</td>
   <td>{{ licensee.naissance|date('d/m/Y') }}</td>
-  <td>{% if licensee.groupe %} {{ licensee.groupe.nom }} {% else %} Pas de groupe sélectionné.{% endif %}</td>
+  <td>{% if licensee.groupe %} {{ licensee.groupe.nom }} {% else %} Pas de groupe sélectionné.{% endif %}
+      {% if licensee.officiel %} </br>Officiel {% endif %}
+      {% if licensee.bureau %} </br>Membre du bureau {% endif %}</td>
   <td>
     <a href="{{ path('SLNRegisterBundle_licensee_edit', {id: licensee.getId}) }}" title='Modifier ce licencié'>
       <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}"></a>
     <a href="{{ path('SLNRegisterBundle_licensee_delete', {id: licensee.getId}) }}" title='Supprimer ce licencié'
          onclick="return confirm('Etes-vous sûr de vouloir effacer le licencié {{ licensee.prenom }} {{ licensee.nom }} ?');">
-      <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif') }}">
+      <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif') }}"/>
+    </a>
   </td>
 </tr>
 {% endfor %}
