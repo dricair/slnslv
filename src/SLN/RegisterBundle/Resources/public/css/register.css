@@ -23,6 +23,8 @@ a.btn { display: inline-block; width: 90%; text-align: center; vertical-align: m
         white-space: no-wrap; padding: 6px 12px; border-radius: 5px; background: white; }
 a.btn:hover { background: transparent; }
 
+span.important { text-decoration: underline; font-weight: bold; }
+
 form.register a.add_row_link { padding-left: 18px; background: url(../images/icon_addrow.gif) no-repeat left center; }
 
 table.register { width: 100%; border: 1px solid white; padding: 10px; text-align: left; }
@@ -30,6 +32,10 @@ table.register th { font-weight: bold; color: white; background-color: #a8caff; 
 table.register td { padding: 10px; }
 table.register tr.odd { background-color: lightgrey; }
 table.register tr.even {  }
+
+.main-col p { margin-top: 6px; margin-bottom: 6px; }
+.main-col ul { margin-top: 12px; margin-bottom: 12px; margin-left: 20px;}
+.main-col li { line-height: 1.2em;}
 
 
 #register_choice table { width: 100%; border: 0px; }

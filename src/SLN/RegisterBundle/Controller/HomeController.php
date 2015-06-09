@@ -17,7 +17,9 @@ class HomeController extends Controller
     public function indexAction()
     {
         $activeLicensees = NULL;
-        $toReconductLicensees = NULL;
+        $year = date('Y');
+        $month = date('M');
+        if ($month < 9) $year = $year - 1;
 
         if ($this->isLoggedIn()) {
             $currentUser = $this->getUser();
@@ -30,7 +32,7 @@ class HomeController extends Controller
         }
 
         return $this->render('SLNRegisterBundle:Home:index.html.twig', array('activeLicensees' => $activeLicensees,
-                                                                             'toReconductLicensees' => $toReconductLicensees));
+                                                                             'year' => $year));
     }
 
 

@@ -5,13 +5,22 @@
 {% block body %}
 
   {% if activeLicensees %}
-  <h1>Inscriptions en cours</h1>
+  <h1>Inscriptions pour la saison {{ year }}-{{year + 1 }}</h1>
 
-  <p>Voici la liste des inscriptions actives pour vous-même ou vos enfants.</p>
+  <p>Voici la liste des inscriptions enregistrées pour vous-même ou vos enfants pour la <span class='important'>saison {{ year }}-{{year + 1 }}</span>.</p>
+
   <p>Vous pouvez les modifier en cliquant sur le bouton <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}" title='Modifier'/>, 
      ou supprimer en cliquant sur le bouton <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif')}}" title='Supprimer'/>.</p>
 
   {% include 'SLNRegisterBundle:Licensee:show_list.html.twig' with { 'licensees': activeLicensees } %}
+
+  <p>Pour valider l'inscription, vous devez maintenant pour chaque inscription imprimer la feuille d'inscription.</p>
+  <p>Vous devrez ramener la feuille d'inscription au bureau du club avec:</p>
+  <ul>
+    <li>Un certificat médical de non contre-indication à la pratique de la natation.</li>
+    <li>Une photo d'identité</li>
+    <li>Le paiement par chèque. Pour les pré-inscriptions en juin, uniquement un chèque de caution de 50€.</li>
+  </ul>
 
   {% endif %}
 
@@ -22,7 +31,7 @@
      renouveller.</p>
   -->
 
-  <h1>Ajouter une inscription</h1>
+  <h1>Ajouter une inscription pour la saison {{ year }}-{{year + 1 }}</h1>
 
   <p>Ajoutez une inscription pour vous-même ou un de vos enfants. Vous avez la possibilité d'en ajouter plusieurs sur cet espace.</p>
 
