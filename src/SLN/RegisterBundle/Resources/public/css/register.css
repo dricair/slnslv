@@ -1,4 +1,5 @@
-.register-notice { text-align: center; padding: 10px; background: #DFF2BF; border: 1px solid; color: #4F8A10; margin-bottom: 10px; }
+div.flash-notice { text-align: center; padding: 10px; background: #DFF2BF; border: 1px solid; color: #4F8A10; margin-bottom: 10px; 
+                   box-shadow: 4px 3px 15px rgba(0,0,0,0.9); } 
 
 h1.register { font-size: 18px; font-weight: bold; margin-top: 10px; }
 form.register { font-size: 14px; }
@@ -29,6 +30,7 @@ table.register th { font-weight: bold; color: white; background-color: #a8caff; 
 table.register td { padding: 10px; }
 table.register tr.odd { background-color: lightgrey; }
 table.register tr.even {  }
+
 
 #register_choice table { width: 100%; border: 0px; }
 #register_choice .left, 

@@ -1,8 +1,6 @@
 Inscriptions:
-- Choisir le ou les groupes
 - Générer les fiches à imprimer
 - Montrer ce qui manque
-- Editer un licencié
 - Ajouter les tarifs et agenda
 - Ajouter des photos
 
@@ -14,8 +12,13 @@ Admin:
 - Voir les licenciés par groupe
 - Indiquer ce qui a été donné et valider l'inscription
 
+Licencié
+- Informations de compétitions
+
 Divers:
+- Ajouter un menu
 - Renouvellement des licences
 - Impression des cartes
 - Envoi de mails
+- Page de contact
 

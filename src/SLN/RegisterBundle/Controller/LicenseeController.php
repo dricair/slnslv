@@ -59,6 +59,11 @@ class LicenseeController extends Controller
             $em->persist($licensee);
             $em->flush();
 
+            $this->get('session')->getFlashBag()->add(
+              'notice',
+              sprintf("Le licencié '%s %s' a été %s avec succès.", $licensee->getPrenom(), $licensee->getNom(), $id = 0 ? "ajouté" : "modifié")
+            );
+
             return $this->redirect($this->generateUrl('SLNRegisterBundle_homepage', array(
                '#licensee-' . $licensee->getId()
             )));
