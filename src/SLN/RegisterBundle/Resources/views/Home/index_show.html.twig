@@ -15,8 +15,12 @@
   {% include 'SLNRegisterBundle:Licensee:show_list.html.twig' with { 'licensees': activeLicensees } %}
 
   <p>Une fois toutes les inscriptions complétées, vous devez imprimer les feuilles d'inscription:</p>
-  <p><a class='btn' href="{{ path('SLNRegisterBundle_member_inscriptions', {'user_id': app.user.getId}) }}">Imprimer les feuilles d'inscription</a></p>
-
+  <a class='btn' href="{{ path('SLNRegisterBundle_member_inscriptions', {'user_id': app.user.getId}) }}" target="_blank">
+     Imprimer les feuilles d'inscription pré-remplies</a>
+  <p>Pensez aussi télécharger et remplir un formulaire de licence par personne:</p>
+{% set yearp1 = year+1%}
+  <a class='btn' href="{{ asset('bundles/slnregister/images/formulaire_licence_'~yearp1~'.pdf') }}" target="_blank">
+     Télécharger le formulaire de licence {{ year }}-{{ year+1 }}</a>
   {% endif %}
 
   <!--

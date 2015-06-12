@@ -26,7 +26,12 @@ class MemberController extends Controller
         $user = $this->getUserFromID($user_id);
         $licensees = $this->getLicenseeRepository()->getLicenseesForUser($user_id);
 
-        return $this->render('SLNRegisterBundle:Member:inscription_sheets.html.twig', array('user' => $user, 'licensees' => $licensees));
+        $year = date('Y');
+        $month = date('n');
+        if ($month < 5) $year = $year - 1;
+
+        return $this->render('SLNRegisterBundle:Member:inscription_sheets.html.twig', array('user' => $user, 'licensees' => $licensees,
+          'year' => $year));
     }
 
     /*

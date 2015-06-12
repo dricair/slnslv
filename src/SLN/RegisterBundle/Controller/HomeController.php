@@ -18,8 +18,8 @@ class HomeController extends Controller
     {
         $activeLicensees = NULL;
         $year = date('Y');
-        $month = date('M');
-        if ($month < 9) $year = $year - 1;
+        $month = date('n');
+        if ($month < 5) $year = $year - 1;
 
         if ($this->isLoggedIn()) {
             $currentUser = $this->getUser();
