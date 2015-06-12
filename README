@@ -21,7 +21,11 @@ app/console router:debug
 Vider les caches:
 php app/console cache:clear
 php app/console cache:clear --env=prod
+php app/console cache:clear --env=prod --no-debug
 
 Vérifier la sécurité et mise à jour
 app/console security:check
 composer update
+
+Liste des fichiers modifiés depuis un tag:
+git diff --name-only <tag>
