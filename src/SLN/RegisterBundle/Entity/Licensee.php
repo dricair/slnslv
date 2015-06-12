@@ -52,8 +52,11 @@ use Symfony\Component\Validator\Constraints as Assert;
      */
     protected $sexe;
     
+    const HOMME = 0;
+    const FEMME = 1;
+
     public static function getGenders() {
-        return array(0 => "Homme", 1 => "Femme");
+        return array(self::HOMME => "Homme", self::FEMME => "Femme");
     }
 
     /**
@@ -134,6 +137,14 @@ use Symfony\Component\Validator\Constraints as Assert;
      * @ORM\JoinColumn(name="groupe_id", referencedColumnName="id", nullable=True)
      */
     protected $groupe;
+
+    /*
+     * Return true if licensee if less than 18
+     */
+    public function isMineur() {
+      $now = new \DateTime();
+      return $this->naissance->diff($now)->y < 18;
+    }
 
     public function __construct()
     {

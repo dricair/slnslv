@@ -34,15 +34,15 @@ function setup_group_description() {
 
 function update_groupe_description(groupe_description, data) {
   if ($.type(data) == "string") {
-    groupe_description.find('.description').html(data);
-    groupe_description.find('.horaires').html("");
+    groupe_description.find('.groupe-description').html(data);
+    groupe_description.find('.groupe-horaires').html("");
   }
   else {
     var description_str = "<p class='title'>__nom__ (__categorie__)</p><p>__description__</p>";
     description_str = description_str.replace("__nom__", data.nom);
     description_str = description_str.replace("__categorie__", data.categorie_name);
     description_str = description_str.replace("__description__", data.description.replace("\n", "<br/>"));
-    groupe_description.find('.description').html(description_str);
+    groupe_description.find('.groupe-description').html(description_str);
 
     var horaires = "";
     for (index = 0; index < data.horaire_list.length; index++) {
@@ -51,6 +51,6 @@ function update_groupe_description(groupe_description, data) {
       if (index < data.horaire_list.length - 1) horaires += "<br/>";
     }
     var horaires_str = "<p class='title'>Horaires</p><p>" + horaires + "</p>";
-    groupe_description.find('.horaires').html(horaires_str);
+    groupe_description.find('.groupe-horaires').html(horaires_str);
   }
 }

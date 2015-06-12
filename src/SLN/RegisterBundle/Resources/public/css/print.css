@@ -1,0 +1,34 @@
+@page { margin: 1cm; }
+
+#header { display: none; }
+#wrapper { width: 100%; }
+.main-col { width: 100%; padding: 0px; }
+.no-print { display: none; }
+
+#inscriptions { width: 18cm; margin: auto; }
+#inscriptions h2 { font-size: 16px; }
+
+#inscriptions .header { height: 2.5cm; }
+
+#inscriptions .renseignements_licencie { height: 6cm; }
+#inscriptions .renseignements_licencie .label { width: 4cm; color: grey; }
+
+#inscriptions .attestation { height: 8cm; }
+
+#inscriptions .signature { height: 3cm; }
+#inscriptions .signature td.signature { height: 2cm; width: 10cm; color: grey; }
+
+#inscriptions .footer { height: 2cm; page-break-after: always; }
+#inscriptions .footer p { color: grey; }
+#inscriptions .footer td { color: grey; }
+#inscriptions .footer .values td { border: 1px solid grey;  color: grey; }
+
+#inscriptions .header .col1 img { width: 3cm; height: auto; }
+#inscriptions .header .col2 img { width: 8cm; height: auto; }
+#inscriptions .header .col3 img { width: 5cm; height: auto; }
+
+tfoot { display: none }
+
+
+
+

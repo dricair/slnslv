@@ -14,13 +14,8 @@
 
   {% include 'SLNRegisterBundle:Licensee:show_list.html.twig' with { 'licensees': activeLicensees } %}
 
-  <p>Pour valider l'inscription, vous devez maintenant pour chaque inscription imprimer la feuille d'inscription.</p>
-  <p>Vous devrez ramener la feuille d'inscription au bureau du club avec:</p>
-  <ul>
-    <li>Un certificat médical de non contre-indication à la pratique de la natation.</li>
-    <li>Une photo d'identité</li>
-    <li>Le paiement par chèque. Pour les pré-inscriptions en juin, uniquement un chèque de caution de 50€.</li>
-  </ul>
+  <p>Une fois toutes les inscriptions complétées, vous devez imprimer les feuilles d'inscription:</p>
+  <p><a class='btn' href="{{ path('SLNRegisterBundle_member_inscriptions', {'user_id': app.user.getId}) }}">Imprimer les feuilles d'inscription</a></p>
 
   {% endif %}
 

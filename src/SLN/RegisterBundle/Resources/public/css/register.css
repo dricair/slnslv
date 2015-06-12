@@ -1,5 +1,7 @@
 div.flash-notice { text-align: center; padding: 10px; background: #DFF2BF; border: 1px solid; color: #4F8A10; margin-bottom: 10px; 
                    box-shadow: 4px 3px 15px rgba(0,0,0,0.9); } 
+div.description  { text-align: left; padding: 10px; background: #DFF2BF; border: 1px solid; color: #4F8A10; margin-bottom: 10px; 
+                   box-shadow: 4px 3px 15px rgba(0,0,0,0.9); } 
 
 h1.register { font-size: 18px; font-weight: bold; margin-top: 10px; }
 form.register { font-size: 14px; }
@@ -47,7 +49,40 @@ table.register tr.even {  }
 #register_choice .bottom td { padding-top: 20px; padding-bottom: 20px; text-align: center; }
 
 #groupe-description { width: 100%; border: 1px black }
-#groupe-description .description { width: 50% }
+#groupe-description .groupe-description { width: 50% }
 #groupe-description .title { font-weight: bold }
 
+#inscriptions { width: 100%; }
+#inscriptions .header table { width: 100%; border: 0px; color: grey; }
+#inscriptions .header td { text-align: center; vertical-align: middle; }
+#inscriptions .header td.col1,
+#inscriptions .header td.col3 { width: 20% }
+#inscriptions .header tr { height: 50px; }
+#inscriptions .header .col1 img { width: 120px; height: auto; }
+#inscriptions .header .col2 img { width: 400px; height: auto; }
+#inscriptions .header .col3 img { width: 140px; height: auto; }
+#inscriptions .header table a { color: grey; text-decoration: underline; }
 
+#inscriptions h2 { color: #1f487c; text-align: center; font-size: 24px; font-weight: bold; text-transform: uppercase; margin-top: 18px; margin-bottom: 12px;  }
+
+#inscriptions .instructions { border: 1px solid black; padding: 2px; margin-top: 20px; margin-bottom: 20px; }
+#inscriptions .instructions h2 { margin-top: 0px; margin-bottom: 0px; }
+#inscriptions .instructions ul { margin-top: 2px; margin-bottom: 2px; }
+#inscriptions .instructions li { margin-left: 20px; line-height: 1.2em; }
+
+#inscriptions .renseignements_licencie table { width: 100%; border: 0px; }
+#inscriptions .renseignements_licencie td { padding: 5px; }
+#inscriptions .renseignements_licencie .label { color: grey; width: 20%; text-align: right; padding-right: 10px; }
+#inscriptions .renseignements_licencie .valeur { font-weight: bold; width: 30%; }
+
+#inscriptions .attestation li { margin-left: 20px; line-height: 1.2em; margin-bottom: 6px;}
+#inscriptions .attestation .important { text-align: center; color: red; font-weight: bold; text-decoration: underline; margin: 20px; }
+#inscriptions .signature table { border-spacing: 20px; border-collapse: separate; width: 100%;}
+#inscriptions .signature td { text-align: right; }
+#inscriptions .signature td.signature { border: 1px dotted lightgrey; color: grey; height: 100px; width: 500px; text-align: left; vertical-align: top; margin: 10px; }
+
+#inscriptions .footer { border: 1px solid grey; padding: 5px; width: 100%; }
+#inscriptions .footer p { color: grey; text-align: center; margin: 1px; margin-top: -5px; }
+#inscriptions .footer table { border: 0px; border-spacing: 5px; border-collapse: separate; width: 100%; }
+#inscriptions .footer td { text-align: center; vertical-align: middle; color: grey; }
+#inscriptions .footer .values td { border: 1px solid grey;  color: grey; height: 30px; }

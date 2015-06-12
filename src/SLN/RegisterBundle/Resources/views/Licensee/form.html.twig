@@ -15,14 +15,14 @@
 
   <fieldset>
     <legend>Groupe de natation</legend>
-    <p>Sélectionnez le groupe de natation si vous le connaissez.</p>
+    <p>Sélectionnez le groupe de natation (pour la saison prochaine) si vous le connaissez.</p>
     <p class="note">Les entraineurs peuvent changer les groupes de natation en fonction du niveau</p>
 
     {{ form_row(form.groupe) }}
 
     <div id='groupe-description' data-function="{{ path('api_get_group', {'id': '__id__'}) }}">
-      <div class='description'></div>
-      <div class='horaires'></div>
+      <div class='groupe-description'></div>
+      <div class='groupe-horaires'></div>
     </div>
   </fieldset>
 

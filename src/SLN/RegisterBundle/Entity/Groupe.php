@@ -88,11 +88,15 @@ class Horaire {
      * @Assert\Choice(callback = "getCategories", message="Merci de sélectionner la catégorie", groups={"Registration", "Profile"})
      */
     protected $categorie;
+
+    const ECOLE=0;
+    const COMPETITION=1;
+    const LOISIR=2;
     
     public static function getCategories() {
-        return array(0 => "Ecole de natation", 
-                     1 => "Sections compétition",
-                     2 => "Ados et loisirs");
+        return array(self::ECOLE => "Ecole de natation", 
+                     self::COMPETITION => "Sections compétition",
+                     self::LOISIR => "Ados et loisirs");
     }
 
     /**

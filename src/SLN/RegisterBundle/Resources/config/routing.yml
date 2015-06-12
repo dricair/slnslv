@@ -51,6 +51,13 @@ SLNRegisterBundle_licensee_delete:
     _method:  GET
     id: \d+
 
+SLNRegisterBundle_member_inscriptions:
+  pattern: /member/inscriptions/{user_id}
+  defaults: { _controller: SLNRegisterBundle:Member:inscriptions }
+  requirements:
+    _method:  GET
+    user_id: \d+
+
 
 #
 # Administrator pages
