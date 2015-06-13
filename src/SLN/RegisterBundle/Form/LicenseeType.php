@@ -19,9 +19,9 @@ class LicenseeType extends AbstractType
                   'choices' => Licensee::getGenders(),))
             ->add('groupe', null, array("group_by" => 'categorieName'))
             ->add('iuf')
-            ->add('officiel')
-            ->add('bureau')
-            ->add('autorisation_photos')
+            ->add('officiel', 'checkbox', array('required'=>false))
+            ->add('bureau', 'checkbox', array('required'=>false))
+            ->add('autorisation_photos', 'checkbox', array('required'=>false))
         ;
     }
 

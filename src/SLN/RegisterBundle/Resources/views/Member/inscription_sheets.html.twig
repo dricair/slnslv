@@ -70,7 +70,7 @@
       <td class='label'>Date de naissance&nbsp;:</td><td class='valeur'>{{ licensee.getNaissance|date("d/m/Y") }}</td> 
     </tr>
     <tr>
-      <td class='label' rowspan='2'>Adresse&nbsp;:</td><td rowspan='2' class='valeur'>{{ user.getAdresse }}</td>
+      <td class='label' rowspan='2'>Adresse&nbsp;:</td><td rowspan='2' class='valeur'>{{ user.getAdresse | nl2br}}</td>
       <td class='label'>Code postal&nbsp;:</td><td class='valeur'>{{ user.getCodePostal }}</td>
     </tr>
     <tr>

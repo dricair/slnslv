@@ -4,6 +4,7 @@
 #wrapper { width: 100%; }
 .main-col { width: 100%; padding: 0px; }
 .no-print { display: none; }
+#footer { display: none; }
 
 #inscriptions { width: 18cm; margin: auto; }
 #inscriptions h2 { font-size: 16px; }
@@ -11,7 +12,7 @@
 #inscriptions .header { height: 2.5cm; }
 
 #inscriptions .renseignements_licencie { height: 6cm; }
-#inscriptions .renseignements_licencie .label { width: 4cm; color: grey; }
+#inscriptions .renseignements_licencie .label { width: 3cm; color: grey; }
 
 #inscriptions .attestation { height: 8cm; }
 
