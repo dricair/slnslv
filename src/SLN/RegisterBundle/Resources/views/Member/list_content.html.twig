@@ -1,0 +1,29 @@
+<table class='register'>
+<tr>
+  <th>Nom</th>
+  <th>Prenom</th>
+  <th>Email</th>
+  <th>Tél. domicile</th>
+  <th>Tél. portable</th>
+  <th>Actions</th>
+</tr>
+
+{% for member in members %}
+<tr class="{{ cycle(['odd', 'even'], loop.index0) }}">
+  <td>{{ member.nom }}</td>
+  <td>{{ member.prenom }}</td>
+  <td><a href='mailto:{{ member.email }}'>{{ member.email }}</a></td>
+  <td>{{ member.telDomicile }}</td>
+  <td>{{ member.telPortable }}</td>
+  <td>
+    <a href="{{ path('SLNRegisterBundle_member_edit', {id: member.getId}) }}" title='Modifier ce membre'>
+      <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}"></a>
+    <a href="{{ path('SLNRegisterBundle_member_delete', {id: member.getId}) }}" title='Supprimer ce membre'
+         onclick="return confirm('Etes-vous sûr de vouloir effacer le membre {{ member.prenom }} {{ member.nom }} ?');">
+      <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif') }}"/>
+    </a>
+  </td>
+</tr>
+{% endfor %}
+</table>
+

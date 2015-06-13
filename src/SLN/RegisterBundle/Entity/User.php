@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 use SLN\RegisterBundle\Entity\Licensee;
 
@@ -63,8 +64,8 @@ class User extends BaseUser
     /**
      * @ORM\Column(type="string", length=10)
      *
-     @Assert\NotBlank(message="Merci d'entrer le code postal.", groups={"Registration", "Profile"})
-     @Assert\Regex("/^\d{5}/")
+     * @Assert\NotBlank(message="Merci d'entrer le code postal.", groups={"Registration", "Profile"})
+     * @Assert\Regex("/^\d{5}/")
      */
     protected $code_postal;
 
@@ -77,15 +78,29 @@ class User extends BaseUser
         
     /**
      * @ORM\Column(type="string", length=20, nullable=True)
-     @Assert\Regex("/^[0-9-.+]+/")
+     * @Assert\Regex("/^[0-9-.+]+/")
      */
     protected $tel_domicile;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=True)
-     @Assert\Regex("/^[0-9-.+]+/")
+     * @Assert\Regex("/^[0-9-.+]+/")
      */
     protected $tel_portable;
+
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context)
+    {
+        // Check that at least one telephone number is given
+        if ($this->tel_domicile == NULL and $this->tel_portable == NULL) {
+            $context->buildViolation('Merci de spécifier au moins un numéro de téléphone, de préférence portable.')
+                ->atPath('tel_portable')
+                ->addViolation();
+        }
+    }
+
 
     /**
      * @ORM\Column(type="datetime")

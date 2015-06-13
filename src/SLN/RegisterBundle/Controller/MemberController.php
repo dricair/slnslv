@@ -3,7 +3,9 @@
 namespace SLN\RegisterBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 use SLN\RegisterBundle\Entity\User;
+use SLN\RegisterBundle\Form\Type\UserType;
 
 use SLN\RegisterBundle\Entity\Repository;
 
@@ -14,9 +16,48 @@ class MemberController extends Controller
      */
     public function listAction()
     {
-        $members = $this->getRepository()->getAll();
+        $members = $this->getUserRepository()->getAll();
 
         return $this->render('SLNRegisterBundle:Member:list.html.twig', array('members' => $members));
+    }
+
+    /**
+     * Form to create a new member or edit an existing one (From admin)
+     */
+    public function editAction($id) {
+        if ($id == 0) {
+          $user = new User();
+        } else {
+          $user = $this->getUserRepository()->find($id);
+
+          if (!$user) {
+              throw $this->createNotFoundException('Ce membre n\'existe pas dans la base de données.');
+          }
+        }
+
+        $request = $this->getRequest();
+        $form    = $this->createForm(new UserType(), $user);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()
+                   ->getEntityManager();
+            $em->persist($user);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add(
+              'notice',
+              sprintf("Le membre '%s %s' a été %s avec succès.", $user->getPrenom(), $user->getNom(), $id = 0 ? "ajouté" : "modifié")
+            );
+
+            return $this->redirect($this->generateUrl('SLNRegisterBundle_member_edit', array('id' => $user->getId())));
+        }
+ 
+        return $this->render('SLNRegisterBundle:Member:edit.html.twig', array(
+            'member' => $user,
+            'form' => $form->createView(),
+            'title' => $id == 0 ? "Ajouter un membre" : "Modifier un membre",
+            'id' => $id));
     }
 
     /*
@@ -88,4 +129,5 @@ class MemberController extends Controller
                    ->getEntityManager();
         return $em->getRepository('SLNRegisterBundle:Licensee');
     }
+
 }

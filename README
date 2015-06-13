@@ -29,3 +29,6 @@ composer update
 
 Liste des fichiers modifiés depuis un tag:
 git diff --name-only <tag>
+
+Mettre à jour la DB:
+mysql -D slnslv -u slnslv -p < backup/stadelau.sql

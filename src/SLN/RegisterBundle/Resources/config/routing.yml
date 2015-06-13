@@ -101,6 +101,28 @@ SLNRegisterBundle_groupe_list:
 #
 # Create and edit members
 # -----------------------
+SLNRegisterBundle_member_create:
+  pattern: /admin/member/create
+  defaults: { _controller: SLNRegisterBundle:Member:edit }
+  requirements:
+    _method:  GET|POST
+
+SLNRegisterBundle_member_edit:
+  pattern: /admin/member/edit/{id}
+  defaults: { _controller: SLNRegisterBundle:Member:edit }
+  requirements:
+    _method:  GET|POST
+    id: \d+
+
+SLNRegisterBundle_member_delete:
+  pattern: /admin/member/delete/{id}
+  defaults: { _controller: SLNRegisterBundle:Member:delete }
+  requirements:
+    _method:  GET
+    id: \d+
+
+
+
 SLNRegisterBundle_member_list:
   pattern: /admin/member/list
   defaults: { _controller: SLNRegisterBundle:Member:list }

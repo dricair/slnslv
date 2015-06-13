@@ -12,7 +12,7 @@
   <p>Vous pouvez les modifier en cliquant sur le bouton <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}" title='Modifier'/>, 
      ou supprimer en cliquant sur le bouton <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif')}}" title='Supprimer'/>.</p>
 
-  {% include 'SLNRegisterBundle:Licensee:show_list.html.twig' with { 'licensees': activeLicensees } %}
+  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': activeLicensees } %}
 
   <p>Une fois toutes les inscriptions complétées, vous devez imprimer les feuilles d'inscription:</p>
   <a class='btn' href="{{ path('SLNRegisterBundle_member_inscriptions', {'user_id': app.user.getId}) }}" target="_blank">

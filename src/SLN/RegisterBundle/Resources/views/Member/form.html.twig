@@ -1,0 +1,26 @@
+<form action="{% if id == 0 %} {{ path('SLNRegisterBundle_member_create') }}
+              {% else %} {{ path('SLNRegisterBundle_member_edit', {'id': id}) }} {% endif %}" method="post" {{ form_enctype(form) }} class="register">
+  {{ form_errors(form) }}
+
+  <fieldset>
+    <legend>Informations de connection</legend>
+    {{ form_row(form.username) }}
+    {{ form_row(form.email) }}
+  </fieldset>
+
+  <fieldset>
+    <legend>Identité</legend>
+    {{ form_row(form.nom) }}
+    {{ form_row(form.prenom) }}
+    {{ form_row(form.adresse) }}
+    {{ form_row(form.code_postal) }}
+    {{ form_row(form.ville) }}
+    {{ form_row(form.tel_domicile) }}
+    {{ form_row(form.tel_portable) }}
+  </fieldset>
+
+  {{ form_rest(form) }}
+  <div>
+    <input type="submit" value="{{ 'Envoyer' }}" />
+  </div>
+</form>

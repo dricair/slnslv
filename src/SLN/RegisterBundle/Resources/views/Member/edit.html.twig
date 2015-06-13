@@ -1,0 +1,13 @@
+{% extends 'SLNRegisterBundle::layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<h1>{{ title }}</h1>
+
+  {% include 'SLNRegisterBundle:Member:form.html.twig' with { 'form': form, 'title': title, 'id': id } %}
+{% endblock %}

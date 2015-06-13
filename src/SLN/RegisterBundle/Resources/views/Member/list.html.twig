@@ -1,6 +1,10 @@
 {% extends 'SLNRegisterBundle::layout.html.twig' %}
 
+{% block title %}Liste des membres{% endblock %}
+
 {% block body %}
-  {% include 'SLNRegisterBundle:Member:show_list.html.twig' with { 'members': members } %}
+<h1>Liste des membres</h1>
+
+  {% include 'SLNRegisterBundle:Member:list_content.html.twig' with { 'members': members } %}
 {% endblock %}
 

@@ -53,8 +53,8 @@ table.register tr.even {  }
 #groupe-description .title { font-weight: bold }
 
 #inscriptions { width: 100%; }
-#inscriptions .header table { width: 100%; border: 0px; color: grey; }
-#inscriptions .header td { text-align: center; vertical-align: middle; }
+#inscriptions .header table { width: 100%; border: 0px; color: lightgrey; }
+#inscriptions .header td { text-align: center; vertical-align: middle; color: grey; }
 #inscriptions .header td.col1,
 #inscriptions .header td.col3 { width: 20% }
 #inscriptions .header tr { height: 50px; }
