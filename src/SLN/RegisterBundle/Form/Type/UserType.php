@@ -15,6 +15,8 @@ class UserType extends AbstractType
         $builder
           ->add('email', 'email', array('label' => 'Adresse email'))
           ->add('username', null, array('label' => 'Nom d\'utilisateur'))
+          ->add('titre', 'choice', array(
+                'choices' => User::getTitres(),))
           ->add('nom')
           ->add('prenom')
           ->add('adresse')

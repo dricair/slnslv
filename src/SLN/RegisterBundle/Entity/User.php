@@ -27,6 +27,19 @@ class User extends BaseUser
     protected $id;
 
     /**
+     * @ORM\Column(type="integer")
+     * TODO Does not work don't know why: Assert\Choice(callback = "getTitres", message="Merci de sélectionner une valeur", groups={"Registration", "Profile"})
+     */
+    protected $titre;
+    
+    const MR = 0;
+    const MME = 1;
+
+    public static function getTitres() {
+        return array(self::MR => "M.", self::MME => "Mme");
+    }
+
+    /**
      * @ORM\Column(type="string", length=100)
      *
      @Assert\NotBlank(message="Merci d'entrer un nom.", groups={"Registration", "Profile"})
