@@ -16,7 +16,8 @@ form.register input[type="password"] { display: inline-block; width: 300px; line
 form.register input[type="time"] { width: 100px; }
 form.register textarea { display: inline-block; width: 300px; height: 150px; line-height: 16px; }
 form.register input[type="submit"] { margin-left: 220px; width: 312px; line-height: 20px; min-height: 20px; }
-form.register ul li { color: #ff0000; margin-bottom: 5px; }
+form.register p.form_error { text-align: left; padding: 10px; padding-left: 210px; background: #ffdcdc; border: 1px solid #ff0000; color: #ff0000; 
+                             margin-bottom: 10px; box-shadow: 4px 3px 15px rgba(0,0,0,0.9); }
 form.register fieldset { width: 95%; border: 1px solid white; padding: 10px; background-color: #a8caff; margin-bottom: 20px; }
 form.register legend { border: 1px solid white; padding: 10px; background-color: #a8caff; font-weight: bold; color: white; }
 form.register .help { margin-top: 20px; margin-bottom: 2px; margin-left: 20px; }

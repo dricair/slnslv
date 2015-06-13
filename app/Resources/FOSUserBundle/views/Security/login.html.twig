@@ -3,10 +3,6 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block fos_user_content %}
-{% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-{% endif %}
-
 <h1 class='register'>Se connecter à un compte utilisateur</h1>
 
 <p>Ce formulaire permet d'accéder aux pages d'inscription.</p>
@@ -16,6 +12,10 @@
 
   <fieldset>
     <legend>Informations de connection</legend>
+
+{% if error %}
+    <p class='form_error'>{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+{% endif %}
 
     <div>
       <label for="username">{{ 'security.login.username'|trans }}</label>
