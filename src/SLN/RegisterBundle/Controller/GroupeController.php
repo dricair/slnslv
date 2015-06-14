@@ -37,6 +37,11 @@ class GroupeController extends Controller {
             $em->persist($groupe);
             $em->flush();
 
+            $this->get('session')->getFlashBag()->add(
+              'notice',
+              sprintf("Le groupe '%s' a été %s avec succès.", $groupe->getNom(), $id = 0 ? "ajouté" : "modifié")
+            );
+
             return $this->redirect($this->generateUrl('SLNRegisterBundle_groupe_show', array(
                 'id' => $groupe->getId()
             )));
