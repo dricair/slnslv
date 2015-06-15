@@ -31,4 +31,4 @@ Liste des fichiers modifiés depuis un tag:
 git diff --name-only <tag>
 
 Mettre à jour la DB:
-mysql -D slnslv -u slnslv -p < backup/stadelau.sql
+mysql -D slnslv -u slnslv -p < cat backup/drop_tables.sql backup/stadelau.sql

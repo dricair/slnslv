@@ -121,25 +121,44 @@ SLNRegisterBundle_member_delete:
     _method:  GET
     id: \d+
 
-
-
 SLNRegisterBundle_member_list:
   pattern: /admin/member/list
   defaults: { _controller: SLNRegisterBundle:Member:list }
   requirements:
     _method:  GET
 
-SLNRegisterBundle_member_role:
-  pattern: /admin/member/role
-  defaults: { _controller: SLNRegisterBundle:Member:list }
+
+#
+# Create and edit licensees
+# -------------------------
+SLNRegisterBundle_admin_licensee_create:
+  pattern: /admin/licensee/create/{user_id}
+  defaults: { _controller: SLNRegisterBundle:Licensee:edit, id:0, admin: true }
+  requirements:
+    _method:  GET|POST
+    user_id: \d+
+
+SLNRegisterBundle_admin_licensee_edit:
+  pattern: /admin/licensee/edit/{user_id}/{id}
+  defaults: { _controller: SLNRegisterBundle:Licensee:edit, admin: true }
+  requirements:
+    _method:  GET|POST
+    id: \d+
+    user_id: \d+
+
+SLNRegisterBundle_admin_licensee_delete:
+  pattern: /admin/licensee/delete/{id}
+  defaults: { _controller: SLNRegisterBundle:Licensee:delete, admin: true }
+  requirements:
+    _method:  GET
+    id: \d+
+
+SLNRegisterBundle_admin_licensee_list:
+  pattern: /admin/licensee/list
+  defaults: { _controller: SLNRegisterBundle:Licensee:list, admin: true }
   requirements:
     _method:  GET
 
-SLNRegisterBundle_member_show:
-  pattern: /admin/member/show
-  defaults: { _controller: SLNRegisterBundle:Member:list }
-  requirements:
-    _method:  GET
 
 
 
