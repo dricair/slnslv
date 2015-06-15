@@ -1,0 +1,10 @@
+{% extends 'SLNRegisterBundle::layout.html.twig' %}
+
+{% block title %}Liste des licenciés{% endblock %}
+
+{% block body %}
+<h1>Liste des licenciés</h1>
+
+  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': licensees } %}
+{% endblock %}
+

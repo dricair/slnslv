@@ -20,6 +20,11 @@
     {{ form_row(form.tel_portable) }}
   </fieldset>
 
+  <fieldset>
+    <legend>Droits spéciaux</legend>
+    {{ form_row(form.roles) }}
+  </fieldset>
+
   {{ form_rest(form) }}
   <div>
     <input type="submit" value="{{ 'Envoyer' }}" />
