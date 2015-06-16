@@ -4,6 +4,7 @@ namespace SLN\RegisterBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
 
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Form\LicenseeType;
@@ -134,6 +135,23 @@ class LicenseeController extends Controller
 
         return $user;
     }
+
+
+    /**
+     * Create a PDF and return it
+     *
+     * @return Response
+     */
+    public function pdftestAction() {
+        $pdf = $this->container->get("white_october.tcpdf")->create();
+
+        $pdf->AddPage();
+        $response = new Response($pdf->Output('test.pdf', 'I'));
+        $response->headers->set('Content-Type', 'application/pdf');
+
+        return $response;
+    }
+
 
     /**
      * Get repository for the licensees

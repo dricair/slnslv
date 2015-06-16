@@ -159,6 +159,13 @@ SLNRegisterBundle_admin_licensee_list:
   requirements:
     _method:  GET
 
+SLNRegisterBundle_admin_pdf_test:
+  pattern: /admin/licensee/pdf_test
+  defaults: { _controller: SLNRegisterBundle:Licensee:pdftest }
+  requirements:
+    _method:  GET
+
+
 
 
 

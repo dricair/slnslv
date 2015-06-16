@@ -24,7 +24,8 @@
         "friendsofsymfony/user-bundle": "~2.0@dev",
         "friendsofsymfony/rest-bundle": "~1.6",
         "jms/serializer-bundle": "0.13.*",
-        "coresphere/console-bundle": "dev-master"
+        "coresphere/console-bundle": "dev-master",
+        "whiteoctober/tcpdf-bundle": "~1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
