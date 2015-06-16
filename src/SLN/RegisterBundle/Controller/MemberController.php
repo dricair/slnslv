@@ -75,16 +75,6 @@ class MemberController extends Controller
           'year' => $year));
     }
 
-    /*
-     * Permits changing the roles for the users
-     */
-    public function roleAction()
-    {
-        $members = $this->getRepository()->getAll();
-
-        return $this->render('SLNRegisterBundle:Member:list_role.html.twig', array('members' => $members));
-    }
-
 
     /**
      * Get user from ID. If user is not current ID or a user with staff role, 

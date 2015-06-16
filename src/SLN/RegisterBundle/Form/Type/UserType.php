@@ -23,7 +23,11 @@ class UserType extends AbstractType
           ->add('code_postal')
           ->add('ville')
           ->add('tel_domicile')
-          ->add('tel_portable');
+          ->add('tel_portable')
+          ->add('roles', 'choice', array('label' => 'Droits d\'administration',
+                                         'choices' => array('ROLE_ADMIN' => 'Administrateur'),
+                                         'multiple' => true,
+                                         'expanded' => true));
     }
 
     public function getName()

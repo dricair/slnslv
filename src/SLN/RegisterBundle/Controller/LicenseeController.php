@@ -20,7 +20,7 @@ class LicenseeController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $licensee = $em->getRepository('SLNRegisterBundle:Licensee')->find($id);
+        $licensee = $this->getLicenseeRepository()->find($id);
 
         if (!$licensee) {
             throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
@@ -34,14 +34,14 @@ class LicenseeController extends Controller
     /**
      * Form to create a new licensee or edit an existing one
      */
-    public function editAction($id, $user_id=0, $inside_page=FALSE) {
+    public function editAction($id, $user_id=0, $inside_page=FALSE, $admin=FALSE) {
         if ($id == 0) {
-            $user = $this->getUserFromID($user_id);
-            $licensee = new Licensee();
-            $licensee->setUser($user);
+          $user = $this->getUserFromID($user_id);
+          $licensee = new Licensee();
+          $licensee->setUser($user);
         } else {
           $em = $this->getDoctrine()->getEntityManager();
-          $licensee = $em->getRepository('SLNRegisterBundle:Licensee')->find($id);
+          $licensee = $this->getLicenseeRepository()->find($id);
           $user = $this->getUserFromID($licensee->getUser()->getId());
 
           if (!$licensee) {
@@ -54,8 +54,7 @@ class LicenseeController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()
-                   ->getEntityManager();
+            $em = $this->getDoctrine()->getEntityManager();
             $em->persist($licensee);
             $em->flush();
 
@@ -64,9 +63,13 @@ class LicenseeController extends Controller
               sprintf("Le licencié '%s %s' a été %s avec succès.", $licensee->getPrenom(), $licensee->getNom(), $id = 0 ? "ajouté" : "modifié")
             );
 
-            return $this->redirect($this->generateUrl('SLNRegisterBundle_homepage', array(
-               '#licensee-' . $licensee->getId()
-            )));
+            if ($admin) {
+              return $this->redirect($this->generateUrl('SLNRegisterBundle_admin_licensee_edit', array(
+                                     'id' => $licensee->getId(), $user_id => $licensee->getUser()->getId())
+                                    ));
+            } else {
+              return $this->redirect($this->generateUrl('SLNRegisterBundle_homepage', array()));
+            }
         }
  
         return $this->render($inside_page ? 'SLNRegisterBundle:Licensee:form.html.twig' :
@@ -82,9 +85,8 @@ class LicenseeController extends Controller
     /**
       * Delete a licensee from a user
       */
-    public function deleteAction($id) {
-        $em = $this->getDoctrine()->getEntityManager();
-        $licensee = $em->getRepository('SLNRegisterBundle:Licensee')->find($id);
+    public function deleteAction($id, $admin=FALSE) {
+        $licensee = $this->getLicenseeRepository()->find($id);
         $user = $this->getUserFromID($licensee->getUser()->getId());
 
         if (!$licensee) {
@@ -92,11 +94,22 @@ class LicenseeController extends Controller
         }
 
         $user->removeLicensee($licensee);
+
+        $em = $this->getDoctrine()->getEntityManager();
         $em->remove($licensee);
         $em->persist($user);
         $em->flush();
 
         return $this->redirect($this->generateUrl('SLNRegisterBundle_homepage'));
+    }
+
+    /** 
+     * List licensee with optional filters and sorting
+     */
+    public function listAction($admin=FALSE) {
+        $licensees = $this->getLicenseeRepository()->getAllByGroups();
+
+        return $this->render('SLNRegisterBundle:Licensee:list.html.twig', array('licensees' => $licensees));
     }
 
 
@@ -115,11 +128,21 @@ class LicenseeController extends Controller
 
         $currentUser = $this->getUser();
 
-        if ($user->getId() != $currentUser->getId()) {
-            // TODO: check that user is current user or a staff user.
+        if ($user->getId() != $currentUser->getId() and !$currentUser->hasRole('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 
         return $user;
+    }
+
+    /**
+     * Get repository for the licensees
+     *
+     * @return Repository
+     */
+    protected function getLicenseeRepository() {
+        $em = $this->getDoctrine()
+                   ->getEntityManager();
+        return $em->getRepository('SLNRegisterBundle:Licensee');
     }
 }
