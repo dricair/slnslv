@@ -3,6 +3,7 @@
 namespace SLN\RegisterBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 use SLN\RegisterBundle\Entity\User;
 use SLN\RegisterBundle\Form\Type\UserType;
@@ -67,12 +68,19 @@ class MemberController extends Controller
         $user = $this->getUserFromID($user_id);
         $licensees = $this->getLicenseeRepository()->getLicenseesForUser($user_id);
 
-        $year = date('Y');
-        $month = date('n');
-        if ($month < 5) $year = $year - 1;
+        $pdf = $this->container->get("white_october.tcpdf")->create();
+        $assets = $this->container->get('templating.helper.assets');
 
-        return $this->render('SLNRegisterBundle:Member:inscription_sheets.html.twig', array('user' => $user, 'licensees' => $licensees,
-          'year' => $year));
+        $title = "Feuilles d'inscriptions - {$user->getPrenom()} {$user->getNom()}";
+        $first = True;
+        foreach ($licensees as $licensee) {
+            $licensee->inscriptionSheet($pdf, $assets, $title=$first ? $title : "");
+        }
+
+        $response = new Response($pdf->Output('inscriptions.pdf', 'I'));
+        $response->headers->set('Content-Type', 'application/pdf');
+
+        return $response;
     }
 
 
@@ -90,7 +98,6 @@ class MemberController extends Controller
         $currentUser = $this->getUser();
 
         if ($user->getId() != $currentUser->getId()) {
-            // TODO: check that user is current user or a staff user.
             throw new AccessDeniedException();
         }
 

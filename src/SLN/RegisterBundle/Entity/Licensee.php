@@ -4,6 +4,8 @@ namespace SLN\RegisterBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use SLN\RegisterBundle\Entity\Groupe;
+
 /**
  * @ORM\Entity(repositoryClass="SLN\RegisterBundle\Entity\Repository\LicenseeRepository")
  * @ORM\Table(name="licensee")
@@ -144,6 +146,167 @@ use Symfony\Component\Validator\Constraints as Assert;
     public function isMineur() {
       $now = new \DateTime();
       return $this->naissance->diff($now)->y < 18;
+    }
+
+
+    /**
+     * Write inscription sheet to a PDF
+     *
+     * @param TCPDF $pdf: PDF to edit.
+     * @param Asset $assets
+     * @param string $title: Title if the PDF needs to be started
+     * @return TCPDF
+     *
+     */
+    public function inscriptionSheet($pdf, $assets, $title='') {
+        if ($title != "") {
+          $pdf->SetAuthor("Stade Laurentin Natation <slnslv@free.fr>");
+          $pdf->SetTitle($title);
+
+          $pdf->setPrintHeader(false);
+          $pdf->setPrintFooter(false);
+          $pdf->SetFont('dejavusans', '', 10);
+          $pdf->SetMargins(10, 10, 10, 10);
+          $pdf->SetAutoPageBreak(FALSE, PDF_MARGIN_BOTTOM);
+        }
+
+        $year = date('Y');
+        $month = date('n');
+        if ($month < 5) $year = $year - 1;
+
+        $groupeValues = array(Groupe::ECOLE       => array('title'      => 'Dossier d\'inscription Ecole',
+                                                           'certificat' => '1 certificat médical d\'aptitude à la pratique de la natation'),
+                              Groupe::COMPETITION => array('title'      => 'Dossier d\'inscription Competition',
+                                                           'certificat' => '1 certificat médical d’absence de contre-indication à la 
+                                                                            <span style="text-decoration: underline;font-weight: bold;">pratique sportive de la natation en 
+                                                                            compétition</span> (Article L3622-2 du code de la santé publique)'),
+                              Groupe::LOISIR      => array('title'      => "Dossier d'inscription Loisirs",
+                                                           'certificat' => Null)
+                             );
+        $values = $groupeValues[$this->groupe->getCategorie()];
+        $femme = $this->sexe == $this::FEMME;
+
+        $pdf->AddPage();
+        $pdf->Image($assets->getUrl('bundles/slnregister/images/logo_club_t.png'), 10, 0, 30);
+        $pdf->Image($assets->getUrl('bundles/slnregister/images/titre_club_t.png'), 60, 5, 90);
+        if ($this->groupe->getCategorie() == Groupe::COMPETITION)
+          $pdf->Image($assets->getUrl('bundles/slnregister/images/logo_ffn.png'), 160, 5, 40);
+        else if ($this->groupe->getCategorie() == Groupe::ECOLE)
+          $pdf->Image($assets->getUrl('bundles/slnregister/images/ecole_natation.gif'), 160, 5, 40);
+          
+        $html = sprintf('
+<p style="color:#cccccc;margin:2">Affilié à la F.F.N et agréé E.N.F<br/>
+Site: http://stadelaurentinnatatin.fr</p>');
+        $pdf->WriteHTMLCell(/*w*/0, /*h*/0, /*x*/10, /*y*/20, $html, /*border*/0, /*ln*/1, /*fill*/0, /*reseth*/true, /*align*/'C', /*autopadding*/false);
+
+        $html = sprintf('
+<div style="text-align:center; color:#1f487c; font-weight: bold; font-size: 14; ">%s - SAISON %d-%d</div>
+<ul>
+  <li>1 photo d\'identité</li>', strtoupper($values['title']), $year, $year+1);
+
+        if ($values['certificat']) {
+            $html .= "
+  <li>{$values['certificat']}</li>";
+        }
+
+        $html .= "
+  <li>La présente fiche de renseignements signée</li>
+  <li>La feuille de licence de la Fédération Française de Natation remplie et signée</li>
+  <li>Le règlement de la cotisation</li>
+</ul>";
+        $pdf->WriteHTMLCell(/*w*/0, /*h*/0, /*x*/10, /*y*/35, $html, /*border*/1, /*ln*/1, /*fill*/0, /*reseth*/true, /*align*/'C', /*autopadding*/false);
+
+        $html = sprintf('
+<div style="text-align:center; color:#1f487c; font-weight: bold; font-size: 14; ">RENSEIGNEMENTS LICENCIE%s</div>
+<table border="0" cellspacing="2mm">
+<tr>
+  <td align="right" width="30mm" color="#cccccc">Nom %s&nbsp;:</td><td align="left" width="60mm" style="font-weight: bold;">%s</td>
+  <td align="right" width="30mm" color="#cccccc">Prénom&nbsp;:</td><td align="left" width="60mm" style="font-weight: bold;">%s</td>
+</tr>
+<tr>
+  <td align="right" color="#cccccc">%s</td><td align="left">%s</td>
+  <td align="right" color="#cccccc">Date de naissance&nbsp;:</td><td align="left">%s</td>
+</tr>
+<tr>
+  <td rowspan="2" align="right" color="#cccccc">Adresse&nbsp;:</td><td rowspan="2" align="left">%s</td>
+  <td align="right" color="#cccccc">Code postal&nbsp;:</td><td align="left">%s</td>
+</tr>
+<tr>
+  <td align="right" color="#cccccc">Ville&nbsp;:</td><td align="left">%s</td>
+</tr>
+<tr>
+  <td align="right" color="#cccccc">Téléphone&nbsp;:</td><td align="left">%s</td>
+  <td align="right" color="#cccccc">Portable&nbsp;:</td><td align="left">%s</td>
+</tr>
+<tr>
+  <td align="right" color="#cccccc">Email&nbsp;:</td><td align="left">%s</td>
+  <td align="right" color="#cccccc">IUF&nbsp;:</td><td align="left">%s</td>
+</tr>
+</table>
+        ', $femme ? "E" : "", $femme ? "de la nageuse" : "du nageur", $this->nom, $this->prenom,
+        $this->isMineur() ? "Responsable légal&nbsp;:" : "&nbsp;", $this->isMineur() ? "{$this->user->getPrenom()} {$this->user->getNom()}" : "&nbsp;",
+        $this->naissance->format("d/m/Y"), nl2br($this->user->getAdresse()), $this->user->getCodePostal(), $this->user->getVille(),
+        $this->user->getTelDomicile(), $this->user->getTelPortable(), $this->user->getEmail(), $this->iuf);
+        $pdf->WriteHTMLCell(/*w*/0, /*h*/0, /*x*/10, /*y*/80, $html, /*border*/0, /*ln*/1, /*fill*/0, /*reseth*/true, /*align*/'C', /*autopadding*/false);
+
+        $html = sprintf('
+<div style="text-align:center; color:#1f487c; font-weight: bold; font-size: 14; ">ATTESTATION %s</div>
+<ul>', $this->isMineur() ? "DES PARENTS POUR UN MINEUR" : "");
+
+        $html .= sprintf('
+  <li>Je soussigné(e), %s %s %s, déclare %s au Stade Laurentin Natation,</li>',
+                     $this->user->getTitreName(), $this->user->getPrenom(), $this->user->getNom(),
+                     $this->isMineur() ? sprintf("avoir inscrit %s %s %s", $femme ? "ma fille" : "mon fils", $this->prenom, $this->nom) : 
+                                         sprintf("m'être inscrit%s", $femme ? "e" : ""));
+
+        $html .= sprintf('
+  <li>J\'atteste %sêtre à jour dans le paiement de la cotisation,</li>', $values['certificat'] ? "avoir fourni le certificat médical obligatoire et " : "");
+
+        if ($this->isMineur()) {
+            $html .= sprintf('
+  <li><span %s>J\'accepte que les résultats sportifs, le nom  ainsi que la photo (podium, photo de groupe...) de mon enfant puissent apparaître 
+        sur le site internet  du club ou de documents destinés à la recherche de sponsors pour le club,</span></li>
+  <li>Je m\'engage à déposer mon enfant à la piscine pour qu\'il soit à l\'heure à son entraînement, et le récupérer à la fin du cours, 
+          le club n’étant pas responsable,</li>', 
+                     $this->autorisation_photos ? "" : 'style="text-decoration: line-through;"');
+        }
+
+        $html .= '
+  <li>Au début et à la fin des cours, l’installation et la désinstallation des lignes sont à la charge des adhérents. Merci de votre compréhension.</li>
+</ul>
+
+<div style="text-align:center; color: #ce0000; text-decoration: underline; font-weight: bold">J\'ai bien pris note qu\'aucun remboursement ne sera effectué en 
+   cours de saison
+</div>';
+        $pdf->WriteHTMLCell(/*w*/0, /*h*/0, /*x*/10, /*y*/140, $html, /*border*/0, /*ln*/1, /*fill*/0, /*reseth*/true, /*align*/'C', /*autopadding*/false);
+        
+        $now = new \DateTime();
+        $html = sprintf('<p>A %s, le %s</p>', $this->user->getVille(), $now->format("d/m/Y"));
+        $pdf->WriteHTMLCell(/*w*/80, /*h*/0, /*x*/10, /*y*/235, $html, /*border*/0, /*ln*/1, /*fill*/0, /*reseth*/true, /*align*/'C', /*autopadding*/false);
+
+        $html = sprintf('<div >Signature %s&nbsp;</div>', $this->isMineur() ? "du responsable légal" : "");
+        $pdf->WriteHTMLCell(/*w*/0, /*h*/20, /*x*/100, /*y*/235, $html, /*border*/array('LTRB' => array('width' => 0.2, 'color' => array(0xcc, 0xcc, 0xcc))), 
+          /*ln*/1, /*fill*/0, /*reseth*/true, /*align*/'L', /*autopadding*/false);
+
+        $html = sprintf('
+<div style="color:#cccccc;">Cadre réservé</div>
+<table border="0" cellspacing="3mm" color="#cccccc">
+<tr>
+  <td>Certificat</td> <td>Licence</td ><td>Photo</td> <td>Groupe</td> <td>Chèque</td> <td>Espèces</td>
+</tr>
+<tr>
+  <td style="border: 1px solid #cccccc;">&nbsp;</td> <td style="border: 1px solid #cccccc;">&nbsp;</td> 
+  <td style="border: 1px solid #cccccc;">&nbsp;</td> <td style="border: 1px solid #cccccc;">%s</td> 
+  <td style="border: 1px solid #cccccc;">&nbsp;</td> <td style="border: 1px solid #cccccc;">&nbsp;</td>
+</tr>
+</table>
+', $this->groupe->getNom());
+        $pdf->WriteHTMLCell(/*w*/0, /*h*/0, /*x*/10, /*y*/265, $html, /*border*/array('LTRB' => array('width' => 0.2, 'color' => array(0xcc, 0xcc, 0xcc))), 
+          /*ln*/1, /*fill*/0, /*reseth*/true, /*align*/'C', /*autopadding*/false);
+        
+        $pdf->EndPage();
+        
+        return $pdf;
     }
 
     public function __construct()

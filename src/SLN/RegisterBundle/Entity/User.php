@@ -114,7 +114,6 @@ class User extends BaseUser
         }
     }
 
-
     /**
      * @ORM\Column(type="datetime")
      */
@@ -342,6 +341,17 @@ class User extends BaseUser
     {
         return $this->titre;
     }
+
+    /**
+     * Get titre as a string
+     *
+     * @return string
+     */
+    public function getTitreName() {
+        $values = $this::getTitres();
+        return $values[$this->titre];
+    }
+
 
     /**
      * Set created

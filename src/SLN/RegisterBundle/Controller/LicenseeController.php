@@ -90,7 +90,7 @@ class LicenseeController extends Controller
         $licensee = $this->getLicenseeRepository()->find($id);
         $user = $this->getUserFromID($licensee->getUser()->getId());
 
-        if (!$licensee) {
+        if (!$licensee instanceof Licensee) {
             throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
         }
 
@@ -140,12 +140,22 @@ class LicenseeController extends Controller
     /**
      * Create a PDF and return it
      *
+     * @param int $id: ID of the licensee
      * @return Response
      */
-    public function pdftestAction() {
+    public function pdftestAction($id) {
         $pdf = $this->container->get("white_october.tcpdf")->create();
+        $assets = $this->container->get('templating.helper.assets');
 
-        $pdf->AddPage();
+        $licensee = $this->getLicenseeRepository()->find($id);
+        $user = $this->getUserFromID($licensee->getUser()->getId());
+
+        if (!$licensee instanceof Licensee) {
+            throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
+        }
+
+        $pdf = $licensee->inscriptionSheet($pdf, $assets, "Fiches d'inscription - {$licensee->getPrenom()} {$licensee->getNom()}");
+
         $response = new Response($pdf->Output('test.pdf', 'I'));
         $response->headers->set('Content-Type', 'application/pdf');
 
