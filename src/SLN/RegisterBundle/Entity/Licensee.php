@@ -166,7 +166,7 @@ use SLN\RegisterBundle\Entity\Groupe;
      *
      */
     public function inscriptionSheet($pdf, $assets, $title='') {
-        assert($this->groupe != Null, "Group cannot be Null in inscriptionSheet");
+        assert($this->groupe != Null);
 
         if ($title != "") {
           $pdf->SetAuthor("Stade Laurentin Natation <slnslv@free.fr>");
