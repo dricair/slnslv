@@ -141,11 +141,18 @@ use SLN\RegisterBundle\Entity\Groupe;
     protected $groupe;
 
     /*
+     * Return Age in years
+     */
+    public function getAge() {
+      $now = new \DateTime();
+      return $this->naissance->diff($now)->y;
+    }
+
+    /*
      * Return true if licensee if less than 18
      */
     public function isMineur() {
-      $now = new \DateTime();
-      return $this->naissance->diff($now)->y < 18;
+        return $this->getAge() < 18;
     }
 
 
@@ -159,6 +166,8 @@ use SLN\RegisterBundle\Entity\Groupe;
      *
      */
     public function inscriptionSheet($pdf, $assets, $title='') {
+        assert($this->groupe != Null, "Group cannot be Null in inscriptionSheet");
+
         if ($title != "") {
           $pdf->SetAuthor("Stade Laurentin Natation <slnslv@free.fr>");
           $pdf->SetTitle($title);

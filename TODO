@@ -1,8 +1,14 @@
+Bugs:
+- Mails qui ne fonctionnent pas
+- Feuilles d'inscription quand pas de groupe sélectionné
+- Licensee admin -> mauvais retour
+
 Inscriptions:
-- Générer les fiches à imprimer
 - Montrer ce qui manque
 - Ajouter les tarifs et agenda
 - Ajouter des photos
+- Remplir la feuille de licence
+- Envoyer un mail en cas de changement de groupe
 
 Profil:
 - Changer adresse et mot de passe

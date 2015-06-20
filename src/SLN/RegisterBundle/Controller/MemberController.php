@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 use SLN\RegisterBundle\Entity\User;
+use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Form\Type\UserType;
 
 use SLN\RegisterBundle\Entity\Repository;
@@ -74,7 +75,12 @@ class MemberController extends Controller
         $title = "Feuilles d'inscriptions - {$user->getPrenom()} {$user->getNom()}";
         $first = True;
         foreach ($licensees as $licensee) {
-            $licensee->inscriptionSheet($pdf, $assets, $title=$first ? $title : "");
+            // For your people and no groupe selected, attach a default group (Not saved)
+            if ($licensee->getGroupe() == Null and $licensee->getAge() < 12)
+                $licensee->setGroupe(new Groupe());
+
+            if ($licensee->getGroupe() != Null)
+                $licensee->inscriptionSheet($pdf, $assets, $title=$first ? $title : "");
         }
 
         $response = new Response($pdf->Output('inscriptions.pdf', 'I'));
@@ -97,9 +103,10 @@ class MemberController extends Controller
 
         $currentUser = $this->getUser();
 
-        if ($user->getId() != $currentUser->getId()) {
-            throw new AccessDeniedException();
-        }
+        // Only permit access from this user, or a user which is Admin
+        //if ($user->getId() != $currentUser->getId() && !$currentUser->hasRole('ROLE_ADMIN')) {
+        //    throw new AccessDeniedException();
+        //}
 
         return $user;
     }

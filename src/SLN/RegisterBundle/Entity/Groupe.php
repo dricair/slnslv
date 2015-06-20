@@ -132,6 +132,10 @@ class Horaire {
 
         $this->licensees = new ArrayCollection();
         $this->horaires = Array((array)new Horaire(), (array)new Horaire());
+
+        // Default groupe used in Licensee
+        $this->nom = "<Inconnu>";
+        $this->categorie = $this::ECOLE;
     }
 
     /**

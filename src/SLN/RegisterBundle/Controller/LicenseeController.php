@@ -129,37 +129,12 @@ class LicenseeController extends Controller
 
         $currentUser = $this->getUser();
 
+        // Only permit access from this user, or a user which is Admin
         if ($user->getId() != $currentUser->getId() and !$currentUser->hasRole('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 
         return $user;
-    }
-
-
-    /**
-     * Create a PDF and return it
-     *
-     * @param int $id: ID of the licensee
-     * @return Response
-     */
-    public function pdftestAction($id) {
-        $pdf = $this->container->get("white_october.tcpdf")->create();
-        $assets = $this->container->get('templating.helper.assets');
-
-        $licensee = $this->getLicenseeRepository()->find($id);
-        $user = $this->getUserFromID($licensee->getUser()->getId());
-
-        if (!$licensee instanceof Licensee) {
-            throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
-        }
-
-        $pdf = $licensee->inscriptionSheet($pdf, $assets, "Fiches d'inscription - {$licensee->getPrenom()} {$licensee->getNom()}");
-
-        $response = new Response($pdf->Output('test.pdf', 'I'));
-        $response->headers->set('Content-Type', 'application/pdf');
-
-        return $response;
     }
 
 
