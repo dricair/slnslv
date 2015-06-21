@@ -159,5 +159,15 @@ SLNRegisterBundle_admin_licensee_list:
   requirements:
     _method:  GET
 
+#
+# Others
+# ------
+SLNRegisterBundle_admin_misc_test:
+  pattern: /admin/test/{id}
+  defaults: { _controller: SLNRegisterBundle:Misc:test }
+  requirements:
+    _method:  GET
+    id: \d+
+
 
 
