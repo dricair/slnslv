@@ -17,10 +17,18 @@
 
 {% if error %}
     <p class='form_error'>{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+
+    <div class='description'>
+      <p>Aide pour les erreurs:</p>
+      <ul>
+        <li>Avez vous <span class='important'>créé un compte</span> ? Si non, <a href="{{ path('fos_user_registration_register') }}">cliquez ici</a>.</li>
+        <li>Si vous ne vous souvenez plus de votre mot de passe, vous pouvez le réactiver: <a href="{{ path('fos_user_resetting_request') }}">cliquez ici</a>.</li>
+      </ul>
+    </div>
 {% endif %}
 
     <div>
-      <label for="username">{{ 'security.login.username'|trans }}</label>
+      <label for="username">Nom d'utilisateur ou email</label>
       <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" />
     </div>
 

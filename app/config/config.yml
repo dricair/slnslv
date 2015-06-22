@@ -90,7 +90,7 @@ fos_user:
             from_email:
                 address:    "slnslv@free.fr"
                 sender_name: "admin"
-            enabled: false
+            enabled: true
 
 
 
