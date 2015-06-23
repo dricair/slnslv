@@ -44,7 +44,24 @@ class LicenseeRepository extends EntityRepository {
                    ->select('l')
                    ->join('l.groupe', 'g')
                    ->where('g IS NOT NULL')
-                   ->orderBy('g.id', 'ASC');
+                   ->addOrderBy('g.id',  'ASC')
+                   ->addOrderBy('l.nom',  'ASC')
+                   ->addOrderBy('l.prenom', 'ASC');
+
+        return $qb->getQuery()
+                  ->getResult();
+    }
+
+    /**
+     * Get all licensees that have no group selected
+     */
+    public function getAllNoGroups() {
+        $qb = $this->createQueryBuilder('l')
+                   ->select('l')
+                   ->join('l.groupe', 'g')
+                   ->where('g IS NULL')
+                   ->addOrderBy('l.nom',  'ASC')
+                   ->addOrderBy('l.prenom', 'ASC');
 
         return $qb->getQuery()
                   ->getResult();

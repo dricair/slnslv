@@ -5,6 +5,19 @@
 {% block body %}
 <h1>Liste des licenciés</h1>
 
-  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': licensees } %}
+{% if no_group|length > 0 %}
+<h2>Pas de groupe sélectionné</h2>
+
+  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': no_group, 'admin': admin } %}
+
+{% endif %}
+
+{% for nom,groupe in groupes %}
+<h2>{{ nom }}</h2>
+
+<p>{{ groupe['num'] }} licencié(e)s</p>
+
+  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': groupe['licensees'], 'admin': admin } %}
+{% endfor %}
 {% endblock %}
 

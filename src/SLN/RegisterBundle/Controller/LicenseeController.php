@@ -66,7 +66,8 @@ class LicenseeController extends Controller
 
             if ($admin) {
               return $this->redirect($this->generateUrl('SLNRegisterBundle_admin_licensee_edit', array(
-                                     'id' => $licensee->getId(), $user_id => $licensee->getUser()->getId())
+                                     'id' => $licensee->getId(), $user_id => $licensee->getUser()->getId(),
+                                     'admin' => $admin)
                                     ));
             } else {
               return $this->redirect($this->generateUrl('SLNRegisterBundle_homepage', array()));
@@ -79,7 +80,8 @@ class LicenseeController extends Controller
             'form' => $form->createView(),
             'title' => $id == 0 ? "Ajouter un licencié" : "Modifier un licencié",
             'id' => $id,
-            'user_id' => $user_id));
+            'user_id' => $user_id,
+            'admin' => $admin));
     }
 
 
@@ -108,9 +110,33 @@ class LicenseeController extends Controller
      * List licensee with optional filters and sorting
      */
     public function listAction($admin=FALSE) {
+        $groupes = array();
+        $total = 0;
+
+        $no_group = $this->getLicenseeRepository()->getAllNoGroups();
+        $total += count($no_group);
+
         $licensees = $this->getLicenseeRepository()->getAllByGroups();
 
-        return $this->render('SLNRegisterBundle:Licensee:list.html.twig', array('licensees' => $licensees));
+        foreach($licensees as $licensee) {
+            if ($licensee->getGroupe() == Null)
+                $groupe = "Pas de groupe";
+            else
+                $groupe = $licensee->getGroupe()->getNom();
+
+            if (!array_key_exists($groupe, $groupes)) {
+                $groupes[$groupe] = array("num" => 0, "licensees" => array());
+            }
+
+            $groupes[$groupe]["num"] += 1;
+            $groupes[$groupe]["licensees"][] = $licensee;
+            $total += 1;
+        }
+
+        return $this->render('SLNRegisterBundle:Licensee:list.html.twig', array('no_group' => $no_group,
+                                                                                'groupes' => $groupes, 
+                                                                                'total' => $total, 
+                                                                                'admin' => $admin));
     }
 
 

@@ -139,18 +139,10 @@ SLNRegisterBundle_admin_licensee_create:
     user_id: \d+
 
 SLNRegisterBundle_admin_licensee_edit:
-  pattern: /admin/licensee/edit/{user_id}/{id}
+  pattern: /admin/licensee/edit/{id}
   defaults: { _controller: SLNRegisterBundle:Licensee:edit, admin: true }
   requirements:
     _method:  GET|POST
-    id: \d+
-    user_id: \d+
-
-SLNRegisterBundle_admin_licensee_delete:
-  pattern: /admin/licensee/delete/{id}
-  defaults: { _controller: SLNRegisterBundle:Licensee:delete, admin: true }
-  requirements:
-    _method:  GET
     id: \d+
 
 SLNRegisterBundle_admin_licensee_list:

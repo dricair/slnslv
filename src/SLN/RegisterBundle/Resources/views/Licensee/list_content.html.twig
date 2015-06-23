@@ -15,9 +15,10 @@
       {% if licensee.officiel %} </br>Officiel {% endif %}
       {% if licensee.bureau %} </br>Membre du bureau {% endif %}</td>
   <td>
-    <a href="{{ path('SLNRegisterBundle_licensee_edit', {id: licensee.getId}) }}" title='Modifier ce licencié'>
+    <a href="{% if admin %}{{ path('SLNRegisterBundle_admin_licensee_edit', { id: licensee.getId }) }}
+             {% else %}{{ path('SLNRegisterBundle_licensee_edit', { id: licensee.getId }) }}{% endif %}" title='Modifier ce licencié'>
       <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}"></a>
-    <a href="{{ path('SLNRegisterBundle_licensee_delete', {id: licensee.getId}) }}" title='Supprimer ce licencié'
+    <a href="{{ path('SLNRegisterBundle_licensee_delete', { id: licensee.getId }) }}" title='Supprimer ce licencié'
          onclick="return confirm('Etes-vous sûr de vouloir effacer le licencié {{ licensee.prenom }} {{ licensee.nom }} ?');">
       <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif') }}"/>
     </a>
