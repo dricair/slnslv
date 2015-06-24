@@ -11,15 +11,27 @@ imports:
 #        result_cache_driver: apc
 #        query_cache_driver: apc
 
+# Email on error
 monolog:
     handlers:
         main:
             type:         fingers_crossed
             action_level: error
-            handler:      nested
-        nested:
-            type:  stream
-            path:  "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
-        console:
-            type:  console
+            handler:      grouped
+        grouped:
+            type:         group
+            members:      [streamed, buffered]
+        streamed:
+            type:         stream
+            path:         "%kernel.logs_dir%/%kernel.environment%.log"
+            level:        debug
+        buffered:
+            type:         buffer
+            handler:      swift
+        swift:
+            type:       swift_mailer
+            from_email: slnslv@free.fr
+            to_email:   cairaud@gmail.com
+            subject:    Erreur sur le site http://stadelaurentinnatation.fr
+            level:      debug
+

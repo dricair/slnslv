@@ -67,6 +67,17 @@ class MemberController extends Controller
      */
     public function inscriptionsAction($user_id) {
         $user = $this->getUserFromID($user_id);
+
+        return $this->render('SLNRegisterBundle:Member:inscriptions.html.twig', array(
+            'member' => $user));
+    }
+
+
+    /*
+     * Inscription sheets
+     */
+    public function inscriptions_pdfAction($user_id) {
+        $user = $this->getUserFromID($user_id);
         $licensees = $this->getLicenseeRepository()->getLicenseesForUser($user_id);
 
         $pdf = $this->container->get("white_october.tcpdf")->create();
@@ -76,8 +87,11 @@ class MemberController extends Controller
         $first = True;
         foreach ($licensees as $licensee) {
             // For your people and no groupe selected, attach a default group (Not saved)
-            if ($licensee->getGroupe() == Null and $licensee->getAge() < 12)
+            if ($licensee->getGroupe() == Null and $licensee->getAge() < 12) {
+                $groupe = new Groupe();
+                $groupe->setNom("<Inconnu>");
                 $licensee->setGroupe(new Groupe());
+            }
 
             if ($licensee->getGroupe() != Null)
                 $licensee->inscriptionSheet($pdf, $assets, $title=$first ? $title : "");

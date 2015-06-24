@@ -1,7 +1,8 @@
-A contact enquiry was made by {{ enquiry.name }} at {{ "now" | date("Y-m-d H:i") }}.
+Une question du site http://stadelaurentinnatation.fr de la part {{ enquiry.name }}.
 
-Reply-To: {{ enquiry.email }}
-Subject: {{ enquiry.subject }}
-Body:
+Email: {{ enquiry.email }}
+Sujet: {{ enquiry.subject }}
+Message:
 {{ enquiry.body }}
+
 

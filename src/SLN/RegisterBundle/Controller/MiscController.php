@@ -17,6 +17,12 @@ class MiscController extends Controller
     public function contactAction()
     {
         $enquiry = new Enquiry();
+        $user = $this->getUser();
+        if ($user->hasRole('ROLE_USER')) {
+            $enquiry->setName($user->getPrenom() . " " . $user->getNom());
+            $enquiry->setEmail($user->getEmail());
+        }
+
         $form = $this->createForm(new EnquiryType(), $enquiry);
 
         $request = $this->getRequest();
@@ -29,10 +35,14 @@ class MiscController extends Controller
                   ->setSubject('Question du site d\'inscription')
                   ->setFrom('postmaster@stadelaurentinnatation.fr')
                   ->setTo($this->container->getParameter('sln_register.emails.contact_email'))
+                  ->setCc('cairaud@gmail.com')
                   ->setBody($this->renderView('SLNRegisterBundle:Misc:contactEmail.txt.twig', array('enquiry' => $enquiry)));
 
                 $this->get('mailer')->send($message);
-                $this->get('session')->getFlashBag()->add('register-notice', 'Votre demande vient d\'être envoyée. Merci!');
+                $this->get('session')->getFlashBag()->add(
+                  'notice',
+                  sprintf("Votre message '" . $enquiry->getSubject() . "' vient d'être envoyé.")
+                );
 
                 // Redirect - This is important to prevent users re-posting
                 // the form if they refresh the page

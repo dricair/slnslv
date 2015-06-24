@@ -4,50 +4,58 @@
               {% else %}
                 {% if id == 0 %} {{ path('SLNRegisterBundle_licensee_create', {'user_id': user_id}) }}
                 {% else %} {{ path('SLNRegisterBundle_licensee_edit', {'id': id}) }} {% endif %}
-              {% endif %}" method="post" {{ form_enctype(form) }} class="register">
+              {% endif %}" method="post" {{ form_enctype(form) }} class="form-horizontal" role="form">
   {{ form_errors(form) }}
 
-  <fieldset>
-    <legend>Identité</legend>
-    {{ form_row(form.sexe) }}
-    {{ form_row(form.nom) }}
-    {{ form_row(form.prenom) }}
-    {{ form_row(form.naissance) }}
-
-    <p class='help'>En cas de renouvellement, indiquez le numéro de licence (IUF), si vous le connaissez:</p>
-    {{ form_row(form.iuf) }}
-  </fieldset>
-
-  <fieldset>
-    <legend>Groupe de natation</legend>
-    <p>Sélectionnez le groupe de natation (pour la saison prochaine) si vous le connaissez.</p>
-    <p class="note">Les entraineurs peuvent changer les groupes de natation en fonction du niveau</p>
-
-    {{ form_row(form.groupe) }}
-
-    <div id='groupe-description' data-function="{{ path('api_get_group', {'id': '__id__'}) }}">
-      <div class='groupe-description'></div>
-      <div class='groupe-horaires'></div>
+  <div class="panel panel-default">
+    <div class="panel-heading">Identité</div>
+    <div class="panel-body">
+      {{ form_row(form.sexe) }}
+      {{ form_row(form.nom) }}
+      {{ form_row(form.prenom) }}
+      {{ form_row(form.naissance) }}
+  
+      <p class='help'>En cas de renouvellement, indiquez le numéro de licence (IUF), si vous le connaissez:</p>
+      {{ form_row(form.iuf) }}
     </div>
-  </fieldset>
+  </div>
 
-  <fieldset>
-    <legend>Fonctions spéciales</legend>
-    
-    {{ form_row(form.officiel) }}
-    {{ form_row(form.bureau) }}
-  </fieldset>
+  <div class="panel panel-default">
+    <div class="panel-heading">Groupe de natation</div>
+    <div class="panel-body">
+      <p>Sélectionnez le groupe de natation (pour la saison prochaine) si vous le connaissez.</p>
+      <p class="note">Les entraineurs peuvent changer les groupes de natation en fonction du niveau</p>
 
-  <fieldset>
-    <legend>Autorisations</legend>
+      {{ form_row(form.groupe) }}
+
+      <div id='groupe-description' data-function="{{ path('api_get_group', {'id': '__id__'}) }}" class="row">
+        <div class='groupe-description col-sm-6'></div>
+        <div class='groupe-horaires col-sm-6'></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">Fonctions spéciales</div>
+    <div class="panel-body">
+      {{ form_row(form.officiel) }}
+      {{ form_row(form.bureau) }}
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">Autorisations</div>
+    <div class="panel-body">
     <p class='help'>J’accepte que les résultats sportifs, le nom  ainsi que la photo (podium, photo de groupe...) de mon enfant puissent apparaître 
        sur le site internet  du club ou de documents destinés à la recherche de sponsors pour le club.</p>
     {{ form_row(form.autorisation_photos) }}
-    <p>
-  </fieldset>
+    </div>
+  </div>
   
   {{ form_rest(form) }}
-  <div>
-    <input type="submit" value="{{ 'Envoyer' }}" />
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-7">
+      <input type="submit" class="btn btn-primary" id="_submit" name="_submit" value="Envoyer" />
+    </div>
   </div>
 </form>

@@ -11,15 +11,15 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // add your custom field
-        $builder->add('nom')
-                ->add('prenom')
+        $builder->add('nom', null, array('attr' => array('placeholder' => 'Nom')))
+                ->add('prenom', null, array('attr' => array('placeholder' => 'Prénom')))
                 ->add('titre', 'choice', array(
                       'choices' => User::getTitres(),))
-                ->add('adresse')
-                ->add('code_postal')
-                ->add('ville')
-                ->add('tel_domicile')
-                ->add('tel_portable');
+                ->add('adresse', null, array('attr' => array('placeholder' => 'Adresse postale')))
+                ->add('code_postal', null, array('attr' => array('placeholder' => '06xxx')))
+                ->add('ville', null, array('attr' => array('placeholder' => 'Ville')))
+                ->add('tel_domicile', null, array('attr' => array('placeholder' => '04xxxxxxxx')))
+                ->add('tel_portable', null, array('attr' => array('placeholder' => '06xxxxxxxx')));
     }
 
     public function getParent()

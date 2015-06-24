@@ -1,32 +1,41 @@
 <form action="{% if id == 0 %} {{ path('SLNRegisterBundle_member_create') }}
-              {% else %} {{ path('SLNRegisterBundle_member_edit', {'id': id}) }} {% endif %}" method="post" {{ form_enctype(form) }} class="register">
+              {% else %} {{ path('SLNRegisterBundle_member_edit', {'id': id}) }} {% endif %}" method="post" {{ form_enctype(form) }} 
+              class="form form-horizontal" role="form">
   {{ form_errors(form) }}
 
-  <fieldset>
-    <legend>Informations de connection</legend>
-    {{ form_row(form.username) }}
-    {{ form_row(form.email) }}
-  </fieldset>
+  <div class="panel panel-default">
+    <div class="panel-heading">Informations de connection</div>
+    <div class="panel-body">
+      {{ form_row(form.username) }}
+      {{ form_row(form.email) }}
+    </div>
+  </div>
 
-  <fieldset>
-    <legend>Identité</legend>
-    {{ form_row(form.titre) }}
-    {{ form_row(form.nom) }}
-    {{ form_row(form.prenom) }}
-    {{ form_row(form.adresse) }}
-    {{ form_row(form.code_postal) }}
-    {{ form_row(form.ville) }}
-    {{ form_row(form.tel_domicile) }}
-    {{ form_row(form.tel_portable) }}
-  </fieldset>
+  <div class="panel panel-default">
+    <div class="panel-heading">Identité</div>
+    <div class="panel-body">
+      {{ form_row(form.titre) }}
+      {{ form_row(form.nom) }}
+      {{ form_row(form.prenom) }}
+      {{ form_row(form.adresse) }}
+      {{ form_row(form.code_postal) }}
+      {{ form_row(form.ville) }}
+      {{ form_row(form.tel_domicile) }}
+      {{ form_row(form.tel_portable) }}
+    </div>
+  </div>
 
-  <fieldset>
-    <legend>Droits spéciaux</legend>
-    {{ form_row(form.roles) }}
-  </fieldset>
+  <div class="panel panel-default">
+    <div class="panel-heading">Droits spéciaux</div>
+    <div class="panel-body">
+      {{ form_row(form.roles) }}
+    </div>
+  </div>
 
   {{ form_rest(form) }}
-  <div>
-    <input type="submit" value="{{ 'Envoyer' }}" />
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-7">
+      <input type="submit" class="btn btn-primary" id="_submit" name="_submit" value="Envoyer" />
+    </div>
   </div>
 </form>

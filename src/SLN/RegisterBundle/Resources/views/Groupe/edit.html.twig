@@ -7,6 +7,10 @@
     <script src="{{ asset('bundles/slnregister/js/groupe.js') }}"></script>
 
     <script type="text/javascript">
+      $( document ).ready(function() {
+        setup_groupe(); 
+        $('.timepicker').datetimepicker({format: 'H:mm', locale: 'fr', 'stepping': 15});
+      });
     </script>
 {% endblock %}
 

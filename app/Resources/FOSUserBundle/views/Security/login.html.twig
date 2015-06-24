@@ -3,49 +3,58 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block fos_user_content %}
-<h1 class='register'>Se connecter à un compte utilisateur</h1>
+<h1>Se connecter à un compte utilisateur</h1>
 
 <p>Ce formulaire permet d'accéder aux pages d'inscription.</p>
 
 <p>Si vous n'avez pas encore créé de compte, entrez vos coordonnées sur <a href="{{ path('fos_user_registration_register') }}">cette page</a>.</p>
 
-<form action="{{ path('fos_user_security_check') }}" method="POST" class="register">
+<form action="{{ path('fos_user_security_check') }}" method="POST" class="form-horizontal" role="form">
   <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 
-  <fieldset>
-    <legend>Informations de connection</legend>
+  <div class="panel panel-default">
+    <div class="panel-heading">Informations de connection</div>
+    <div class="panel-body">
 
 {% if error %}
-    <p class='form_error'>{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+    <p class='alert alert-danger'>{{ error.messageKey|trans(error.messageData, 'security') }}</p>
 
-    <div class='description'>
+    <div class='alert alert-info'>
       <p>Aide pour les erreurs:</p>
       <ul>
-        <li>Avez vous <span class='important'>créé un compte</span> ? Si non, <a href="{{ path('fos_user_registration_register') }}">cliquez ici</a>.</li>
+        <li>Avez vous <span class='mark'>créé un compte</span> ? Si non, <a href="{{ path('fos_user_registration_register') }}">cliquez ici</a>.</li>
         <li>Si vous ne vous souvenez plus de votre mot de passe, vous pouvez le réactiver: <a href="{{ path('fos_user_resetting_request') }}">cliquez ici</a>.</li>
       </ul>
     </div>
 {% endif %}
 
-    <div>
-      <label for="username">Nom d'utilisateur ou email</label>
-      <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" />
+    <div class="form-group">
+      <label for="username" class="control-label col-sm-3">Nom d'utilisateur ou email</label>
+      <div class="col-sm-7">
+        <input type="text" id="username" name="_username" value="{{ last_username }}" required="required"  class="form-control"/>
+      </div>
     </div>
 
-    <div>
-      <label for="password">{{ 'security.login.password'|trans }}</label>
-      <input type="password" id="password" name="_password" required="required" />
+    <div class="form-group">
+      <label for="password" class="control-label col-sm-3">{{ 'security.login.password'|trans }}</label>
+      <div class="col-sm-7">
+        <input type="password" id="password" name="_password" required="required" class="form-control"/>
+      </div>
     </div>
 
-    <div>
-      <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
-      <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+    <div class="form-group">
+      <div class="col-sm-offset-3 col-sm-7">
+        <div class="checkbox">
+          <label><input type="checkbox" id="remember_me" name="_remember_me" value="on"/>{{ 'security.login.remember_me'|trans }}</label>
+        </div>
+      </div>
     </div>
-
-  </fieldset>
+  </div>
   
-  <div>
-    <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-7">
+      <input type="submit" class="btn btn-primary" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />
+    </div>
   </div>
   
 </form>

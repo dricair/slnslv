@@ -15,14 +15,14 @@ class HoraireType extends AbstractType {
         $builder
             ->add('jour', 'choice', array('choices' => Horaire::getJours(),))
             ->add('debut', 'time', array(
-                'input' => 'timestamp',
-                'widget' => 'single_text',
-                'with_seconds' => False))
+                  'input' => 'timestamp',
+                  'widget' => 'single_text',
+                  'with_seconds' => False))
             ->add('fin', 'time', array(
-                'input' => 'timestamp',
-                'widget' => 'single_text',
-                'with_seconds' => False))
-            ->add('description');
+                  'input' => 'timestamp',
+                  'widget' => 'single_text',
+                  'with_seconds' => False))
+            ->add('description', null, array("attr" => array("placeholder" => "Natation ou PPG ?")));
     }
 
     public function getName()

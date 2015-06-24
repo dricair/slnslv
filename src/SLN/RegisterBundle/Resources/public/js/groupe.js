@@ -1,7 +1,7 @@
-$( document ).ready(function() {
+function setup_groupe() {
 
-  var addLink = '<a href="#" class="add_row_link">Ajouter une ligne</a>';
-  var delLink = '<a href="#" class="del_row_link">Supprimer</a>';
+  var addLink = '<p><a href="#" class="add_row_link"><span class="glyphicon glyphicon-plus"></span> Ajouter une ligne</a></p>';
+  var delLink = '<a href="#" class="del_row_link"><span class="glyphicon glyphicon-trash"></span></a>';
   var div = $('div.add-row');
   var link = $(addLink);
   div.append(link);
@@ -24,7 +24,7 @@ $( document ).ready(function() {
     // Add a remove link to the line
     delRow(newLine, delLink);
   });
-});               
+};
    
 
 // Function called when adding a row to the table

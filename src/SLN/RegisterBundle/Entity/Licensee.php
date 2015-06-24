@@ -204,7 +204,7 @@ use SLN\RegisterBundle\Entity\Groupe;
           $pdf->Image($assets->getUrl('bundles/slnregister/images/ecole_natation.gif'), 160, 5, 40);
           
         $html = sprintf('
-<p style="color:#cccccc;margin:2">Affilié à la F.F.N et agréé E.N.F<br/>
+<p style="color:#888888;margin:2">Affilié à la F.F.N et agréé E.N.F<br/>
 Site: http://stadelaurentinnatatin.fr</p>');
         $pdf->WriteHTMLCell(/*w*/0, /*h*/0, /*x*/10, /*y*/20, $html, /*border*/0, /*ln*/1, /*fill*/0, /*reseth*/true, /*align*/'C', /*autopadding*/false);
 
@@ -229,27 +229,27 @@ Site: http://stadelaurentinnatatin.fr</p>');
 <div style="text-align:center; color:#1f487c; font-weight: bold; font-size: 14; ">RENSEIGNEMENTS LICENCIE%s</div>
 <table border="0" cellspacing="2mm">
 <tr>
-  <td align="right" width="30mm" color="#cccccc">Nom %s&nbsp;:</td><td align="left" width="60mm" style="font-weight: bold;">%s</td>
-  <td align="right" width="30mm" color="#cccccc">Prénom&nbsp;:</td><td align="left" width="60mm" style="font-weight: bold;">%s</td>
+  <td align="right" width="30mm" color="#888888">Nom %s&nbsp;:</td><td align="left" width="60mm" style="font-weight: bold;">%s</td>
+  <td align="right" width="30mm" color="#888888">Prénom&nbsp;:</td><td align="left" width="60mm" style="font-weight: bold;">%s</td>
 </tr>
 <tr>
-  <td align="right" color="#cccccc">%s</td><td align="left">%s</td>
-  <td align="right" color="#cccccc">Date de naissance&nbsp;:</td><td align="left">%s</td>
+  <td align="right" color="#888888">%s</td><td align="left">%s</td>
+  <td align="right" color="#888888">Date de naissance&nbsp;:</td><td align="left">%s</td>
 </tr>
 <tr>
-  <td rowspan="2" align="right" color="#cccccc">Adresse&nbsp;:</td><td rowspan="2" align="left">%s</td>
-  <td align="right" color="#cccccc">Code postal&nbsp;:</td><td align="left">%s</td>
+  <td rowspan="2" align="right" color="#888888">Adresse&nbsp;:</td><td rowspan="2" align="left">%s</td>
+  <td align="right" color="#888888">Code postal&nbsp;:</td><td align="left">%s</td>
 </tr>
 <tr>
-  <td align="right" color="#cccccc">Ville&nbsp;:</td><td align="left">%s</td>
+  <td align="right" color="#888888">Ville&nbsp;:</td><td align="left">%s</td>
 </tr>
 <tr>
-  <td align="right" color="#cccccc">Téléphone&nbsp;:</td><td align="left">%s</td>
-  <td align="right" color="#cccccc">Portable&nbsp;:</td><td align="left">%s</td>
+  <td align="right" color="#888888">Téléphone&nbsp;:</td><td align="left">%s</td>
+  <td align="right" color="#888888">Portable&nbsp;:</td><td align="left">%s</td>
 </tr>
 <tr>
-  <td align="right" color="#cccccc">Email&nbsp;:</td><td align="left">%s</td>
-  <td align="right" color="#cccccc">IUF&nbsp;:</td><td align="left">%s</td>
+  <td align="right" color="#888888">Email&nbsp;:</td><td align="left">%s</td>
+  <td align="right" color="#888888">IUF&nbsp;:</td><td align="left">%s</td>
 </tr>
 </table>
         ', $femme ? "E" : "", $femme ? "de la nageuse" : "du nageur", $this->nom, $this->prenom,
@@ -298,15 +298,15 @@ Site: http://stadelaurentinnatatin.fr</p>');
           /*ln*/1, /*fill*/0, /*reseth*/true, /*align*/'L', /*autopadding*/false);
 
         $html = sprintf('
-<div style="color:#cccccc;">Cadre réservé</div>
-<table border="0" cellspacing="3mm" color="#cccccc">
+<div style="color:#888888;">Cadre réservé</div>
+<table border="0" cellspacing="3mm" color="#888888">
 <tr>
   <td>Certificat</td> <td>Licence</td ><td>Photo</td> <td>Groupe</td> <td>Chèque</td> <td>Espèces</td>
 </tr>
 <tr>
-  <td style="border: 1px solid #cccccc;">&nbsp;</td> <td style="border: 1px solid #cccccc;">&nbsp;</td> 
-  <td style="border: 1px solid #cccccc;">&nbsp;</td> <td style="border: 1px solid #cccccc;">%s</td> 
-  <td style="border: 1px solid #cccccc;">&nbsp;</td> <td style="border: 1px solid #cccccc;">&nbsp;</td>
+  <td style="border: 1px solid #888888;">&nbsp;</td> <td style="border: 1px solid #888888;">&nbsp;</td> 
+  <td style="border: 1px solid #888888;">&nbsp;</td> <td style="border: 1px solid #888888;">%s</td> 
+  <td style="border: 1px solid #888888;">&nbsp;</td> <td style="border: 1px solid #888888;">&nbsp;</td>
 </tr>
 </table>
 ', $this->groupe->getNom());

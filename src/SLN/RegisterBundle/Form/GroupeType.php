@@ -13,7 +13,7 @@ class GroupeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom')
+            ->add('nom', null, array("attr" => array("placeholder" => "Nom du groupe")))
             ->add('categorie', 'choice', array(
                   'choices' => Groupe::getCategories(),))
             ->add('description', 'textarea')

@@ -1,4 +1,4 @@
-<table class='register'>
+<table class='table table-striped'>
 <tr>
   <th>Nom</th>
   <th>Prenom</th>
@@ -9,7 +9,7 @@
 </tr>
 
 {% for member in members %}
-<tr class="{{ cycle(['odd', 'even'], loop.index0) }}">
+<tr>
   <td>
     {{ member.nom }}
   </td>
@@ -18,14 +18,13 @@
   <td>{{ member.telDomicile }}</td>
   <td>{{ member.telPortable }}</td>
   <td>
-    <a href="{{ path('SLNRegisterBundle_member_edit', {id: member.getId}) }}" title='Modifier ce membre'>
-      <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}"></a>
-    <a href="{{ path('SLNRegisterBundle_member_delete', {id: member.getId}) }}" title='Supprimer ce membre'
+    <a href="{{ path('SLNRegisterBundle_member_edit', { id: member.id }) }}" title='Modifier ce membre'>
+      <span class="glyphicon glyphicon-pencil"></span></a>
+    <a href="{{ path('SLNRegisterBundle_member_delete', { id: member.id }) }}" title='Supprimer ce membre'
          onclick="return confirm('Etes-vous sûr de vouloir effacer le membre {{ member.prenom }} {{ member.nom }} ?');">
-      <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif') }}"/>
-    </a>
+      <span class="glyphicon glyphicon-trash"></span></a>
     {% if member.hasRole('ROLE_ADMIN') %}
-    <img src="{{ asset('bundles/slnregister/images/admin.png') }}" title='Administrateur'/>
+    <span class="glyphicon glyphicon-wrench" title="Administrateur"></span>
     {% endif %}
   </td>
 </tr>

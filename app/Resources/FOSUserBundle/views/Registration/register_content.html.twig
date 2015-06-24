@@ -1,41 +1,49 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
-<h1 class='register'>Créer un compte membre</h1>
+<h1>Créer un compte membre</h1>
 
 <p>Ce formulaire permet de créer un compte membre au <a href='http://stadelaurentinnatation.fr/'>Stade Laurentin Natation</a>.
    Une fois créé et validé, vous pourrez accéder aux pages d'inscription.</p>
-<p>Pour inscrire un <b>enfant</b>, vous devez d'abord créer un compte au nom du <span class='important'>représentant légal</span>, 
+<p>Pour inscrire un <span class='mark'>enfant</span>, vous devez d'abord créer un compte au nom du <span class='mark'>représentant légal</span>, 
    puis vous connecter pour inscrire votre enfant.</p>
 
-<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="register">
-    {{ form_errors(form) }}
+<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="form-horizontal" role="form">
+  {{ form_errors(form) }}
 
-  <fieldset>
-    <legend>Identité du responsable légal</legend>
-    {{ form_row(form.titre) }}
-    {{ form_row(form.nom) }}
-    {{ form_row(form.prenom) }}
-  </fieldset>
+  <div class="panel panel-default">
+    <div class="panel-heading">Identité du responsable légal</div>
+    <div class="panel-body">
+      {{ form_row(form.titre) }}
+      {{ form_row(form.nom) }}
+      {{ form_row(form.prenom) }}
+    </div>
+  </div>
 
-  <fieldset>
-    <legend>Informations de contact</legend>
-    {{ form_row(form.adresse) }}
-    {{ form_row(form.code_postal) }}
-    {{ form_row(form.ville) }}
-    {{ form_row(form.tel_domicile) }}
-    {{ form_row(form.tel_portable) }}
-  </fieldset>
+  <div class="panel panel-default">
+    <div class="panel-heading">Informations de contact</div>
+    <div class="panel-body">
+      {{ form_row(form.adresse) }}
+      {{ form_row(form.code_postal) }}
+      {{ form_row(form.ville) }}
+      {{ form_row(form.tel_domicile) }}
+      {{ form_row(form.tel_portable) }}
+    </div>
+  </div>
 
-  <fieldset>
-    <legend>Compte utilisateur</legend>
-    {{ form_row(form.email) }}
-    {{ form_row(form.username) }}
-    {{ form_row(form.plainPassword.first) }}
-    {{ form_row(form.plainPassword.second) }}
-  </fieldset>
+  <div class="panel panel-default">
+    <div class="panel-heading">Compte utilisateur</div>
+    <div class="panel-body">
+      {{ form_row(form.email) }}
+      {{ form_row(form.username) }}
+      {{ form_row(form.plainPassword.first) }}
+      {{ form_row(form.plainPassword.second) }}
+    </div>
+  </div>
 
   {{ form_rest(form) }}
-  <div>
-    <input type="submit" value="{{ 'registration.submit'|trans }}" />
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-primary" value="{{ 'registration.submit'|trans }}" />
+    </div>
   </div>
 </form>

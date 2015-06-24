@@ -131,10 +131,9 @@ class Horaire {
         $this->setUpdated(new \DateTime());
 
         $this->licensees = new ArrayCollection();
-        $this->horaires = Array((array)new Horaire(), (array)new Horaire());
+        $this->horaires = Array((array)new Horaire());
 
         // Default groupe used in Licensee
-        $this->nom = "<Inconnu>";
         $this->categorie = $this::ECOLE;
     }
 

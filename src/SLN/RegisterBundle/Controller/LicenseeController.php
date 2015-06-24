@@ -139,6 +139,38 @@ class LicenseeController extends Controller
                                                                                 'admin' => $admin));
     }
 
+    /*
+     * Inscription sheets
+     */
+    public function inscriptionAction($id, $admin=False) {
+        $licensee = $this->getLicenseeRepository()->find($id);
+        if (!$licensee instanceof Licensee) {
+            throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
+        }
+
+        $user = $this->getUserFromID($licensee->getId());
+
+        $pdf = $this->container->get("white_october.tcpdf")->create();
+        $assets = $this->container->get('templating.helper.assets');
+
+        $title = "Feuilles d'inscriptions - {$licensee->getPrenom()} {$licensee->getNom()}";
+
+        // For your people and no groupe selected, attach a default group (Not saved)
+        if ($licensee->getGroupe() == Null and $licensee->getAge() < 12) {
+            $groupe = new Groupe();
+            $groupe->setNom("<Inconnu>");
+            $licensee->setGroupe(new Groupe());
+        }
+
+        if ($licensee->getGroupe() != Null)
+            $licensee->inscriptionSheet($pdf, $assets, $title);
+
+        $response = new Response($pdf->Output('inscriptions.pdf', 'I'));
+        $response->headers->set('Content-Type', 'application/pdf');
+
+        return $response;
+    }
+
 
     /**
      * Get user from ID. If user is not current ID or a user with staff role, 

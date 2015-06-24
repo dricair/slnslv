@@ -35,6 +35,6 @@ class Enquiry
         $metadata->addPropertyConstraint('subject', new NotBlank());
         $metadata->addPropertyConstraint('subject', new Length(array('max' => 50)));
 
-        $metadata->addPropertyConstraint('body', new Length(array('min' => 50)));
+        $metadata->addPropertyConstraint('body', new Length(array('min' => 3)));
     }
 }

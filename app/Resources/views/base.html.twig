@@ -1,59 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html"; charset="utf-8" />
+  <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Inscriptions{% endblock %} - Stade Laurentin Natation</title>
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   {% block stylesheets %}
-    <link href='http://fonts.googleapis.com/css?family=Irish+Grover' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=La+Belle+Aurore' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/build/css/bootstrap-datetimepicker.css">
+    <!-- <link href='http://fonts.googleapis.com/css?family=Irish+Grover' rel='stylesheet' type='text/css'> -->
+    <!-- <link href='http://fonts.googleapis.com/css?family=La+Belle+Aurore' rel='stylesheet' type='text/css'> -->
     <link href="{{ asset('css/screen.css') }}" type="text/css" rel="stylesheet" />
   {% endblock %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+  <script src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/src/js/bootstrap-datetimepicker.js"></script>
   <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
 </head>
 <body>
 
-  <section id="wrapper">
-    <header id="header">
-      <div class="banner">
-        <a href="/" title="Accueil"><img alt="" src="{{ asset('banner.png') }}"/></a>
-      </div>
+<div class='container' id='header'>
+  <div class="banner">
+    <a href="/" title="Accueil"><img alt="" src="{{ asset('banner.png') }}"/></a>
+  </div>
+</div>
 
-      <div class="top">
-          <nav>
-            <ul class="navigation">
-              {% block navigation %}
-              <li><a href="{{ path('SLNRegisterBundle_homepage') }}">Accueil</a></li>
-              {% endblock %}
-              <li><a href="{{ path('SLNRegisterBundle_contact') }}">Contact</a></li>
-              <li><a href="{{ path('fos_user_security_logout') }}">Déconnection</a></li>
-            </ul>
-          </nav>
-      </div>
-    </header>
-
-    {% for flashMessage in app.session.flashbag.get('notice') %}
-    <div class="flash-notice">
-       {{ flashMessage }}
+<div class='container' id='nav'>
+  <nav class='navbar navbar-default'>
+    <div class='navbar-header'>
+      <a class='navbar-brand' href='http://www.stadelaurentinnatation.fr'>Stade Laurentin Natation</a>
     </div>
-    {% endfor %}
+    <div>
+      {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+      {{ knp_menu_render('SLNRegisterBundle:Builder:mainMenu', {'currentClass': 'active', 'template': 'SLNRegisterBundle:Menu:knp_menu.html.twig'}) }}
+      {{ knp_menu_render('SLNRegisterBundle:Builder:userMenu', {'currentClass': 'active', 'template': 'SLNRegisterBundle:Menu:knp_menu.html.twig'}) }}
+      {% endif %}
+    </div>
+  </nav>
+</div>
 
-    <section class="main-col">
+<div class='container' id='content'>
+  {% for flashMessage in app.session.flashbag.get('notice') %}
+  <div class="alert alert-info fade in">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    {{ flashMessage }}
+  </div>
+  {% endfor %}
+
+  <div id='main-col'>
       {% block body %}{% endblock %}
-    </section>
+  </div>
 
-    <div id="footer">
-      {% block footer %}
-         Site d'inscription - Créé par Cédric Airaud - version {{ version }}
-      {% endblock %}
-    </div>
-  </section>
-
-  {% block javascripts %}
-    <script src="{{ asset('js/jquery.js') }}"></script>
+  <div id='footer'>
+  {% block footer %}
+    Site d'inscription - Créé par Cédric Airaud - version {{ version }}
   {% endblock %}
+  </div>
+</div>
+
+{% block javascripts %}
+{% endblock %}
+
 </body>
 </html>
 

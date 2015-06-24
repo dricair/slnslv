@@ -7,21 +7,39 @@
   {% if activeLicensees %}
   <h1>Inscriptions pour la saison {{ year }}-{{year + 1 }}</h1>
 
-  <p>Voici la liste des inscriptions enregistrées pour vous-même ou vos enfants pour la <span class='important'>saison {{ year }}-{{year + 1 }}</span>.</p>
+  <p>Voici la liste des inscriptions enregistrées pour vous-même ou vos enfants pour la <span class='mark'>saison {{ year }}-{{year + 1 }}</span>.</p>
 
-  <p>Vous pouvez les modifier en cliquant sur le bouton <img src="{{ asset('bundles/slnregister/images/icon_editrow.png') }}" title='Modifier'/>, 
-     ou supprimer en cliquant sur le bouton <img src="{{ asset('bundles/slnregister/images/icon_deleterow.gif')}}" title='Supprimer'/>.</p>
+  <p>Vous pouvez les modifier en cliquant sur le bouton <span class="glyphicon glyphicon-pencil" title="Modifier"></span>, 
+     ou supprimer en cliquant sur le bouton <span class="glyphicon glyphicon-trash" title="Supprimer"></span>.</p>
 
   {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': activeLicensees, 'admin': false } %}
 
-  <p>Une fois toutes les inscriptions complétées, vous devez imprimer les feuilles d'inscription:</p>
-  <a class='btn' href="{{ path('SLNRegisterBundle_member_inscriptions', {'user_id': app.user.getId}) }}" target="_blank">
-     Imprimer les feuilles d'inscription pré-remplies</a>
-  <p>Pensez aussi télécharger, remplir et imprimer un formulaire de licence par personne:</p>
-{% set yearp1 = year+1%}
-  <a class='btn' href="{{ asset('bundles/slnregister/images/formulaire_licence_'~yearp1~'.pdf') }}" target="_blank">
-     Télécharger le formulaire de licence {{ year }}-{{ year+1 }}</a>
-  {% endif %}
+  <div class='row'>
+    <div class='col-sm-6'>
+      <div class="panel panel-default">
+        <div class="panel-heading">Feuilles d'inscription</div>
+        <div class="panel-body">
+          <p>Une fois toutes les inscriptions complétées, vous devez imprimer les feuilles d'inscription:</p>
+          <a class='btn btn-primary btn-block' role="button" href="{{ path('SLNRegisterBundle_member_inscriptions_pdf', {'user_id': app.user.getId}) }}" target="_blank">
+            Imprimer les feuilles d'inscription pré-remplies</a>
+        </div>
+      </div>
+    </div>
+
+    <div class='col-sm-6'>
+      <div class="panel panel-default">
+        <div class="panel-heading">Formulaires de licence</div>
+        <div class="panel-body">
+          <p>Pensez aussi télécharger, remplir et imprimer un formulaire de licence par personne:</p>
+          {% set yearp1 = year+1%}
+          <a class='btn btn-primary btn-block' role="button" href="{{ asset('bundles/slnregister/images/formulaire_licence_'~yearp1~'.pdf') }}" target="_blank">
+           Télécharger le formulaire de licence {{ year }}-{{ year+1 }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ {% endif %}
 
   <!--
   <h1>Inscriptions à renouveler</h1>
@@ -42,7 +60,10 @@
     {{ parent() }}
     <script src="{{ asset('bundles/slnregister/js/licensee.js') }}"></script>
     <script type="text/javascript">
-      $( document ).ready(function() { setup_group_description(); });
+      $( document ).ready(function() { 
+        $('.datepicker').datetimepicker({format: 'DD/MM/YYYY', locale: 'fr'});
+        setup_group_description(); 
+      });
     </script>
 {% endblock %}
 

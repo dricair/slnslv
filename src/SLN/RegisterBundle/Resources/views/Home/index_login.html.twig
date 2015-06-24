@@ -11,45 +11,42 @@
 
 <p>Choisissez le type d'inscription que vous souhaitez réaliser:</p>
 
-<div id='register_choice'>
-  <table id='register_choice'>
-  <tr>
-    <th class='left'>Connection à votre compte</th>
-    <th class='middle'>&nbsp;</th>
-    <th class='right'>Création de compte</th>
-  <tr>
-  <tr>
-    <td class='left'>
-      <ol>
-        <li><a href="{{ path('fos_user_security_login') }}">Connectez-vous</a> à <b>votre espace</b>. Si vous avez perdu 
+<div class='row'>
+  <div class='col-sm-6'>
+    <div class="panel panel-default">
+      <div class="panel-heading">Connection à votre compte</div>
+      <div class="panel-body">
+        <ol>
+          <li><a href="{{ path('fos_user_security_login') }}">Connectez-vous</a> à <span class='mark'>votre espace</span>. Si vous avez perdu 
             vos identifiants de connection, des formulaires existent 
             pour retrouver <a href="{{ path('fos_user_resetting_request') }}" title=''>votre mot de passe</a></li>
-        <li><b>Vérifiez</b> vos informations personnelles en allant dans la section <b>Mon compte</b></li>
-        <li><b>Inscrivez</b> vos enfants ou vous-même aux activités</li>
-        <li><b>Imprimez</b> la ou les fiches d'inscription, <b>joignez</b> le règlement et les documents demandés, et faites parvenir le tout au 
-            bureau de l'association</li>
-      </ol>
-    </td>
-  
-    <td class='middle'>&nbsp;</td>
-  
-    <td class='right'>
-      <ol>
-        <li><a href="{{ path('fos_user_registration_register') }}">Créez un compte</a>. Pour inscrire un enfant, vous devez 
-            d'abord créer le compte pour le <b>représentant légal</b></li>
-        <li><b>Activez votre compte</b> avec l'email qui vous a été envoyé</li>
-        <li>Connectez-vous au site avec les identifiants choisis</li>
-        <li><b>Inscrivez</b> vos enfants ou vous-même aux activités</li>
-        <li><b>Imprimez</b> la ou les fiches d'inscription, <b>joignez</b> le règlement et les documents demandés, et faites parvenir le tout au 
-            bureau de l'association</li>
-      </ol>
-    </td>
-  </tr>
-  <tr class='bottom'>
-    <td><a href="{{ path('fos_user_security_login') }}" class='btn'>Formulaire de connection</a></td>
-    <td>&nbsp;</td>
-    <td><a href="{{ path('fos_user_registration_register') }}" class='btn'>Formulaire d'inscription</a></td>
-  </table>
+          <li><span class='mark'>Vérifiez</span> vos informations personnelles en allant dans la section <span class='mark'>Mon compte</span></li>
+          <li><span class='mark'>Inscrivez</span> vos enfants ou vous-même aux activités</li>
+          <li><span class='mark'>Imprimez</span> la ou les fiches d'inscription, <span class='mark'>joignez</span> le règlement et 
+            les documents demandés, et faites parvenir le tout au bureau de l'association</li>
+        </ol>
+        <a href="{{ path('fos_user_security_login') }}" class='btn btn-primary btn-block'>Formulaire de connection</a>
+      </div>
+    </div>
+  </div>
+
+  <div class='col-sm-6'>
+    <div class="panel panel-default">
+      <div class="panel-heading">Créez un compte</div>
+      <div class="panel-body">
+        <ol>
+          <li><a href="{{ path('fos_user_registration_register') }}">Créez un compte</a>. Pour inscrire un enfant, vous devez 
+            d'abord créer le compte pour le <span class='mark'>représentant légal</span></li>
+          <li><span class='mark'>Activez votre compte</span> avec l'email qui vous a été envoyé</li>
+          <li>Connectez-vous au site avec les identifiants choisis</li>
+          <li><span class='mark'>Inscrivez</span> vos enfants ou vous-même aux activités</li>
+          <li><span class='mark'>Imprimez</span> la ou les fiches d'inscription, <span class='mark'>joignez</span> le règlement et 
+            les documents demandés, et faites parvenir le tout au bureau de l'association</li>
+        </ol>
+        <a href="{{ path('fos_user_registration_register') }}" class='btn btn-primary btn-block'>Formulaire d'inscription</a>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

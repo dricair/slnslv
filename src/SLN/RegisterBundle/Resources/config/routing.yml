@@ -58,6 +58,12 @@ SLNRegisterBundle_member_inscriptions:
     _method:  GET
     user_id: \d+
 
+SLNRegisterBundle_member_inscriptions_pdf:
+  pattern: /member/inscriptions/{user_id}/inscriptions.pdf
+  defaults: { _controller: SLNRegisterBundle:Member:inscriptions_pdf }
+  requirements:
+    _method:  GET
+    user_id: \d+
 
 #
 # Administrator pages
@@ -103,7 +109,7 @@ SLNRegisterBundle_groupe_list:
 # -----------------------
 SLNRegisterBundle_member_create:
   pattern: /admin/member/create
-  defaults: { _controller: SLNRegisterBundle:Member:edit }
+  defaults: { _controller: SLNRegisterBundle:Member:edit, id:0 }
   requirements:
     _method:  GET|POST
 
@@ -150,6 +156,13 @@ SLNRegisterBundle_admin_licensee_list:
   defaults: { _controller: SLNRegisterBundle:Licensee:list, admin: true }
   requirements:
     _method:  GET
+
+SLNRegisterBundle_admin_licensee_inscription:
+  pattern: /admin/licensee/inscription/{id}
+  defaults: { _controller: SLNRegisterBundle:Licensee:inscription, admin: true}
+  requirements:
+    _method:  GET|POST
+    id: \d+
 
 #
 # Others

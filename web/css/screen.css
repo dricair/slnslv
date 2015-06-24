@@ -1,3 +1,4 @@
+/*
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,
   big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,
   dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,
@@ -19,11 +20,19 @@ body { line-height: 1;font-family: Arial, Helvetica, sans-serif;font-size: 12px;
 #header { margin-bottom: 20px; }
 #header .banner { background-color: #6495B3; width: 100%; text-align: center }
 #header .top { margin-bottom: 10px; }
-#header ul.navigation { list-style: none; text-align: left; background-image: url('../menu.png'); background-repeat: repeat-x; height: 80px; padding-top: 8px; }
-#header ul.navigation a { color: black; }
-#header ul.navigation a:hover { background-color: #8080ff; }
-#header .navigation li { display: inline }
-#header .navigation li a { display: inline-block; padding: 10px 15px; border-left: 1px solid black; }
+#header div.navbar-inner { background-image: url('../menu.png'); background-repeat: repeat-x; height: 90px; }
+#header .navbar-inner ul { display: inline-block; list-style: none; text-align: left; padding-top: 8px; }
+#header .navbar-inner ul a { color: black; }
+#header .navbar-inner ul a:hover { background-color: #8080ff; }
+#header .navbar-inner li { display: inline }
+#header .navbar-inner li a { display: inline-block; padding: 10px 15px; border-left: 1px solid black; }
+#header .navbar-inner ul.pull-right { float: right; }
+
+#header ul.menu_level_1 { visibility: hidden; display: none; position: absolute; margin-top: 0px; margin-left: 85px; 
+                          border: 1px solid black; background-color: #8080ff; }
+#header ul.menu_level_1 li { display: block; }
+#header li:hover ul.menu_level_1 { visibility: visible; display: block; }
+
 #header h2 { font-family: 'Irish Grover', cursive; font-size: 48px; text-align: center; line-height: 110px; }
 #header h2 a { color: #000; }
 #header h3 { text-align: center; font-family: 'La Belle Aurore', cursive; font-size: 24px; margin-bottom: 20px; font-weight: normal; }
@@ -39,4 +48,22 @@ body { line-height: 1;font-family: Arial, Helvetica, sans-serif;font-size: 12px;
 .main-col p { line-height: 1.5em; margin-bottom: 20px; }
 
 #footer { border-top: 1px solid #ccc; clear: both; text-align: center; padding: 10px; color: #aaa; background-color: white; }
+*/
+
+.container { max-width: 1000px; }
+
+#header { height: 110px; }
+#header .banner { background-color: #6495B3; width: 100%; text-align: center; }
+
+#nav .affix { position: fixed; top: 0; width: 100%; }
+
+#footer { border-top: 1px solid #ccc; clear: both; text-align: center; padding: 10px; color: #aaa; background-color: white; }
+
+h1, h2, h3 { color: #6495b3; }
+
+.panel-default > .panel-heading {
+    color: white;
+    background-color: #A8CAFF;
+    font-weight: bold;
+}
 

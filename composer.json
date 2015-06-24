@@ -25,7 +25,8 @@
         "friendsofsymfony/rest-bundle": "~1.6",
         "jms/serializer-bundle": "0.13.*",
         "coresphere/console-bundle": "dev-master",
-        "whiteoctober/tcpdf-bundle": "~1.0"
+        "whiteoctober/tcpdf-bundle": "~1.0",
+        "knplabs/knp-menu-bundle": "~2"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

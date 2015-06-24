@@ -3,6 +3,10 @@
 {% block title %}Liste des membres{% endblock %}
 
 {% block body %}
+<div class="btn-group btn-group-justified">
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_member_create') }}">Créer un membre</a>
+</div>
+
 <h1>Liste des membres</h1>
 
   {% include 'SLNRegisterBundle:Member:list_content.html.twig' with { 'members': members } %}
