@@ -72,8 +72,12 @@ class Builder extends ContainerAware {
 			->setAttribute('icon', 'envelope')
 			->setAttribute('divider_append', true);
  
-		$menu['User']->addChild("Changer l'adresse email", array('route' => 'fos_user_profile_edit'))
+		$menu['User']->addChild("Mettre à jour mon profil", array('route' => 'fos_user_profile_edit'))
 			->setAttribute('icon', 'edit');
+
+		$menu['User']->addChild("Changer mon mot de passe", array('route' => 'fos_user_change_password'))
+			->setAttribute('icon', 'cog')
+			->setAttribute('divider_append', true);
 
 		$menu['User']->addChild("Déconnection", array('route' => 'fos_user_security_logout'))
 			->setAttribute('icon', 'log-out');

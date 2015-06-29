@@ -1,0 +1,23 @@
+<form action="{{ path('SLNRegisterBundle_contact') }}" method="post" {{ form_enctype(form) }} class="form form-horizontal" role="form">
+  
+<div class="panel panel-default">
+  <div class="panel-heading">Message</div>
+  <div class="panel-body">
+    {{ form_errors(form) }}
+
+    {{ form_row(form.name) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.subject) }}
+    {{ form_row(form.body) }}
+
+    {{ form_rest(form) }}
+
+    <div class="form-group">
+      <div class="col-sm-offset-3 col-sm-7">
+        <input type="submit" class="btn btn-primary" id="_submit" name="_submit" value="Envoyer" />
+      </div>
+    </div>
+  </div>
+</div>
+
+</form>

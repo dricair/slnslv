@@ -3,6 +3,10 @@ services:
         class: SLN\RegisterBundle\Form\Type\RegistrationFormType
         tags:
             - {name: form.type, alias: sln_user_registration}
+    sln_user.profile.form.type:
+        class: SLN\RegisterBundle\Form\Type\ProfileFormType
+        tags:
+            - {name: form.type, alias: sln_user_profile}
     sln_register.form.type.horaire:
         class: SLN\RegisterBundle\Form\Type\HoraireType
         tags:

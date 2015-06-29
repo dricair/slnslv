@@ -1,0 +1,16 @@
+{% extends 'SLNRegisterBundle::layout.html.twig' %}
+
+{% block title %}Une erreur est survenue : {{ status_text }}{% endblock %}
+
+{% block body %}
+<h1>Oups ! Une erreur est survenue</h1>
+
+<p>Le serveur a retourné une erreur "{{ status_code }} {{ status_text }}</p>
+
+<p>Nous traiterons cette erreur au plus vite. Vous pouvez retourner sur la <a href="{{ path('SLNRegisterBundle_homepage') }}">page principale</a>.
+
+{% endblock %}
+
+
+
+

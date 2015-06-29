@@ -1,17 +1,20 @@
 {% extends 'SLNRegisterBundle::layout.html.twig' %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('bundles/slnregister/js/licensee.js') }}"></script>
-    <script type="text/javascript">
-      $( document ).ready(function() { setup_group_description(); });
-    </script>
-{% endblock %}
-
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 <h1>{{ title }}</h1>
 
   {% include 'SLNRegisterBundle:Licensee:form.html.twig' with { 'form': form, 'title': title, 'id': id, 'user_id': user_id, 'admin': admin } %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/slnregister/js/licensee.js') }}"></script>
+    <script type="text/javascript">
+      $( document ).ready(function() { 
+        $('.datepicker').datetimepicker({format: 'DD/MM/YYYY', locale: 'fr'});
+        setup_group_description(); 
+      });
+    </script>
 {% endblock %}
