@@ -1,0 +1,12 @@
+Bonjour {{ user.getPrenom() }} {{ user.getNom() }}
+
+Un compte a été créé pour vous sur le site: 
+http://stadelaurentinnatation.fr
+
+Le nom d'utilisateur est: {{ user.getUsername() }}.
+
+Pour changer votre mot de passe, accédez à cette page:
+{{ url('fos_user_resetting_request') }}
+
+Le bureau.
+

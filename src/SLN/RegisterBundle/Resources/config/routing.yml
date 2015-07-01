@@ -109,13 +109,13 @@ SLNRegisterBundle_groupe_list:
 # -----------------------
 SLNRegisterBundle_member_create:
   pattern: /admin/member/create
-  defaults: { _controller: SLNRegisterBundle:Member:edit, id:0 }
+  defaults: { _controller: SLNRegisterBundle:Member:edit, id:0, admin: true}
   requirements:
     _method:  GET|POST
 
 SLNRegisterBundle_member_edit:
   pattern: /admin/member/edit/{id}
-  defaults: { _controller: SLNRegisterBundle:Member:edit }
+  defaults: { _controller: SLNRegisterBundle:Member:edit, admin: true }
   requirements:
     _method:  GET|POST
     id: \d+
@@ -129,7 +129,7 @@ SLNRegisterBundle_member_delete:
 
 SLNRegisterBundle_member_list:
   pattern: /admin/member/list
-  defaults: { _controller: SLNRegisterBundle:Member:list }
+  defaults: { _controller: SLNRegisterBundle:Member:list, admin: true }
   requirements:
     _method:  GET
 
@@ -138,7 +138,13 @@ SLNRegisterBundle_member_list:
 # Create and edit licensees
 # -------------------------
 SLNRegisterBundle_admin_licensee_create:
-  pattern: /admin/licensee/create/{user_id}
+  pattern: /admin/licensee/create
+  defaults: { _controller: SLNRegisterBundle:Licensee:edit, id:0, admin: true }
+  requirements:
+    _method:  GET|POST
+
+SLNRegisterBundle_admin_licensee_create_for_user:
+  pattern: /admin/licensee/create/{$user_id}
   defaults: { _controller: SLNRegisterBundle:Licensee:edit, id:0, admin: true }
   requirements:
     _method:  GET|POST

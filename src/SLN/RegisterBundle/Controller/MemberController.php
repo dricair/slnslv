@@ -16,7 +16,7 @@ class MemberController extends Controller
     /*
      * List the members
      */
-    public function listAction()
+    public function listAction($admin=False)
     {
         $members = $this->getUserRepository()->getAll();
 
@@ -26,7 +26,7 @@ class MemberController extends Controller
     /**
      * Form to create a new member or edit an existing one (From admin)
      */
-    public function editAction($id) {
+    public function editAction($id, $admin=false) {
         if ($id == 0) {
           $user = new User();
         } else {
@@ -44,12 +44,26 @@ class MemberController extends Controller
         if ($form->isValid()) {
             $em = $this->getDoctrine()
                    ->getEntityManager();
+
+            // Password not set for user
+            if ($admin) {
+                $tokenGenerator = $this->get('fos_user.util.token_generator');
+                $user->setPlainPassword(substr($tokenGenerator->generateToken(), 0, 8));
+
+                $message = \Swift_Message::newInstance()
+                 ->setSubject("Bienvenue {$user->getPrenom()}")
+                 ->setFrom('slnslv@free.fr')
+                 ->setTo($user->getEmail())
+                 ->setBody($this->renderView('SLNRegisterBundle:Member:createAccount.txt.twig', array('user' => $user)));
+
+                $this->get('mailer')->send($message);
+            }
             $em->persist($user);
             $em->flush();
 
             $this->get('session')->getFlashBag()->add(
               'notice',
-              sprintf("Le membre '%s %s' a été %s avec succès.", $user->getPrenom(), $user->getNom(), $id = 0 ? "ajouté" : "modifié")
+              sprintf("Le membre '%s %s' a été %s avec succès.", $user->getPrenom(), $user->getNom(), $id == 0 ? "ajouté" : "modifié")
             );
 
             return $this->redirect($this->generateUrl('SLNRegisterBundle_member_edit', array('id' => $user->getId())));
@@ -59,7 +73,8 @@ class MemberController extends Controller
             'member' => $user,
             'form' => $form->createView(),
             'title' => $id == 0 ? "Ajouter un membre" : "Modifier un membre",
-            'id' => $id));
+            'id' => $id,
+            'admin' => $admin));
     }
 
     /*

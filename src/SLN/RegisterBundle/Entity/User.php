@@ -141,6 +141,16 @@ class User extends BaseUser
     }
 
     /**
+     * String to use for choice lists
+     *
+     * @return string
+     */
+    public function __toString() {
+        return "{$this->nom} {$this->prenom}";
+    }
+
+
+    /**
      * @ORM\PreUpdate
      */
     public function setUpdatedValue()

@@ -33,7 +33,7 @@ class MiscController extends Controller
                 // Perform some action, such as sending an email
                 $message = \Swift_Message::newInstance()
                   ->setSubject('Question du site d\'inscription')
-                  ->setFrom('postmaster@stadelaurentinnatation.fr')
+                  ->setFrom('slnslv@free.fr')
                   ->setTo($this->container->getParameter('sln_register.emails.contact_email'))
                   ->setCc('cairaud@gmail.com')
                   ->setBody($this->renderView('SLNRegisterBundle:Misc:contactEmail.txt.twig', array('enquiry' => $enquiry)));

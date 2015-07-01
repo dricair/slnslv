@@ -64,7 +64,7 @@ use SLN\RegisterBundle\Entity\Groupe;
     /**
      * @ORM\Column(type="date")
      *
-     @Assert\NotBlank(message="Merci d'entrer la date de naissance.", groups={"Registration", "Profile"})
+     * @Assert\NotBlank(message="Merci d'entrer la date de naissance.", groups={"Registration", "Profile"})
      */
     protected $naissance;
 
@@ -131,6 +131,7 @@ use SLN\RegisterBundle\Entity\Groupe;
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="licensees")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @Assert\NotBlank(message="Un licencié doit être rattaché à un utilisateur.", groups={"Registration", "Profile"})
      */
     protected $user;
 

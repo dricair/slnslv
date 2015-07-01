@@ -11,7 +11,10 @@
   <td>{{ licensee.nom }}</td>
   <td>{{ licensee.prenom }}</td>
   <td>{{ licensee.naissance|date('d/m/Y') }}</td>
-  <td>{% if licensee.groupe %}<a href="{{ path('SLNRegisterBundle_groupe_show', { id: licensee.groupe.id }) }}">{{ licensee.groupe.nom }}</a>
+  <td>
+      {% if licensee.groupe %}
+        {% if admin %}<a href="{{ path('SLNRegisterBundle_groupe_show', { id: licensee.groupe.id }) }}">{{ licensee.groupe.nom }}</a>
+        {% else %}{{ licensee.groupe.nom }}{% endif %}
       {% else %} Pas de groupe sélectionné.{% endif %}
       {% if licensee.officiel %} </br>Officiel {% endif %}
       {% if licensee.bureau %} </br>Membre du bureau {% endif %}</td>

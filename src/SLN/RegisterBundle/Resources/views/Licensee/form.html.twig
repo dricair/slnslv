@@ -7,6 +7,17 @@
               {% endif %}" method="post" {{ form_enctype(form) }} class="form-horizontal" role="form">
   {{ form_errors(form) }}
 
+  {% if admin %}
+  <div class="panel panel-default">
+    <div class="panel-heading">Compte de rattachement</div>
+    <div class="panel-body">
+       {{ form_row(form.user) }}
+
+       <p><a href="{{ path('SLNRegisterBundle_member_create') }}"><span class="glyphicon glyphicon-plus"></span>Ajouter un compte utilisateur</a></p>
+    </div>
+  </div>
+  {% endif %}
+
   <div class="panel panel-default">
     <div class="panel-heading">Identité</div>
     <div class="panel-body">

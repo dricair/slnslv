@@ -37,9 +37,14 @@ class LicenseeController extends Controller
      */
     public function editAction($id, $user_id=0, $inside_page=FALSE, $admin=FALSE) {
         if ($id == 0) {
-          $user = $this->getUserFromID($user_id);
           $licensee = new Licensee();
-          $licensee->setUser($user);
+          if ($user_id == 0 and !$admin)
+              throw $this->createNotFoundException("Cet utilisateur n'existe pas.");
+
+          if ($user_id != 0) {
+              $user = $this->getUserFromID($user_id);
+              $licensee->setUser($user);
+          }
         } else {
           $em = $this->getDoctrine()->getEntityManager();
           $licensee = $this->getLicenseeRepository()->find($id);
@@ -51,7 +56,7 @@ class LicenseeController extends Controller
         }
 
         $request = $this->getRequest();
-        $form    = $this->createForm(new LicenseeType(), $licensee);
+        $form    = $this->createForm(new LicenseeType(), $licensee, array("admin" => $admin));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -78,7 +83,7 @@ class LicenseeController extends Controller
                                             'SLNRegisterBundle:Licensee:edit.html.twig', array(
             'licensee' => $licensee,
             'form' => $form->createView(),
-            'title' => $id == 0 ? "Ajouter un licencié" : "Modifier un licencié",
+            'title' => $id == 0 ? "Ajouter un licencié" : "Editer le licencié \"{$licensee->getPrenom()} {$licensee->getNom()}\"",
             'id' => $id,
             'user_id' => $user_id,
             'admin' => $admin));

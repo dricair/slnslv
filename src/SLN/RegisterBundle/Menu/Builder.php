@@ -43,7 +43,9 @@ class Builder extends ContainerAware {
     			->setAttribute('divider_append', true);
 
             $menu['Admin']->addChild('Liste des licenciés', array('route' => 'SLNRegisterBundle_admin_licensee_list'))
-                ->setAttribute('icon', 'th-list')
+                ->setAttribute('icon', 'th-list');
+            $menu['Admin']->addChild('Ajouter un licencié', array('route' => 'SLNRegisterBundle_admin_licensee_create'))
+                ->setAttribute('icon', 'user')
     			->setAttribute('divider_append', true);
 
             $menu['Admin']->addChild('Liste des groupes', array('route' => 'SLNRegisterBundle_groupe_list'))
