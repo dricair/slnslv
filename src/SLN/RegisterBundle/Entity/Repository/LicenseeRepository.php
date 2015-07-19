@@ -35,6 +35,22 @@ class LicenseeRepository extends EntityRepository {
     }
 
     /**
+     * Get all licensees
+     *
+     * @Return Array of Licensee
+     */
+    public function getAll() {
+        $qb = $this->createQueryBuilder('l')
+                   ->select('l')
+                   ->join('l.groupe', 'g')
+                   ->addOrderBy('l.nom',  'ASC')
+                   ->addOrderBy('l.prenom', 'ASC');
+
+        return $qb->getQuery()
+                  ->getResult();
+    }
+
+    /**
      * Get all licensees, ordered by groups. Do not include licensees that have no group
      *
      * @Return Array of Licensee
@@ -58,8 +74,7 @@ class LicenseeRepository extends EntityRepository {
     public function getAllNoGroups() {
         $qb = $this->createQueryBuilder('l')
                    ->select('l')
-                   ->join('l.groupe', 'g')
-                   ->where('g IS NULL')
+                   ->where('l.groupe IS NULL')
                    ->addOrderBy('l.nom',  'ASC')
                    ->addOrderBy('l.prenom', 'ASC');
 

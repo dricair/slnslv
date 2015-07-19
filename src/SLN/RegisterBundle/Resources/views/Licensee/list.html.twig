@@ -19,5 +19,14 @@
 
   {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': groupe['licensees'], 'admin': admin } %}
 {% endfor %}
+
+<h1>Fonctions spéciales</h1>
+
+<h2>Officiels</h2>
+  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': officiels, 'admin': admin } %}
+
+<h2>Membres du bureau</h2>
+  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': bureau, 'admin': admin } %}
+
 {% endblock %}
 
