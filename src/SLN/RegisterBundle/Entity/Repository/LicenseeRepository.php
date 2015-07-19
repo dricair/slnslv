@@ -3,6 +3,7 @@
 namespace SLN\RegisterBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use SLN\RegisterBundle\Entity\Groupe;
 
 /**
  * LicenseeRepository
@@ -70,6 +71,8 @@ class LicenseeRepository extends EntityRepository {
 
     /**
      * Get all licensees that have no group selected
+     *
+     * @Return Array of Licensee
      */
     public function getAllNoGroups() {
         $qb = $this->createQueryBuilder('l')
@@ -81,4 +84,22 @@ class LicenseeRepository extends EntityRepository {
         return $qb->getQuery()
                   ->getResult();
     }
+
+    /**
+     * Get all licensees for a specific group
+     *
+     * @Return Array of Licensee
+     */
+    public function getAllForGroupe(Groupe $groupe) {
+        $qb = $this->createQueryBuilder('l')
+                   ->select('l')
+                   ->where('l.groupe = :groupe_id')
+                   ->addOrderBy('l.nom',  'ASC')
+                   ->addOrderBy('l.prenom', 'ASC')
+                   ->setParameter('groupe_id', $groupe->getId());
+
+        return $qb->getQuery()
+                  ->getResult();
+    }
+
 }

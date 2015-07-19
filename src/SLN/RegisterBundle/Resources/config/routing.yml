@@ -93,7 +93,7 @@ SLNRegisterBundle_groupe_delete:
 
 SLNRegisterBundle_groupe_show:
   pattern: /admin/groupe/show/{id}
-  defaults: { _controller: SLNRegisterBundle:Groupe:show }
+  defaults: { _controller: SLNRegisterBundle:Groupe:show, admin: true }
   requirements:
     _method:  GET|POST
     id: \d+

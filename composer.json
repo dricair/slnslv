@@ -29,7 +29,9 @@
         "knplabs/knp-menu-bundle": "~2"
     },
     "require-dev": {
-        "sensio/generator-bundle": "~2.3"
+        "sensio/generator-bundle": "~2.3",
+        "liip/functional-test-bundle": "~1.2",
+        "doctrine/doctrine-fixtures-bundle": "~2.2"
     },
     "scripts": {
         "post-root-package-install": [

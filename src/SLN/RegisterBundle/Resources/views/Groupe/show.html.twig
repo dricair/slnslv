@@ -10,6 +10,8 @@
 
 <h1>Groupe de natation: {{ groupe.nom }}</h1>
 
+<h2>Horaires</h2>
+
 <p>Pour le groupe <span class="mark">{{ groupe.nom }}</span>, les horaires sont les suivants:</p>
 
 <table class='table table-striped'>
@@ -24,6 +26,10 @@
 </tr>
 {% endfor %}
 </table>
+
+<h2>Liste des licenciés</h2>
+
+  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': licensees, 'admin': admin } %}
   
 {% endblock %}
   

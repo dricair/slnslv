@@ -32,3 +32,6 @@ git diff --name-only <tag>
 
 Mettre à jour la DB:
 cat backup/drop_tables.sql backup/stadelau.sql | mysql -D slnslv -u slnslv -p
+
+Tests:
+rm -f app/logs/test.log && phpunit -c app src/SLN/

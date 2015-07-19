@@ -58,7 +58,7 @@ class GroupeController extends Controller {
     /**
      * Show and modify a groupe
      */
-    public function showAction($id, $licensees=False) {
+    public function showAction($id, $admin=false) {
         $em = $this->getDoctrine()->getEntityManager();
         $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
 
@@ -66,8 +66,12 @@ class GroupeController extends Controller {
             throw $this->createNotFoundException('Ce groupe n\'existe pas dans la base de données.');
         }
 
+        $licensees =  $em->getRepository('SLNRegisterBundle:Licensee')->getAllForGroupe($groupe);
+
         return $this->render('SLNRegisterBundle:Groupe:show.html.twig', array(
-          'groupe' => $groupe));
+          'groupe' => $groupe,
+          'licensees' => $licensees,
+          'admin' => $admin));
     }
 
 
