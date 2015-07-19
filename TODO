@@ -1,30 +1,21 @@
 Bugs:
-- Licensee admin -> mauvais retour
+- Licensee admin -> tri Users par nom, 
 
 Inscriptions:
 - Montrer ce qui manque
-- Ajouter les tarifs et agenda
 - Ajouter des photos
 - Remplir la feuille de licence
 - Envoyer un mail en cas de changement de groupe
 
-Profil:
-- Changer adresse et mot de passe
-
 Admin:
-- Editer un licencié
-- Voir les licenciés par groupe
 - Indiquer ce qui a été donné et valider l'inscription
 
 Licencié
 - Informations de compétitions
 
 Divers:
-- Ajouter un menu
 - Renouvellement des licences
 - Impression des cartes
-- Envoi de mails
-- Page de contact
 - assetic
 
 https://github.com/comur/ComurImageBundle
