@@ -1,12 +1,20 @@
 <?php
+/**
+  * Represents a Licensee
+  *
+  * @author Cédric Airaud
+  */
 
 namespace SLN\RegisterBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use SLN\RegisterBundle\Entity\Groupe;
+use SLN\RegisterBundle\Entity\User;
 
 /**
+ * Licensee class, representing an inscription.
+ *
  * @ORM\Entity(repositoryClass="SLN\RegisterBundle\Entity\Repository\LicenseeRepository")
  * @ORM\Table(name="licensee")
  * @ORM\HasLifecycleCallbacks()
@@ -14,6 +22,7 @@ use SLN\RegisterBundle\Entity\Groupe;
  class Licensee {
 
     /**
+     * @var int $id Id of the Licensee
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -21,6 +30,7 @@ use SLN\RegisterBundle\Entity\Groupe;
     protected $id;
 
     /**
+     * @var string $nom Name of the licensee
      * @ORM\Column(type="string", length=100)
      *
      * @Assert\NotBlank(message="Merci d'entrer un nom.", groups={"Registration", "Profile"})
@@ -35,6 +45,7 @@ use SLN\RegisterBundle\Entity\Groupe;
     protected $nom;
 
     /**
+     * @var string $prenom Family name
      * @ORM\Column(type="string", length=100)
      *
      * @Assert\NotBlank(message="Merci d'entrer un prénom.", groups={"Registration", "Profile"})
@@ -49,6 +60,7 @@ use SLN\RegisterBundle\Entity\Groupe;
     protected $prenom;
 
     /**
+     * var int $sexe Integer value for gender
      * @ORM\Column(type="integer")
      * @Assert\Choice(callback = "getGenders", message="Merci de sélectionner une valeur", groups={"Registration", "Profile"})
      */
@@ -57,11 +69,17 @@ use SLN\RegisterBundle\Entity\Groupe;
     const HOMME = 0;
     const FEMME = 1;
 
+    /**
+     * Return an array to convert integer to string for gender
+     *
+     * @return string[] List of string for genders.
+     */
     public static function getGenders() {
         return array(self::HOMME => "Homme", self::FEMME => "Femme");
     }
 
     /**
+     * @var \Datetime $naissance Birth date
      * @ORM\Column(type="date")
      *
      * @Assert\NotBlank(message="Merci d'entrer la date de naissance.", groups={"Registration", "Profile"})
@@ -69,66 +87,79 @@ use SLN\RegisterBundle\Entity\Groupe;
     protected $naissance;
 
     /**
+     * @var string $iuf License number
      * @ORM\Column(type="string", length=7, nullable=True)
      */
     protected $iuf;
     
     /**
+     * @var \Datetime $date_licence Date for license creation
      * @ORM\Column(type="date", nullable=True)
      */
     protected $date_licence;
 
     /**
+     * @var bool $officiel True if licensee is an officiel
      * @ORM\Column(type="boolean")
      */
     protected $officiel;
 
     /**
+     * @var bool $bureau True if licensee is member of the Bureau
      * @ORM\Column(type="boolean")
      */
     protected $bureau;
 
     /**
+     * @var bool $inscription_ok True if inscription is ok.
      * @ORM\Column(type="boolean")
      */
     protected $inscription_ok;
 
     /**
+     * @var bool $attestation_ok True if medical attestion is verified
      * @ORM\Column(type="boolean")
      */
     protected $attestation_ok;
 
     /**
+     * @var bool $photo_ok True if provided photo is ok
      * @ORM\Column(type="boolean")
      */
     protected $photo_ok;
 
     /**
+     * @var bool $certificat_ok True if medical attestion is verified
      * @ORM\Column(type="boolean")
      */
     protected $certificat_ok;
 
     /**
+     * @var bool $paiement_ok True if payment is ok.
      * @ORM\Column(type="boolean")
      */
     protected $paiement_ok;
 
     /**
+     * @var bool $autorisation_photos True if authorization for photos is ok
      * @ORM\Column(type="boolean")
      */
     protected $autorisation_photos;
 
     /**
+     * @var \Datetime $created Date of creation
      * @ORM\Column(type="datetime")
      */
     protected $created;
 
     /**
+     * @var \Datetime $updated Date of last update
      * @ORM\Column(type="datetime")
      */
     protected $updated;
 
     /**
+     * @var User $user Connected User class
      * @ORM\ManyToOne(targetEntity="User", inversedBy="licensees")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * @Assert\NotBlank(message="Un licencié doit être rattaché à un utilisateur.", groups={"Registration", "Profile"})
@@ -136,21 +167,26 @@ use SLN\RegisterBundle\Entity\Groupe;
     protected $user;
 
     /**
+     * @var Groupe $groupe Selected groupe
      * @ORM\ManyToOne(targetEntity="Groupe", inversedBy="licensees")
      * @ORM\JoinColumn(name="groupe_id", referencedColumnName="id", nullable=True)
      */
     protected $groupe;
 
-    /*
+    /**
      * Return Age in years
+     * 
+     * @return int Age in years, rounded down.
      */
     public function getAge() {
       $now = new \DateTime();
       return $this->naissance->diff($now)->y;
     }
 
-    /*
+    /**
      * Return true if licensee if less than 18
+     * 
+     * @return bool True if licensee is less than 18
      */
     public function isMineur() {
         return $this->getAge() < 18;
@@ -160,10 +196,11 @@ use SLN\RegisterBundle\Entity\Groupe;
     /**
      * Write inscription sheet to a PDF
      *
-     * @param TCPDF $pdf: PDF to edit.
-     * @param Asset $assets
-     * @param string $title: Title if the PDF needs to be started
-     * @return TCPDF
+     * @param TCPDF $pdf PDF to edit.
+     * @param Asset[] $assets List of assets to access pictures
+     * @param string $title Title if the PDF needs to be started
+     *
+     * @return TCPDF Generated PDF
      *
      */
     public function inscriptionSheet($pdf, $assets, $title='') {
@@ -319,6 +356,7 @@ Site: http://stadelaurentinnatatin.fr</p>');
         return $pdf;
     }
 
+    /** @ignore */
     public function __construct()
     {
         $this->setCreated(new \DateTime());
@@ -335,6 +373,7 @@ Site: http://stadelaurentinnatatin.fr</p>');
     }
 
     /**
+     * @ignore
      * @ORM\PreUpdate
      */
     public function setUpdatedValue()
@@ -402,7 +441,7 @@ Site: http://stadelaurentinnatatin.fr</p>');
     /**
      * Set naissance
      *
-     * @param \DateTime $naissance
+     * @param DateTime $naissance
      * @return Licensee
      */
     public function setNaissance($naissance)
@@ -415,7 +454,7 @@ Site: http://stadelaurentinnatatin.fr</p>');
     /**
      * Get naissance
      *
-     * @return \DateTime 
+     * @return DateTime 
      */
     public function getNaissance()
     {
@@ -540,7 +579,7 @@ Site: http://stadelaurentinnatatin.fr</p>');
     /**
      * Set date_licence
      *
-     * @param \DateTime $dateLicence
+     * @param DateTime $dateLicence
      * @return Licensee
      */
     public function setDateLicence($dateLicence)
@@ -553,7 +592,7 @@ Site: http://stadelaurentinnatatin.fr</p>');
     /**
      * Get date_licence
      *
-     * @return \DateTime 
+     * @return DateTime 
      */
     public function getDateLicence()
     {
@@ -563,7 +602,7 @@ Site: http://stadelaurentinnatatin.fr</p>');
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      * @return Licensee
      */
     public function setCreated($created)
@@ -576,7 +615,7 @@ Site: http://stadelaurentinnatatin.fr</p>');
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return DateTime 
      */
     public function getCreated()
     {
@@ -586,7 +625,7 @@ Site: http://stadelaurentinnatatin.fr</p>');
     /**
      * Set updated
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      * @return Licensee
      */
     public function setUpdated($updated)
@@ -599,7 +638,7 @@ Site: http://stadelaurentinnatatin.fr</p>');
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return DateTime 
      */
     public function getUpdated()
     {
@@ -609,10 +648,10 @@ Site: http://stadelaurentinnatatin.fr</p>');
     /**
      * Set user
      *
-     * @param \SLN\RegisterBundle\Entity\User $user
+     * @param User $user
      * @return Licensee
      */
-    public function setUser(\SLN\RegisterBundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 
@@ -622,7 +661,7 @@ Site: http://stadelaurentinnatatin.fr</p>');
     /**
      * Get user
      *
-     * @return \SLN\RegisterBundle\Entity\User 
+     * @return User 
      */
     public function getUser()
     {
@@ -701,10 +740,10 @@ Site: http://stadelaurentinnatatin.fr</p>');
     /**
      * Set groupe
      *
-     * @param \SLN\RegisterBundle\Entity\Groupe $groupe
+     * @param Groupe $groupe
      * @return Licensee
      */
-    public function setGroupe(\SLN\RegisterBundle\Entity\Groupe $groupe = null)
+    public function setGroupe(Groupe $groupe = null)
     {
         $this->groupe = $groupe;
 
@@ -714,7 +753,7 @@ Site: http://stadelaurentinnatatin.fr</p>');
     /**
      * Get groupe
      *
-     * @return \SLN\RegisterBundle\Entity\Groupe 
+     * @return Groupe 
      */
     public function getGroupe()
     {

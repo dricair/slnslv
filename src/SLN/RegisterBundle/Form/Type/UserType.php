@@ -1,4 +1,7 @@
 <?php
+/**
+ * Edit a user from admin page
+ */
 
 namespace SLN\RegisterBundle\Form\Type;
 
@@ -7,8 +10,17 @@ use Symfony\Component\Form\FormBuilderInterface;
 use SLN\RegisterBundle\Entity\User;
 
 
+/**
+ * Edit a user from admin page
+ */
 class UserType extends AbstractType
 {
+   /**
+    * Build the form
+    *
+    * @param FormBuilderInterface $builder
+    * @param array $options
+    */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // Used for administration, does not set password
@@ -30,6 +42,7 @@ class UserType extends AbstractType
                                          'expanded' => true));
     }
 
+    /** @ignore */
     public function getName()
     {
         return 'sln_registerbundle_usertype';

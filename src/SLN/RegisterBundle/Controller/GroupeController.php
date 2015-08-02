@@ -1,8 +1,16 @@
 <?php
+/**
+  * Group controller class. 
+  *
+  * Contains controller class to deal with groups. Mostly admin functions.
+  *
+  * @author Cédric Airaud
+  */
 
 namespace SLN\RegisterBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Form\GroupeType;
@@ -13,9 +21,15 @@ use SLN\RegisterBundle\Form\GroupeType;
 class GroupeController extends Controller {
     
     /**
-     * Create a groupe
+     * Create or edit a groupe. 
+     *
+     * Can be used for GET and POST requests. 
+     *
+     * @param int $id Id of the group to edit. If 0 or not specified, create a group
+     *
+     * @return Response Rendered page
      */
-    public function editAction($id=0) {
+    public function editAction(int $id=0) {
         if ($id == 0) {
             $groupe = new Groupe();
         } else {
@@ -56,7 +70,14 @@ class GroupeController extends Controller {
     }
 
     /**
-     * Show and modify a groupe
+     * Show a groupe.
+     *
+     * Show the groupe detail as well as the licensees that are in this groupe.
+     *
+     * @param int  $id     Id of the group to show
+     * @param bool $admin  True if the page is accessed with admin rights
+     *
+     * @return Response Rendered page
      */
     public function showAction($id, $admin=false) {
         $em = $this->getDoctrine()->getEntityManager();
@@ -75,6 +96,13 @@ class GroupeController extends Controller {
     }
 
 
+    /**
+     * Delete a groupe.
+     *
+     * @param int $id Id for the groupe.
+     *
+     * @return Response Redirect to the groupe list.
+     */
     public function deleteAction($id) {
         $em = $this->getDoctrine()->getEntityManager();
         $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
@@ -91,7 +119,9 @@ class GroupeController extends Controller {
 
 
     /**
-     * List of the groups
+     * List of the groups.
+     *
+     * @return Response Rendered page.
      */
     public function listAction() {
         $em = $this->getDoctrine()->getEntityManager();

@@ -1,12 +1,6 @@
 <?php
-
-/*
- * This file is part of the FOSUserBundle package.
- *
- * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+/**
+ * Override FOS Profile type to edit User class
  */
 
 namespace SLN\RegisterBundle\Form\Type;
@@ -15,8 +9,17 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use SLN\RegisterBundle\Entity\User;
 
+/**
+ * Override FOS Profile type to edit User class
+ */
 class ProfileFormType extends AbstractType
 {
+   /**
+    * Build the form
+    *
+    * @param FormBuilderInterface $builder
+    * @param array $options
+    */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // add your custom field
@@ -31,11 +34,13 @@ class ProfileFormType extends AbstractType
                 ->add('tel_portable', null, array('attr' => array('placeholder' => '06xxxxxxxx')));
     }
 
+    /** @ignore */
     public function getParent()
     {
         return 'fos_user_profile';
     }
 
+    /** @ignore */
     public function getName()
     {
         return 'sln_user_profile';

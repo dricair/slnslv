@@ -1,4 +1,9 @@
 <?php
+/**
+  * Represents a group, with time slots and descriptions
+  *
+  * @author Cédric Airaud
+  */
 
 namespace SLN\RegisterBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,12 +16,38 @@ use JMS\Serializer\Annotation\ExclusionPolicy,
 
 use SLN\RegisterBundle\Entity\Horaire;
 
+/**
+ * Class for time slot, used in Horaire class
+ */
 class Horaire {
+    /**
+     * @var int $jour Day of the week
+     */
     public $jour;
+
+    /**
+     * @var \Datetime $debut Start time
+     */
     public $debut;
+
+    /**
+     * @var \Datetime $debut End time
+     */
     public $fin;
+
+    /**
+     * @var string $description Description for the slot
+     */
     public $description;
 
+    /**
+     * Constructor of the class
+     *
+     * @param int    $jour        Day of the week
+     * @param string $debut       Start time
+     * @param string $fin         End time
+     * @param string $description Description for the slot
+     */
     public function __construct($jour=0, $debut=0, $fin=0, $description="") {
         $this->jour = $jour;
         $this->debut = $debut;
@@ -24,6 +55,11 @@ class Horaire {
         $this->description = $description;
     }
 
+    /**
+     * Returns a list to convert days of week to strings
+     *
+     * @return string[] List of days
+     */
     public static function getJours() {
         return array(0 => "lundi",
                      1 => "mardi",
@@ -34,14 +70,32 @@ class Horaire {
                      6 => "dimanche");
     }
 
+    /**
+     * Return the day of week as a string
+     *
+     * @return string Day of week as a string
+     */
     public function getJour() { $jours = $this->getjours(); return $jours[$this->jour]; }
 
+    /**
+     * Return start time as a string
+     * 
+     * @return string Start time
+     */
     public function getDebut() { return date("H:i", $this->debut); }
+
+    /**
+     * Return end time as a string
+     * 
+     * @return string End time as a string
+     */
     public function getFin() { return date("H:i", $this->fin); }
 }
 
 
 /**
+ * Groupe class
+ *
  * @ORM\Entity(repositoryClass="SLN\RegisterBundle\Entity\Repository\GroupeRepository")
  * @ORM\Table(name="groupe")
  * @ORM\HasLifecycleCallbacks()
@@ -49,6 +103,7 @@ class Horaire {
  */
  class Groupe {
     /**
+     * @var int $id Id of the groupe
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -57,9 +112,10 @@ class Horaire {
     protected $id;
 
     /**
+     * @var string $nom Name of the groupe
      * @ORM\Column(type="string", length=100)
      *
-     @Assert\NotBlank(message="Merci d'entrer un nom.", groups={"Registration", "Profile"})
+     * @Assert\NotBlank(message="Merci d'entrer un nom.", groups={"Registration", "Profile"})
      * @Assert\Length(
      *     min=3,
      *     max="100",
@@ -72,6 +128,7 @@ class Horaire {
     protected $nom;
 
     /**
+     * @var string $description Description for the Groupe
      * @ORM\Column(type="string", length=300)
      * @Assert\Length(
      *     max="300",
@@ -84,6 +141,7 @@ class Horaire {
      
 
     /**
+     * @var int $category Category for the groupe
      * @ORM\Column(type="integer")
      * @Assert\Choice(callback = "getCategories", message="Merci de sélectionner la catégorie", groups={"Registration", "Profile"})
      */
@@ -93,6 +151,11 @@ class Horaire {
     const COMPETITION=1;
     const LOISIR=2;
     
+    /**
+     * Return array to convert category values to strings
+     * 
+     * @return string[] list of categories
+     */
     public static function getCategories() {
         return array(self::ECOLE => "Ecole de natation", 
                      self::COMPETITION => "Sections compétition",
@@ -100,32 +163,38 @@ class Horaire {
     }
 
     /**
+     * @var Licensee[] $licensees List of related Licensee
      * @ORM\OneToMany(targetEntity="Licensee", mappedBy="groupe")
      */
     protected $licensees;
 
      /**
-     * @ORM\Column(type="json_array")
-     */
+      * @var Horaire[] $horaires List of Horaire slots
+      * @ORM\Column(type="json_array")
+      */
     protected $horaires;
 
     // TODO: Tarifs
 
+    /** @ignore */
     public function __toString() {
         return $this->nom;
     }
 
 
-    /*
+    /**
+     * @var \Datetime $created Creation date
      * @ORM\Column(type="datetime")
      */
     protected $created;
 
     /**
+     * @var \Datetime $updated Last update date
      * @ORM\Column(type="datetime")
      */
     protected $updated;
 
+    /** @ignore */
     public function __construct() {
         $this->setCreated(new \DateTime());
         $this->setUpdated(new \DateTime());
@@ -138,6 +207,7 @@ class Horaire {
     }
 
     /**
+     * @ignore
      * @ORM\PreUpdate
      */
     public function setUpdatedValue()
@@ -147,6 +217,7 @@ class Horaire {
 
     /**
      * Add a new Horaire
+     * @param Horaire $horaire
      */
     public function addHoraire($horaire) {
         $this->horaires[] = $horaire;
@@ -154,6 +225,7 @@ class Horaire {
 
     /** 
       * Remove an horaire
+      * @param Horaire $horaire
       */
     public function removeHoraire($horaire) {
         $index = -1;
@@ -226,7 +298,8 @@ class Horaire {
     }
 
     /**
-     * Get categorie name
+     * Get categorie name as a string
+     * @return string Category
      * @VirtualProperty
      */
     public function getCategorieName() {
@@ -237,8 +310,8 @@ class Horaire {
     /**
      * Add licensees
      *
-     * @param \SLN\RegisterBundle\Entity\Licensee $licensees
-     * @return Groupe
+     * @param Licensee $licensees Licensee to add
+     * @return Groupe Containing group
      */
     public function addLicensee(\SLN\RegisterBundle\Entity\Licensee $licensees)
     {
@@ -250,9 +323,9 @@ class Horaire {
     /**
      * Remove licensees
      *
-     * @param \SLN\RegisterBundle\Entity\Licensee $licensees
+     * @param Licensee $licensees Licensees to remove
      */
-    public function removeLicensee(\SLN\RegisterBundle\Entity\Licensee $licensees)
+    public function removeLicensee(Licensee $licensees)
     {
         $this->licensees->removeElement($licensees);
     }
@@ -260,7 +333,7 @@ class Horaire {
     /**
      * Get licensees
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Collection Collection of licensees
      */
     public function getLicensees()
     {
@@ -270,12 +343,17 @@ class Horaire {
     /**
      * Get horaires
      *
-     * @return array 
+     * @return Horaire[] List of slots
      */
     public function getHoraires() {
         return $this->horaires;
     }
 
+    /**
+     * Get horaires as string array
+     *
+     * @return string[]
+     */
     public function getFormatedHoraires() {
         $ret = array();
         foreach ($this->horaires as $horaire) {
@@ -285,8 +363,11 @@ class Horaire {
     }
 
     /**
-      * Virtual property for horaires
+      * Virtual property for horaires.
       * 'jour' is reported as a string, 'debut' and 'fin' as formatted times
+      *
+      * @return string[] List of slots as string
+      *
       * @VirtualProperty
       */
     public function horaireList() {

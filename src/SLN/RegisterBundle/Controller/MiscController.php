@@ -1,19 +1,44 @@
 <?php
+/**
+  * Misc controller class. 
+  *
+  * Contains controller class to deal with various functions.
+  *
+  * @author Cédric Airaud
+  */
 
 namespace SLN\RegisterBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 use SLN\RegisterBundle\Entity\Enquiry;
 use SLN\RegisterBundle\Form\EnquiryType;
 
+/**
+ * Controller class for misc functions
+ */
 class MiscController extends Controller
 {
+    /**
+     * About action: render a page for the About page.
+     *
+     * @return Response Rendered page.
+     */
     public function aboutAction()
     {
         return $this->render('SLNRegisterBundle:Misc:about.html.twig');
     }
 
+    
+    /**
+     * Contact action: render a page for contact the webmaster.
+     *
+     * When the form is validated, send an email to the webmaster.
+     *
+     * @return Response Rendered form.
+     * @see Enquiry Internally uses Enquiry class.
+     */
     public function contactAction()
     {
         $enquiry = new Enquiry();
@@ -36,6 +61,7 @@ class MiscController extends Controller
                   ->setFrom('slnslv@free.fr')
                   ->setTo($this->container->getParameter('sln_register.emails.contact_email'))
                   ->setCc('cairaud@gmail.com')
+                  ->setReplyTo($enquiry->getEmail())
                   ->setBody($this->renderView('SLNRegisterBundle:Misc:contactEmail.txt.twig', array('enquiry' => $enquiry)));
 
                 $this->get('mailer')->send($message);
@@ -44,8 +70,6 @@ class MiscController extends Controller
                   sprintf("Votre message '" . $enquiry->getSubject() . "' vient d'être envoyé.")
                 );
 
-                // Redirect - This is important to prevent users re-posting
-                // the form if they refresh the page
                 return $this->redirect($this->generateUrl('SLNRegisterBundle_contact'));
             }
         }
@@ -55,6 +79,14 @@ class MiscController extends Controller
         ));
     }
 
+
+    /**
+     * Private test function, normally not available
+     *
+     * @param int $id Integer parameter.
+     *
+     * @return Response Rendered response
+     */
     public function testAction($id) {
       $message = \Swift_Message::newInstance()
         ->setSubject('Hello Email')

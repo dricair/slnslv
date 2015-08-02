@@ -1,4 +1,7 @@
 <?php
+/**
+ * Create a form for a Groupe instance
+ */
 
 namespace SLN\RegisterBundle\Form;
 
@@ -8,8 +11,17 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use SLN\RegisterBundle\Entity\Licensee;
 
 
+/**
+ * Create a form for a Groupe instance
+ */
 class LicenseeType extends AbstractType
 {
+   /**
+    * Build the form
+    *
+    * @param FormBuilderInterface $builder
+    * @param array $options
+    */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $admin = $options["admin"];
@@ -31,10 +43,16 @@ class LicenseeType extends AbstractType
             $builder->add('user', null, array("label" => "Rattaché au compte"));
     }
 
+    /**
+     * Set default options to set to the instance
+     *
+     * @param OptionsResolverInterface $resolver
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
         $resolver->setDefaults(array("admin" => false));
     }
 
+    /** @ignore */
     public function getName()
     {
         return 'sln_registerbundle_licenseetype';

@@ -1,16 +1,37 @@
 <?php
+/**
+  * Test the home controller, mainly the user functions
+  *
+  * @author Cédric Airaud
+  */
 
 namespace SLN\RegisterBundle\Tests\Controller;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
+/**
+  * Test the home controller through web access, mainly the user functions
+  *
+  * This tests the user functions:
+  * - No access when not logged in
+  * - Creation of a user
+  * - Access to user pages
+  */
 class HomeControllerTest extends WebTestCase
 {
+    /** Normal user to test */
     const TEST_USER      = "test-user@test.com";
+    /** Password for normal user */
     const TEST_USER_PWD  = "test";
+
+    /** User with admin rights */
     const TEST_ADMIN     = "test-admin@test.com";
+    /** Password for user with admin */
     const TEST_ADMIN_PWD = "test";
 
+    /**
+     * Set-up: enable profiler
+     */
     public function setUp() {
         parent::setUp();
         $this->client = static::createClient();
@@ -99,7 +120,17 @@ class HomeControllerTest extends WebTestCase
         $this->assertTrue($crawler->filter('html:contains("Félicitation test, votre compte est maintenant activé.")')->count() > 0);
     }
         
+    /**
+     * @todo Test add licensee
+     * @todo Test show licensees
+     */
 
+    /**
+     * Log a user, to be used with further pages
+     *
+     * @param string $username Username of the user to log in
+     * @param string $password Password ot the user to log in
+     */
     public function doLogin($username, $password) {
       $crawler = $this->client->request('GET', '/login');
       $form = $crawler->selectButton('_submit')->form(array(

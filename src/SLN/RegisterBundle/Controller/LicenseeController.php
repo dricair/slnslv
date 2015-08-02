@@ -1,4 +1,11 @@
 <?php
+/**
+  * Licensee controller class. 
+  *
+  * Contains controller class to deal with groups. Mostly admin functions.
+  *
+  * @author Cédric Airaud
+  */
 
 namespace SLN\RegisterBundle\Controller;
 
@@ -6,8 +13,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 
+use SLN\RegisterBundle\Entity\User;
+use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Form\LicenseeType;
+
+use SLN\RegisterBundle\Entity\Repository\LicenseeRepository;
 
 /**
  * Licensee controller.
@@ -15,7 +26,11 @@ use SLN\RegisterBundle\Form\LicenseeType;
 class LicenseeController extends Controller
 {
     /**
-     * Show a Licensee entry
+     * Show a Licensee entry.
+     *
+     * @param int $id Id of the licensee to show.
+     *
+     * @return Response Rendered page.
      */
     public function showAction($id)
     {
@@ -33,7 +48,14 @@ class LicenseeController extends Controller
     }
 
     /**
-     * Form to create a new licensee or edit an existing one
+     * Form to create a new licensee or edit an existing one. Answers to GET and POST requests.
+     *
+     * @param int  $id           Id of the Licensee to edit. If 0, a new Licensee instead.
+     * @param int  $user_id      Id of the User, used when a Licensee is created.
+     * @param bool $inside_page  If true, the page is rendered inside another page, no header is generated
+     * @param bool $admin        If true, the page is accessed with admin rights.
+     *
+     * @return Response Rendered page.
      */
     public function editAction($id, $user_id=0, $inside_page=FALSE, $admin=FALSE) {
         if ($id == 0) {
@@ -91,7 +113,12 @@ class LicenseeController extends Controller
 
 
     /**
-      * Delete a licensee from a user
+      * Delete a licensee from a given user.
+      * 
+      * @param int  $id    Id of the licensee to delete.
+      * @param bool $admin If true, the page is accessed with admin rights.
+      *
+      * @return Response Rendered page.
       */
     public function deleteAction($id, $admin=FALSE) {
         $licensee = $this->getLicenseeRepository()->find($id);
@@ -112,7 +139,11 @@ class LicenseeController extends Controller
     }
 
     /** 
-     * List licensee with optional filters and sorting
+     * List licensee with optional filters and sorting.
+     * 
+     * @param bool $admin If True, the page is accessed with admin rights
+     *
+     * @return Response Rendered page.
      */
     public function listAction($admin=FALSE) {
         $groupes = array();
@@ -160,8 +191,16 @@ class LicenseeController extends Controller
                                                                                 'admin' => $admin));
     }
 
-    /*
-     * Inscription sheets
+    /**
+     * Inscription sheets.
+     *
+     * Render a PDF file containing the inscription sheet for the Licensee, and return a HTML
+     * page to download the file.
+     *
+     * @param int  $id    Id of the Licensee
+     * @param bool $admin True if the page is accessed with admin rights.
+     *
+     * @return Response Rendered page
      */
     public function inscriptionAction($id, $admin=False) {
         $licensee = $this->getLicenseeRepository()->find($id);
@@ -195,7 +234,13 @@ class LicenseeController extends Controller
 
     /**
      * Get user from ID. If user is not current ID or a user with staff role, 
-     * raise an exception
+     * raise an exception.
+     *
+     * @param int $user_id Id of the User.
+     *
+     * @return User User instance with the given ID.
+     *
+     * @throws AccessDeniedException if the current user does not match, and current user does not have admin rights.
      */
     public function getUserFromID($user_id) {
         $em = $this->getDoctrine()
@@ -220,7 +265,7 @@ class LicenseeController extends Controller
     /**
      * Get repository for the licensees
      *
-     * @return Repository
+     * @return LicenseeRepository Repository for Licensee instances.
      */
     protected function getLicenseeRepository() {
         $em = $this->getDoctrine()

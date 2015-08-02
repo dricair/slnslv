@@ -35,3 +35,8 @@ cat backup/drop_tables.sql backup/stadelau.sql | mysql -D slnslv -u slnslv -p
 
 Tests:
 rm -f app/logs/test.log && phpunit -c app src/SLN/
+
+Documentation:
+vendor/phpdocumentor/phpdocumentor/bin/phpdoc -d ./src/ -t ./docs/
+gnome-open docs/index.php
+

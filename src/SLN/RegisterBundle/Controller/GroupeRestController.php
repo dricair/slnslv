@@ -1,5 +1,11 @@
 <?php
-// REST API for the groups
+/**
+  * Group controller class for REST api 
+  *
+  * Contains controller class to deal with groups, for REST api. 
+  *
+  * @author Cédric Airaud
+  */
 
 namespace SLN\RegisterBundle\Controller;
 
@@ -10,8 +16,17 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Form\GroupeType;
 
-
+/**
+ * Controller for the Groupe class to answer REST api.
+ */
 class GroupeRestController extends Controller {
+
+    /**
+     * Get the description for a Groupe. Return the Groupe itself.
+     *
+     * @param int $id Id for the Groupe
+     * @return Groupe Requested groupe.
+     */
     public function getGroupAction($id){
         $em = $this->getDoctrine()->getEntityManager();
         $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);

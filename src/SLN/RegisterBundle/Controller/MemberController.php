@@ -1,4 +1,11 @@
 <?php
+/**
+  * Member controller class. 
+  *
+  * Contains controller class to deal with members. Mostly admin functions.
+  *
+  * @author Cédric Airaud
+  */
 
 namespace SLN\RegisterBundle\Controller;
 
@@ -9,12 +16,20 @@ use SLN\RegisterBundle\Entity\User;
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Form\Type\UserType;
 
-use SLN\RegisterBundle\Entity\Repository;
+use SLN\RegisterBundle\Entity\Repository\UserRepository;
+use SLN\RegisterBundle\Entity\Repository\LicenseeRepository;
 
+/**
+ * Member controller.
+ */
 class MemberController extends Controller
 {
-    /*
-     * List the members
+    /**
+     * List the members.
+     *
+     * @param bool $admin If True, page is accessed with admin rights.
+     *
+     * @return Response Rendered page.
      */
     public function listAction($admin=False)
     {
@@ -25,6 +40,11 @@ class MemberController extends Controller
 
     /**
      * Form to create a new member or edit an existing one (From admin)
+     *
+     * @param int  $id    Id of the User to edit.
+     * @param bool $admin If True, the page is accessed with admin rights.
+     * 
+     * @return Response Rendered page
      */
     public function editAction($id, $admin=false) {
         if ($id == 0) {
@@ -77,8 +97,14 @@ class MemberController extends Controller
             'admin' => $admin));
     }
 
-    /*
-     * Inscription sheets
+    /**
+     * Inscription sheets.
+     *
+     * Generate a HTML page to download a PDF contaning the inscription sheets for Licensee of the given User.
+     *
+     * @param int $user_id Id of the User 
+     *
+     * @return Response Rendered page.
      */
     public function inscriptionsAction($user_id) {
         $user = $this->getUserFromID($user_id);
@@ -88,8 +114,14 @@ class MemberController extends Controller
     }
 
 
-    /*
-     * Inscription sheets
+    /**
+     * Inscription sheets. 
+     *
+     * Generate a PDF for all the Licensee of the given User.
+     *
+     * @param int $user_id Id of the User.
+     * 
+     * @return Response Render HTML page to download the PDF file.
      */
     public function inscriptions_pdfAction($user_id) {
         $user = $this->getUserFromID($user_id);
@@ -121,7 +153,13 @@ class MemberController extends Controller
 
     /**
      * Get user from ID. If user is not current ID or a user with staff role, 
-     * raise an exception
+     * raise an exception.
+     *
+     * @param int $user_id Id of the given User
+     *
+     * @return User User instance
+     *
+     * @throws AccessDeniedException if $user_id does not match current user, and current user does not have admin rights.
      */
     public function getUserFromID($user_id) {
         $user = $this->getUserRepository()->find($user_id);
@@ -133,18 +171,18 @@ class MemberController extends Controller
         $currentUser = $this->getUser();
 
         // Only permit access from this user, or a user which is Admin
-        //if ($user->getId() != $currentUser->getId() && !$currentUser->hasRole('ROLE_ADMIN')) {
-        //    throw new AccessDeniedException();
-        //}
+        if ($user->getId() != $currentUser->getId() and !$currentUser->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedException();
+        }
 
         return $user;
     }
 
 
-    /*
+    /**
      * Get the repository for users
      *
-     * @return Repository
+     * @return UserRepository User repository
      */
     protected function getUserRepository() {
         $em = $this->getDoctrine()
@@ -152,10 +190,10 @@ class MemberController extends Controller
         return $em->getRepository('SLNRegisterBundle:User');
     }
 
-    /*
+    /**
      * Get the repository for licensees
      *
-     * @return Repository
+     * @return LicenseeRepository Licensee Repository
      */
     protected function getLicenseeRepository() {
         $em = $this->getDoctrine()

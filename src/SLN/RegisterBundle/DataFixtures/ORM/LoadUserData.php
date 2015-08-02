@@ -1,4 +1,9 @@
 <?php
+/**
+  * Sample data for tests: User data 
+  *
+  * @author Cédric Airaud
+  */
 
 namespace SLN\RegisterBundle\DataFixtures\ORM;
 
@@ -6,10 +11,17 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use SLN\RegisterBundle\Entity\User;
 
+/**
+ * Load user data to database
+ */
 class LoadUserData implements FixtureInterface
 {
     /**
-     * {@inheritDoc}
+     * Load User class data
+     *
+     * @param ObjectManager $manager Manager instance for load.
+     *
+     * @return void
      */
     public function load(ObjectManager $manager)
     {

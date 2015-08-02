@@ -1,4 +1,9 @@
 <?php
+/**
+  * Represents a user, used for connection. A user contains Licensee
+  *
+  * @author Cédric Airaud
+  */
 
 namespace SLN\RegisterBundle\Entity;
 
@@ -12,7 +17,9 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 use SLN\RegisterBundle\Entity\Licensee;
 
+
 /**
+ * User class, derived from FOS User
  * @ORM\Entity(repositoryClass="SLN\RegisterBundle\Entity\Repository\UserRepository")
  * @ORM\Table(name="sln_user")
  * @ORM\HasLifecycleCallbacks()
@@ -20,6 +27,7 @@ use SLN\RegisterBundle\Entity\Licensee;
 class User extends BaseUser
 {
     /**
+     * @var int $id Index in the DB
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -27,22 +35,29 @@ class User extends BaseUser
     protected $id;
 
     /**
+     * @var int $titre Title value as integer
      * @ORM\Column(type="integer")
-     * TODO Does not work don't know why: Assert\Choice(callback = "getTitres", message="Merci de sélectionner une valeur", groups={"Registration", "Profile"})
+     * @todo Does not work don't know why: Assert\Choice(callback = "getTitres", message="Merci de sélectionner une valeur", groups={"Registration", "Profile"})
      */
     protected $titre;
     
     const MR = 0;
     const MME = 1;
 
+    /**
+     * Returns an array to convert Title integer to string
+     *
+     * @return string[] List of title strings
+     */
     public static function getTitres() {
         return array(self::MR => "M.", self::MME => "Mme");
     }
 
     /**
+     * @var string $nom Family name of the user
      * @ORM\Column(type="string", length=100)
      *
-     @Assert\NotBlank(message="Merci d'entrer un nom.", groups={"Registration", "Profile"})
+     * @Assert\NotBlank(message="Merci d'entrer un nom.", groups={"Registration", "Profile"})
      * @Assert\Length(
      *     min=3,
      *     max="100",
@@ -54,6 +69,7 @@ class User extends BaseUser
     protected $nom;
 
     /**
+     * @var string $prenom First name of the user
      * @ORM\Column(type="string", length=100)
      *
      @Assert\NotBlank(message="Merci d'entrer un prénom.", groups={"Registration", "Profile"})
@@ -68,6 +84,7 @@ class User extends BaseUser
     protected $prenom;
 
     /**
+     * @var string $adresse User address
      * @ORM\Column(type="text", length=300)
      *
      @Assert\NotBlank(message="Merci d'entrer votre adresse.", groups={"Registration", "Profile"})
@@ -75,6 +92,7 @@ class User extends BaseUser
     protected $adresse;
 
     /**
+     * @var string $code_postal Post code
      * @ORM\Column(type="string", length=10)
      *
      * @Assert\NotBlank(message="Merci d'entrer le code postal.", groups={"Registration", "Profile"})
@@ -83,25 +101,30 @@ class User extends BaseUser
     protected $code_postal;
 
     /**
+     * @var string $ville Town
      * @ORM\Column(type="string", length=100)
      *
-     @Assert\NotBlank(message="Merci d'entrer la ville.", groups={"Registration", "Profile"})
+     * @Assert\NotBlank(message="Merci d'entrer la ville.", groups={"Registration", "Profile"})
      */
     protected $ville;
         
     /**
+     * @var string $tel_domicile Home phone
      * @ORM\Column(type="string", length=20, nullable=True)
      * @Assert\Regex("/^[0-9-.+]+/")
      */
     protected $tel_domicile;
 
     /**
+     * @var string $tel_domicile Mobile phone
      * @ORM\Column(type="string", length=20, nullable=True)
      * @Assert\Regex("/^[0-9-.+]+/")
      */
     protected $tel_portable;
 
     /**
+     * Validate the values and throws an exception if this is not correct.
+     * @param ExecutionContextInterface $context Context
      * @Assert\Callback
      */
     public function validate(ExecutionContextInterface $context)
@@ -115,21 +138,24 @@ class User extends BaseUser
     }
 
     /**
+     * @var \Datetime $created Creation date
      * @ORM\Column(type="datetime")
      */
     protected $created;
 
     /**
+     * @var \Datetime $updated Last update date
      * @ORM\Column(type="datetime")
      */
     protected $updated;
 
     /**
+     * @var Licensee[] List of related licensees
      * @ORM\OneToMany(targetEntity="Licensee", mappedBy="user")
      */
     protected $licensees;
 
-
+    /** @ignore */
     public function __construct()
     {
         parent::__construct();
@@ -151,6 +177,7 @@ class User extends BaseUser
 
 
     /**
+     * @ignore
      * @ORM\PreUpdate
      */
     public function setUpdatedValue()

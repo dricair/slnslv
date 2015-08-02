@@ -11,6 +11,7 @@
 /vendor/
 /bin/
 /composer.phar
+/docs/
 composer.lock
 *.swp
 *~

@@ -1,12 +1,27 @@
 <?php
+/**
+  * Menus for the application
+  *
+  * @author Cédric Airaud
+  */
 
 namespace SLN\RegisterBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
+/**
+ * Menu builder
+ */
 class Builder extends ContainerAware {
-    // Main menu
+    /**
+     * Main menu for most options. It contains options that are specific to administration.
+     *
+     * @param FactoryInterface $factory Factory interface
+     * @param array            $options List of options
+     *
+     * @return Knp\Menu\ItemInterface Built menu
+     */
     public function mainMenu(FactoryInterface $factory, array $options) {
         $menu = $factory->createItem('root');
         $menu->setChildrenAttribute('class', 'nav navbar-nav');
@@ -58,7 +73,14 @@ class Builder extends ContainerAware {
         return $menu;
     }
 
-    // User/Profile menu
+    /**
+     * Specific user menu for profile edit.
+     *
+     * @param FactoryInterface $factory Factory interface
+     * @param array            $options List of options
+     *
+     * @return \Knp\Menu\ItemInterface Built menu
+     */
     public function userMenu(FactoryInterface $factory, array $options) {
         $securityContext = $this->container->get('security.context');
         $user = $securityContext->getToken()->getUser();
@@ -83,11 +105,6 @@ class Builder extends ContainerAware {
 
 		$menu['User']->addChild("Déconnection", array('route' => 'fos_user_security_logout'))
 			->setAttribute('icon', 'log-out');
-
-        //$menu->addChild('Profile', array('label' => 'Mon profil', 'route' => 'fos_user_profile_edit'));
-        //     ->setAttribute('dropdown', true);
-        //$menu['Profile']->addChild('Editer le profil', array('route' => 'fos_user_security_logout'));
-        //$menu['Profile']->addChild('Déconnection', array('route' => 'fos_user_profile_edit'));
 
         return $menu;
     }

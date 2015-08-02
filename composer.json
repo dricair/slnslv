@@ -26,7 +26,8 @@
         "jms/serializer-bundle": "0.13.*",
         "coresphere/console-bundle": "dev-master",
         "whiteoctober/tcpdf-bundle": "~1.0",
-        "knplabs/knp-menu-bundle": "~2"
+        "knplabs/knp-menu-bundle": "~2",
+        "phpdocumentor/phpdocumentor": "2.*"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",
