@@ -182,7 +182,7 @@ class Horaire {
     }
 
 
-    /**
+    /*
      * @var \Datetime $created Creation date
      * @ORM\Column(type="datetime")
      */
