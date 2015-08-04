@@ -36,6 +36,10 @@ class HomeControllerTest extends WebTestCase
         parent::setUp();
         $this->client = static::createClient();
         $this->client->enableProfiler();
+        $this->loadFixtures(array(
+            'SLN\RegisterBundle\DataFixtures\ORM\LoadUserData',
+        ));
+
     }
 
     /**
@@ -43,16 +47,13 @@ class HomeControllerTest extends WebTestCase
      */
     public function testIndexLogin()
     {
-        $this->loadFixtures(array(
-            'SLN\RegisterBundle\DataFixtures\ORM\LoadUserData',
-        ));
-
         $crawler = $this->client->request('GET', '/');
         $this->assertTrue($crawler->filter('html:contains("S\'inscrire au club")')->count() > 0);
 
         foreach(array("/licensee/create/1",
                       "/contact",
                       "/profile/edit",
+                      "/profile/change-password",
                       "/admin/member/list") as $url) {
             $crawler = $this->client->request('GET', $url);
             $this->assertTrue($this->client->getResponse()->isRedirect());
@@ -106,7 +107,7 @@ class HomeControllerTest extends WebTestCase
             $message->getBody()
         );
 
-        $this->assertEquals(preg_match("/http:\/\/.*register\/confirm\/\w+/", $message->getBody(), $matches), 1);
+        $this->assertEquals(preg_match("/http:\/\/.*register\/confirm\/\S+/", $message->getBody(), $matches), 1);
         $this->assertEquals(count($matches), 1);
         $confirmUrl = $matches[0];
 
@@ -119,11 +120,80 @@ class HomeControllerTest extends WebTestCase
         $crawler = $this->client->followRedirect();
         $this->assertTrue($crawler->filter('html:contains("Félicitation test, votre compte est maintenant activé.")')->count() > 0);
     }
-        
+     
+
     /**
-     * @todo Test add licensee
-     * @todo Test show licensees
+     * Test adding a licensee from the home page
      */
+    public function testAddLicenseeInline() {
+        $this->doLogin(self::TEST_USER, self::TEST_USER_PWD);
+
+        $crawler = $this->client->request('GET', '/');
+        $this->assertTrue($crawler->filter('form')->count() == 1);
+
+        /**
+         * @todo Fill the form and send
+         * @todo Check no field "Admin"
+         * @todo Check title contains correct year
+         * @todo Check list of licensee in table
+         * @todo Check link for inscription sheets
+         * @todo Check link for licensee sheet
+         * @todo Check Delete and Edit actions
+         */
+    }
+
+
+    /**
+     * Test User profile edit
+     */
+    public function testProfileEdit() {
+        $this->doLogin(self::TEST_USER, self::TEST_USER_PWD);
+
+        $crawler = $this->client->request('GET', '/profile/edit');
+        $this->assertTrue($crawler->filter('html:contains("Modifier les informations de connection")')->count() > 0);
+        $this->assertTrue($crawler->filter('html:contains("Modifier l\'identité")')->count() > 0);
+        $this->assertTrue($crawler->filter('html:contains("Vérifier le mot de passe")')->count() > 0);
+
+        /**
+         * @todo Check change of username and email
+         * @todo Check change of address and telephone
+         * @todo Check that it does not work if password is not given or wrong
+         */
+    }
+
+    /**
+     * Test User profile edit
+     */
+    public function testPasswordChange() {
+        $this->doLogin(self::TEST_USER, self::TEST_USER_PWD);
+
+        $crawler = $this->client->request('GET', '/profile/change-password');
+        $this->assertTrue($crawler->filter('html:contains("Changement de mot de passe")')->count() > 0);
+
+        /**
+         * @todo Check password change
+         * @todo Check that if password is wrong or not provided it does not work
+         * @todo Check that password can be changed twice in a row
+         */
+    }
+
+
+    /**
+     * Test logout
+     */
+    public function testLogout() {
+        $this->doLogin(self::TEST_USER, self::TEST_USER_PWD);
+    
+        $crawler = $this->client->request('GET', '/logout');
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $crawler = $this->client->followRedirect();
+        $this->assertTrue($crawler->filter('html:contains("S\'inscrire au club")')->count() > 0);
+    }
+
+
+ 
+
+
 
     /**
      * Log a user, to be used with further pages

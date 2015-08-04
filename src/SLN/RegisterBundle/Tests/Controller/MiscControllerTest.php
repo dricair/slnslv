@@ -79,6 +79,7 @@ class MiscControllerTest extends WebTestCase
         );
     }
 
+
     /**
      * Log a user, to be used with further pages
      *
