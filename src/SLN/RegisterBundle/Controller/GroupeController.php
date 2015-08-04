@@ -29,7 +29,7 @@ class GroupeController extends Controller {
      *
      * @return Response Rendered page
      */
-    public function editAction(int $id=0) {
+    public function editAction($id=0) {
         if ($id == 0) {
             $groupe = new Groupe();
         } else {
