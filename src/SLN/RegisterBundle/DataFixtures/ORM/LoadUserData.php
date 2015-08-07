@@ -7,14 +7,16 @@
 
 namespace SLN\RegisterBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use SLN\RegisterBundle\Entity\User;
+
 
 /**
  * Load user data to database
  */
-class LoadUserData implements FixtureInterface
+class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
      * Load User class data
@@ -37,9 +39,11 @@ class LoadUserData implements FixtureInterface
         $user->setEmail("test-admin@test.com");
         $user->setPlainPassword("test");
         $user->setEnabled(true);
+        $user->addRole("ROLE_ADMIN");
 
         $manager->persist($user);
         $manager->flush();
+        $this->addReference("user-admin", $user);
 
         $user = new User();
         $user->setTitre(User::MME);
@@ -56,5 +60,13 @@ class LoadUserData implements FixtureInterface
 
         $manager->persist($user);
         $manager->flush();
+        $this->addReference("user-standard", $user);
+    }
+
+    /**
+     * Order when loading the fixtures
+     */
+    public function getOrder() {
+        return 1;
     }
 }

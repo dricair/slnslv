@@ -44,8 +44,8 @@ class Horaire {
      * Constructor of the class
      *
      * @param int    $jour        Day of the week
-     * @param string $debut       Start time
-     * @param string $fin         End time
+     * @param int    $debut       Start time
+     * @param int    $fin         End time
      * @param string $description Description for the slot
      */
     public function __construct($jour=0, $debut=0, $fin=0, $description="") {

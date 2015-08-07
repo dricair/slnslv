@@ -7,7 +7,7 @@
 
 namespace SLN\RegisterBundle\Tests\Controller;
 
-use Liip\FunctionalTestBundle\Test\WebTestCase;
+use SLN\RegisterBundle\Tests\Controller\SLNTestCase;
 
 /**
   * Test the home controller through web access, mainly the user functions
@@ -17,30 +17,8 @@ use Liip\FunctionalTestBundle\Test\WebTestCase;
   * - Creation of a user
   * - Access to user pages
   */
-class HomeControllerTest extends WebTestCase
+class HomeControllerTest extends SLNTestCase
 {
-    /** Normal user to test */
-    const TEST_USER      = "test-user@test.com";
-    /** Password for normal user */
-    const TEST_USER_PWD  = "test";
-
-    /** User with admin rights */
-    const TEST_ADMIN     = "test-admin@test.com";
-    /** Password for user with admin */
-    const TEST_ADMIN_PWD = "test";
-
-    /**
-     * Set-up: enable profiler
-     */
-    public function setUp() {
-        parent::setUp();
-        $this->client = static::createClient();
-        $this->client->enableProfiler();
-        $this->loadFixtures(array(
-            'SLN\RegisterBundle\DataFixtures\ORM\LoadUserData',
-        ));
-
-    }
 
     /**
      * Test user not logged in and wrong login
@@ -58,14 +36,14 @@ class HomeControllerTest extends WebTestCase
             $crawler = $this->client->request('GET', $url);
             $this->assertTrue($this->client->getResponse()->isRedirect());
             $crawler = $this->client->followRedirect();
-            $this->assertTrue($crawler->filter('html:contains("Se connecter à un compte utilisateur")')->count() > 0);
+            $this->assertLoginPage($crawler);
         }
 
         /**
-         * Login test (User does not exist
+         * Login test (User does not exist)
          */
         $this->doLogin("test@test.com", "test");
-        $this->assertTrue($crawler->filter('html:contains("Se connecter à un compte utilisateur")')->count() > 0);
+        $this->assertLoginPage($crawler);
     }
 
     /**
@@ -126,7 +104,7 @@ class HomeControllerTest extends WebTestCase
      * Test adding a licensee from the home page
      */
     public function testAddLicenseeInline() {
-        $this->doLogin(self::TEST_USER, self::TEST_USER_PWD);
+        $this->userLogin();
 
         $crawler = $this->client->request('GET', '/');
         $this->assertTrue($crawler->filter('form')->count() == 1);
@@ -147,7 +125,7 @@ class HomeControllerTest extends WebTestCase
      * Test User profile edit
      */
     public function testProfileEdit() {
-        $this->doLogin(self::TEST_USER, self::TEST_USER_PWD);
+        $this->userLogin();
 
         $crawler = $this->client->request('GET', '/profile/edit');
         $this->assertTrue($crawler->filter('html:contains("Modifier les informations de connection")')->count() > 0);
@@ -165,7 +143,7 @@ class HomeControllerTest extends WebTestCase
      * Test User profile edit
      */
     public function testPasswordChange() {
-        $this->doLogin(self::TEST_USER, self::TEST_USER_PWD);
+        $this->userLogin();
 
         $crawler = $this->client->request('GET', '/profile/change-password');
         $this->assertTrue($crawler->filter('html:contains("Changement de mot de passe")')->count() > 0);
@@ -182,7 +160,7 @@ class HomeControllerTest extends WebTestCase
      * Test logout
      */
     public function testLogout() {
-        $this->doLogin(self::TEST_USER, self::TEST_USER_PWD);
+        $this->userLogin();
     
         $crawler = $this->client->request('GET', '/logout');
         $this->assertTrue($this->client->getResponse()->isRedirect());
@@ -190,27 +168,4 @@ class HomeControllerTest extends WebTestCase
         $this->assertTrue($crawler->filter('html:contains("S\'inscrire au club")')->count() > 0);
     }
 
-
- 
-
-
-
-    /**
-     * Log a user, to be used with further pages
-     *
-     * @param string $username Username of the user to log in
-     * @param string $password Password ot the user to log in
-     */
-    public function doLogin($username, $password) {
-      $crawler = $this->client->request('GET', '/login');
-      $form = $crawler->selectButton('_submit')->form(array(
-        '_username'  => $username,
-        '_password'  => $password,
-      ));     
-      $this->client->submit($form);
-
-      $this->assertTrue($this->client->getResponse()->isRedirect());
-
-      $crawler = $this->client->followRedirect();
-    }
 }
