@@ -14,7 +14,9 @@
        {{ form_row(form.user) }}
 
        <p><a href="{{ path('SLNRegisterBundle_member_create') }}"><span class="glyphicon glyphicon-plus"></span>Ajouter un compte utilisateur</a></p>
+       {% if id != 0 %}
        <p><a href="{{ path('SLNRegisterBundle_member_edit', {'id': licensee.user.id }) }}"><span class="glyphicon glyphicon-edit"></span>Editer le membre</a></p>
+       {% endif %}
     </div>
   </div>
   {% endif %}

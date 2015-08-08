@@ -10,7 +10,6 @@
 namespace SLN\RegisterBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 
 use SLN\RegisterBundle\Entity\User;
@@ -122,12 +121,12 @@ class LicenseeController extends Controller
       */
     public function deleteAction($id, $admin=FALSE) {
         $licensee = $this->getLicenseeRepository()->find($id);
-        $user = $this->getUserFromID($licensee->getUser()->getId());
 
         if (!$licensee instanceof Licensee) {
             throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
         }
 
+        $user = $this->getUserFromID($licensee->getUser()->getId());
         $user->removeLicensee($licensee);
 
         $em = $this->getDoctrine()->getEntityManager();
@@ -255,7 +254,7 @@ class LicenseeController extends Controller
 
         // Only permit access from this user, or a user which is Admin
         if ($user->getId() != $currentUser->getId() and !$currentUser->hasRole('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
+            throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
         }
 
         return $user;

@@ -16,13 +16,6 @@ SLNRegisterBundle_contact:
   requirements:
     _method:  GET|POST
 
-SLNRegisterBundle_licensee_show:
-  pattern: /licensee/{id}
-  defaults: { _controller: SLNRegisterBundle:Licensee:show }
-  requirements:
-    _method:  GET
-    id: \d+
-
 
 #
 # User pages
@@ -42,6 +35,13 @@ SLNRegisterBundle_licensee_edit:
   defaults: { _controller: SLNRegisterBundle:Licensee:edit }
   requirements:
     _method:  GET|POST
+    id: \d+
+
+SLNRegisterBundle_licensee_show:
+  pattern: /licensee/{id}
+  defaults: { _controller: SLNRegisterBundle:Licensee:show }
+  requirements:
+    _method:  GET
     id: \d+
 
 SLNRegisterBundle_licensee_delete:

@@ -27,6 +27,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
+        // ID=1 -> admin
         $user = new User();
         $user->setTitre(User::MR);
         $user->setNom("Test");
@@ -45,6 +46,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
         $manager->flush();
         $this->addReference("user-admin", $user);
 
+        // ID=2 -> User with no admin rights
         $user = new User();
         $user->setTitre(User::MME);
         $user->setNom("Test");

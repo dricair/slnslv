@@ -172,7 +172,7 @@ class MemberController extends Controller
 
         // Only permit access from this user, or a user which is Admin
         if ($user->getId() != $currentUser->getId() and !$currentUser->hasRole('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
+            throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
         }
 
         return $user;

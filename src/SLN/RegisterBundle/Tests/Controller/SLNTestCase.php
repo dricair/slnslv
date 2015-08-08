@@ -15,11 +15,15 @@ class SLNTestCase extends WebTestCase {
     const TEST_USER      = "test-user@test.com";
     /** Password for normal user */
     const TEST_USER_PWD  = "test";
+    /** Id for normal user */
+    const TEST_USER_ID = 2;
 
     /** User with admin rights */
     const TEST_ADMIN     = "test-admin@test.com";
     /** Password for user with admin */
     const TEST_ADMIN_PWD = "test";
+    /** Id for normal user */
+    const TEST_ADMIN_ID = 1;
 
     /**
      * Set-up: enable profiler
@@ -32,6 +36,7 @@ class SLNTestCase extends WebTestCase {
         $this->loadFixtures(array(
             'SLN\RegisterBundle\DataFixtures\ORM\LoadUserData',
             'SLN\RegisterBundle\DataFixtures\ORM\LoadGroupeData',
+            'SLN\RegisterBundle\DataFixtures\ORM\LoadLicenseeData',
         ));
     }
 
