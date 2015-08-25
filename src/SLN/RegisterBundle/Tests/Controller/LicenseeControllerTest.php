@@ -132,7 +132,7 @@ class LicenseeControllerTest extends SLNTestCase
         // @todo check valid PDF ?
         //$this->client->request('GET', $url);
         //ob_start();
-        //$client->getResponse()->sendContent();
+        //$this->client->getResponse()->sendContent();
         //$content = ob_get_contents();
         //ob_end_clean();
     }

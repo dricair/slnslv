@@ -46,11 +46,48 @@ class HomeControllerTest extends SLNTestCase
         $this->assertLoginPage($crawler);
     }
 
+
+    /**
+     * Test menu: admin menu should not appear if no admin rights. Check Profile menu.
+     */
+    public function testMenu() {
+        $this->userLogin();
+        $crawler = $this->client->request('GET', '/');
+        $menu = $crawler->filter("nav.navbar")->first();
+
+        $user = $this->getDoctrineManager()->getRepository('SLNRegisterBundle:User')->find(self::TEST_USER_ID);
+        $nom = $user->getNom();
+        $prenom = $user->getPrenom();
+
+        $this->assertTrue($menu->filter('a:contains("Stade Laurentin Natation")')->count() == 1);
+        $this->assertTrue($menu->filter('a:contains("Mes licenciés")')->count() == 1);
+        $this->assertTrue($menu->filter('a:contains("Administration")')->count() == 0);
+        $this->assertTrue($menu->filter('a:contains("Bonjour $prenom $nom")')->count() == 0);
+
+        $this->doLogout();
+
+        $this->adminLogin();
+        $crawler = $this->client->request('GET', '/');
+        $menu = $crawler->filter("nav.navbar")->first();
+
+        $user = $this->getDoctrineManager()->getRepository('SLNRegisterBundle:User')->find(self::TEST_ADMIN_ID);
+        $nom = $user->getNom();
+        $prenom = $user->getPrenom();
+
+        $this->assertTrue($menu->filter('a:contains("Stade Laurentin Natation")')->count() == 1);
+        $this->assertTrue($menu->filter('a:contains("Mes licenciés")')->count() == 1);
+        $this->assertTrue($menu->filter('a:contains("Administration")')->count() == 1);
+        $this->assertTrue($menu->filter('a:contains("Bonjour $prenom $nom")')->count() == 0);
+    }
+
     /**
      * Create a user, intercept email, activate, logout and login
      */
     public function testCreateUser() {
         $crawler = $this->client->request('GET', '/register/');
+        $this->assertTrue($crawler->filter("div.checkbox:contains('Administrateur')")->count() == 0);
+        $this->assertTrue($crawler->filter("html:contains('Droits spéciaux')")->count() == 0);
+
         $form = $crawler->selectButton('_submit')->form(array(
           'fos_user_registration_form[nom]'          => "Test",
           'fos_user_registration_form[prenom]'       => "Test-Prenom",

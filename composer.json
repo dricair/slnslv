@@ -26,13 +26,14 @@
         "jms/serializer-bundle": "0.13.*",
         "coresphere/console-bundle": "dev-master",
         "whiteoctober/tcpdf-bundle": "~1.0",
-        "knplabs/knp-menu-bundle": "~2",
-        "phpdocumentor/phpdocumentor": "2.*"
+        "knplabs/knp-menu-bundle": "~2"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",
         "liip/functional-test-bundle": "~1.2",
-        "doctrine/doctrine-fixtures-bundle": "~2.2"
+        "doctrine/doctrine-fixtures-bundle": "~2.2",
+        "phpdocumentor/phpdocumentor": "2.*",
+        "phpunit/php-token-stream": "~1.2"
     },
     "scripts": {
         "post-root-package-install": [
