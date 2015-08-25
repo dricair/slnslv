@@ -65,8 +65,8 @@ class MemberController extends Controller
             $em = $this->getDoctrine()
                    ->getEntityManager();
 
-            // Password not set for user
-            if ($admin) {
+            // Password not set for new user
+            if ($admin && $id == 0) {
                 $tokenGenerator = $this->get('fos_user.util.token_generator');
                 $user->setPlainPassword(substr($tokenGenerator->generateToken(), 0, 8));
 

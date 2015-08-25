@@ -103,6 +103,7 @@ class MemberControllerTest extends SLNTestCase
         // @todo Check that user is created
         // @todo Check that fields are correct
         // @todo Check that admin rights are correct
+        // @todo Check that mail is sent
     }
 
 
@@ -124,6 +125,7 @@ class MemberControllerTest extends SLNTestCase
         // @todo Test form
         // @todo Check admin rights
         // @todo Test modified fields
+        // @todo Check that mail is not sent.
     }
 
 
