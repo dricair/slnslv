@@ -207,7 +207,7 @@ class LicenseeController extends Controller
             throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
         }
 
-        $user = $this->getUserFromID($licensee->getId());
+        $user = $this->getUserFromID($licensee->getUser()->getId());
 
         $pdf = $this->container->get("white_october.tcpdf")->create();
         $assets = $this->container->get('templating.helper.assets');
