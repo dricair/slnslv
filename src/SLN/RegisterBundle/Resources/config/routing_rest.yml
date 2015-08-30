@@ -3,3 +3,9 @@ groups:
     resource: "SLNRegisterBundle:GroupeRest"
     name_prefix: api_
 
+licensees:
+    type: rest
+    resource: "SLNRegisterBundle:LicenseeRest"
+    name_prefix: api_
+
+

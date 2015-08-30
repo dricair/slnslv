@@ -170,6 +170,24 @@ SLNRegisterBundle_admin_licensee_inscription:
     _method:  GET|POST
     id: \d+
 
+
+#
+# Mail sending
+# ------------
+SLNRegisterBundle_mail_licensee:
+  pattern: /admin/mail/licensee
+  defaults: { _controller: SLNRegisterBundle:Mail:licensee, default:0 }
+  requirements:
+    _method: GET|POST
+
+SLNRegisterBundle_mail_licensee_select:
+  pattern: /admin/mail/licensee/{default}
+  defaults: { _controller: SLNRegisterBundle:Mail:licensee }
+  requirements:
+    _method: GET|POST
+
+
+
 #
 # Others
 # ------

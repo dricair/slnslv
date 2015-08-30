@@ -1,0 +1,30 @@
+<form action="."  method="post" {{ form_enctype(form) }} class="form-horizontal" role="form">
+  {{ form_errors(form) }}
+
+  <div class="panel panel-default">
+    <div class="panel-heading">Sélection des destinataires</div>
+    <div class="panel-body">
+     
+      <div class="row">
+        <div class="col-sm-5" data-function="{{ path('api_get_licensees_in_group', {'id': '__id__'}) }}">{{ form_widget(form.groupe) }}</div>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-5"></div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-5"><select id="licensee_list" multiple="multiple" class="form-control" size="10"></select></div>
+        <div class="col-sm-2"> 
+          <div class="btn-group-vertical">
+            <button type="button" class="btn btn-primary" id="add_all">Tout ajouter</button>
+            <button type="button" class="btn btn-primary" id="add">Ajouter</button>
+            <button type="button" class="btn btn-primary" id="del">Supprimer</button>
+            <button type="button" class="btn btn-primary" id="del_all">Tout supprimer</button>
+          </div>
+        </div>
+        <div class="col-sm-5">{{ form_widget(form.licensees) }}</div>
+      </div>
+    </div>
+  </div>
+
+  {% include 'SLNRegisterBundle:Mail:mail_content.html.twig' with { 'form': form, 'title': title } %}
+</form>

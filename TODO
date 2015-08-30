@@ -1,5 +1,7 @@
 Bugs:
 - Licensee admin -> tri Users par nom, 
+- Licensee admin -> accès aux feuilles d'inscription, erreur
+- Inscription si pas de groupe
 
 Inscriptions:
 - Montrer ce qui manque
