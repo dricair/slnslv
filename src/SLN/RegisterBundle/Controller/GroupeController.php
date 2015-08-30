@@ -33,7 +33,7 @@ class GroupeController extends Controller {
         if ($id == 0) {
             $groupe = new Groupe();
         } else {
-          $em = $this->getDoctrine()->getEntityManager();
+          $em = $this->getDoctrine()->getManager();
           $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
 
           if (!is_object($groupe)) {
@@ -47,7 +47,7 @@ class GroupeController extends Controller {
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
             $em->persist($groupe);
             $em->flush();
 
@@ -80,7 +80,7 @@ class GroupeController extends Controller {
      * @return Response Rendered page
      */
     public function showAction($id, $admin=false) {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
 
         if (!$groupe) {
@@ -104,7 +104,7 @@ class GroupeController extends Controller {
      * @return Response Redirect to the groupe list.
      */
     public function deleteAction($id) {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
 
         if (!$groupe) {
@@ -124,7 +124,7 @@ class GroupeController extends Controller {
      * @return Response Rendered page.
      */
     public function listAction() {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $groupes = $em->getRepository('SLNRegisterBundle:Groupe')->findAll();
 
         $groupes_by_categories = array();

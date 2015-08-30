@@ -28,7 +28,7 @@ class LicenseeRestController extends Controller {
      * @return Licensee[] List of licensees
      */
     public function getLicenseesInGroupAction($id){
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
         if(!is_object($groupe)){

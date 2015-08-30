@@ -5,10 +5,12 @@
     <div class="panel-heading">Sélection des destinataires</div>
     <div class="panel-body">
      
+      <p>Sélectionner un groupe ci-dessous, puis des licenciés dans ce groupe. Cliquez sur un des boutons "Ajouter" pour déplacer
+         la sélection dans la liste de droite, sur un des boutons "Supprimer" pour enlever de la liste de droite.</p>
       <div class="row">
         <div class="col-sm-5" data-function="{{ path('api_get_licensees_in_group', {'id': '__id__'}) }}">{{ form_widget(form.groupe) }}</div>
         <div class="col-sm-2"></div>
-        <div class="col-sm-5"></div>
+        <div class="col-sm-5"><p>Destinataires du mail</p></div>
       </div>
 
       <div class="row">
@@ -26,5 +28,10 @@
     </div>
   </div>
 
-  {% include 'SLNRegisterBundle:Mail:mail_content.html.twig' with { 'form': form, 'title': title } %}
+  <div class="panel panel-default">
+    <div class="panel-heading">Texte du mail</div>
+    <div class="panel-body">
+    {% include 'SLNRegisterBundle:Mail:mail_content.html.twig' with { 'form': form, 'title': title } %}
+    </div>
+  </div>
 </form>

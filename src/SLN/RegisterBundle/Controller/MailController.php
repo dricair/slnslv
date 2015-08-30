@@ -28,7 +28,7 @@ class MailController extends Controller {
         $title = "Envoi de mails";
 
         $defaultGroup = null;
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         if ($default)
           $defaultGroup = $em->getRepository('SLNRegisterBundle:Groupe')->find($default);

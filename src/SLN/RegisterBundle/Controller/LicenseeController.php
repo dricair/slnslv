@@ -33,7 +33,7 @@ class LicenseeController extends Controller
      */
     public function showAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $licensee = $this->getLicenseeRepository()->find($id);
 
@@ -67,7 +67,7 @@ class LicenseeController extends Controller
               $licensee->setUser($user);
           }
         } else {
-          $em = $this->getDoctrine()->getEntityManager();
+          $em = $this->getDoctrine()->getManager();
           $licensee = $this->getLicenseeRepository()->find($id);
           $user = $this->getUserFromID($licensee->getUser()->getId());
 
@@ -81,7 +81,7 @@ class LicenseeController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($licensee);
             $em->flush();
 
@@ -129,7 +129,7 @@ class LicenseeController extends Controller
         $user = $this->getUserFromID($licensee->getUser()->getId());
         $user->removeLicensee($licensee);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($licensee);
         $em->persist($user);
         $em->flush();
@@ -243,7 +243,7 @@ class LicenseeController extends Controller
      */
     public function getUserFromID($user_id) {
         $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
 
         $user = $em->getRepository('SLNRegisterBundle:User')->find($user_id);
         if (!$user) {
@@ -268,7 +268,7 @@ class LicenseeController extends Controller
      */
     protected function getLicenseeRepository() {
         $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
         return $em->getRepository('SLNRegisterBundle:Licensee');
     }
 }

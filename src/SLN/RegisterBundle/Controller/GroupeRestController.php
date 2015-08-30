@@ -28,7 +28,7 @@ class GroupeRestController extends Controller {
      * @return Groupe Requested groupe.
      */
     public function getGroupAction($id){
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
 
         if(!is_object($groupe)){

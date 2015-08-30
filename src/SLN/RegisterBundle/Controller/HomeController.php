@@ -34,7 +34,7 @@ class HomeController extends Controller
         if ($this->isLoggedIn()) {
             $currentUser = $this->getUser();
             $em = $this->getDoctrine()
-                       ->getEntityManager();
+                       ->getManager();
 
             $activeLicensees = $em->getRepository('SLNRegisterBundle:Licensee')
                                ->getLicenseesForUser($currentUser->getId());

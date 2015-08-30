@@ -63,7 +63,7 @@ class MemberController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
 
             // Password not set for new user
             if ($admin && $id == 0) {
@@ -186,7 +186,7 @@ class MemberController extends Controller
      */
     protected function getUserRepository() {
         $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
         return $em->getRepository('SLNRegisterBundle:User');
     }
 
@@ -197,7 +197,7 @@ class MemberController extends Controller
      */
     protected function getLicenseeRepository() {
         $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
         return $em->getRepository('SLNRegisterBundle:Licensee');
     }
 
