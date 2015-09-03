@@ -88,13 +88,19 @@ class MemberController extends Controller
 
             return $this->redirect($this->generateUrl('SLNRegisterBundle_member_edit', array('id' => $user->getId())));
         }
+
+        $licensees = null;
+        if ($admin) {
+            $licensees = $this->getLicenseeRepository()->getLicenseesForUser($user->getId());
+        }
  
         return $this->render('SLNRegisterBundle:Member:edit.html.twig', array(
             'member' => $user,
             'form' => $form->createView(),
             'title' => $id == 0 ? "Ajouter un membre" : "Modifier un membre",
             'id' => $id,
-            'admin' => $admin));
+            'admin' => $admin,
+            'licensees' => $licensees));
     }
 
     /**

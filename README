@@ -16,7 +16,7 @@ Installer les "assets" (Fichiers statiques)
 php app/console assets:install web --symlink
 
 Lister les routes:
-app/console router:debug
+app/console debug:router
 
 Vider les caches:
 php app/console cache:clear

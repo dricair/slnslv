@@ -7,7 +7,18 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
+
+{% if admin and id != 0 %}
+<div class="btn-group btn-group-justified">
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_create_for_user', {'id': id}) }}">Ajouter un licencié à ce compte</a>
+</div>
+
+<h1>Liste des licenciés attachés au compte</h1>
+  {%include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': licensees, 'admin': admin } %}
+{% endif %}
+
 <h1>{{ title }}</h1>
 
-  {% include 'SLNRegisterBundle:Member:form.html.twig' with { 'form': form, 'title': title, 'id': id } %}
+  {% include 'SLNRegisterBundle:Member:form.html.twig' with { 'form': form, 'title': title, 'id': id, 'member_link': false } %}
+
 {% endblock %}

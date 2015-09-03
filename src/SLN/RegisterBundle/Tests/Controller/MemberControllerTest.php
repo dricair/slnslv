@@ -104,6 +104,8 @@ class MemberControllerTest extends SLNTestCase
         // @todo Check that fields are correct
         // @todo Check that admin rights are correct
         // @todo Check that mail is sent
+        // @todo Check no licensee list
+        // @todo Check no add licensee button
     }
 
 
@@ -126,6 +128,8 @@ class MemberControllerTest extends SLNTestCase
         // @todo Check admin rights
         // @todo Test modified fields
         // @todo Check that mail is not sent.
+        // @todo Check licensee list (Empty or not) for admin
+        // @todo Check add licensee button
     }
 
 

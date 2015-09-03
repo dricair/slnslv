@@ -11,6 +11,7 @@ namespace SLN\RegisterBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 use SLN\RegisterBundle\Entity\User;
 use SLN\RegisterBundle\Entity\Groupe;
@@ -226,6 +227,71 @@ class LicenseeController extends Controller
 
         $response = new Response($pdf->Output('inscriptions.pdf', 'I'));
         $response->headers->set('Content-Type', 'application/pdf');
+
+        return $response;
+    }
+
+
+    /**
+     * Export the list of licensees to an Excel file
+     *
+     * Return an excel file to download.
+     *
+     * @todo: options to select fields to export
+     * @todo: split categories in sheets
+     */
+    public function exportAction() {
+        $licensees = $this->getLicenseeRepository()->findAll();
+        $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
+
+        $phpExcelObject->getProperties()->setCreator("Cédric Airaud")
+           ->setTitle("Liste des licenciés")
+           ->setSubject("Liste des licenciés du club");
+
+        $phpExcelObject->setActiveSheetIndex(0);
+        $activeSheet = $phpExcelObject->getActiveSheet();
+        $activeSheet->setTitle('Liste globale');
+        
+        $data = array(array("Nom", "Prénom", "Sexe", "Catégorie", "Date naissance", "IUF", "Titre", "Responsable légal", "Tél. fixe", "Tél portable", "Email",  
+                            "Adresse", "Code postal", "Ville"));
+
+        foreach($licensees as $licensee) {
+          $user = $licensee->getUser();
+          $groupe = $licensee->getGroupe();
+          if ($groupe == NULL) {
+            $groupe = new Groupe();
+            $groupe->setNom('<Pas de groupe>');
+          }
+
+          $data[] = array($licensee->getNom(), 
+                          $licensee->getPrenom(),
+                          $licensee->getSexeName(),
+                          $groupe->getNom(),
+                          $licensee->getNaissance()->format("d/m/Y"),
+                          $licensee->getIUF(),
+                          $user->getTitreName(),
+                          sprintf("%s %s", $user->getNom(), $user->getPrenom()),
+                          $user->getTelDomicile(),
+                          $user->getTelPortable(),
+                          $user->getEmail(),
+                          $user->getAdresse(),
+                          $user->getCodePostal(),
+                          $user->getVille());
+        }
+
+        $activeSheet->fromArray($data, NULL, 'A1');
+
+        // Create the response
+        $writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel2007');
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        $dispositionHeader = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'ListeLicencies.xlsx'
+        );
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'maxage=1');
+        $response->headers->set('Content-Disposition', $dispositionHeader);
 
         return $response;
     }
