@@ -3,6 +3,12 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
+{% if id != 0 %}
+<div class="btn-group btn-group-justified">
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_inscription', {'id': id}) }}" target="_blank">Imprimer la fiche d'inscription</a>
+</div>
+{% endif  %}
+
 <h1>{{ title }}</h1>
 
   {% include 'SLNRegisterBundle:Licensee:form.html.twig' with { 'form': form, 'title': title, 'id': id, 'user_id': user_id, 'admin': admin } %}

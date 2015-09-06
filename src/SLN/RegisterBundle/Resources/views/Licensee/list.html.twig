@@ -3,6 +3,10 @@
 {% block title %}Liste des licenciés{% endblock %}
 
 {% block body %}
+<div class="btn-group btn-group-justified">
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_create') }}">Créer un licencié</a>
+</div>
+
 <h1>Liste des licenciés</h1>
 
 {% if no_group|length > 0 %}
