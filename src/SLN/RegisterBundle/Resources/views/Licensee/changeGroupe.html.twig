@@ -1,0 +1,30 @@
+{% extends 'SLNRegisterBundle::mail.html.twig' %}
+{% set user=licensee.getUser %}
+{% set groupe=licensee.getGroupe %}
+
+{% block title %}Information pour les licenciés{% endblock %}
+
+{% block content %}
+<h2 style='color: #6495B3;'>Changement de groupe pour {{ licensee.getPrenom }} {{ licensee.getNom }}</h2>
+
+<p>Les entraineurs ont décidé de changer le groupe pour {{ licensee.getPrenom }} {{ licensee.getNom }}.</p>
+
+<p>Le groupe <span style="background-color: #FCF8E3;">{{ groupe.getNom }}</span> semble le plus adapté pour lui permettre de progresser dans les 
+meilleures conditions.</p>
+
+<p>La description est la suivante:</p>
+
+<p style="margin-left: 20px">{{ groupe.getDescription|nl2br }}</p>
+
+<p>Les horaires sont les suivants:</p>
+<ul>
+{% for horaire in groupe.getFormatedHoraires %}
+  <li>{{ horaire.description }}: {{ horaire.getJour }}, de {{ horaire.getDebut }} à {{ horaire.getFin }}</li>
+{% endfor %}
+</ul>
+
+<p>Cordialement<br/>
+Le Stade Laurentin Natation.</p>
+{% endblock %}
+
+

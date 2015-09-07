@@ -1,0 +1,20 @@
+{% set user=licensee.getUser %}
+{% set groupe=licensee.getGroupe %}
+{{ user.getTitreName }} {{ user.getNom }}
+
+Les entraineurs ont décidé de changer le groupe pour {{ licensee.getPrenom }} {{ licensee.getNom }}.
+
+Le groupe "{{ groupe.getNom }}" semble le plus adapté pour lui permettre de progresser dans les 
+meilleures conditions.
+
+La description est la suivante:
+
+{{ groupe.getDescription }}
+
+Les horaires sont les suivants:
+{% for horaire in groupe.getFormatedHoraires %}
+- {{ horaire.description }}: {{ horaire.getJour }}, de {{ horaire.getDebut }} à {{ horaire.getFin }}
+{% endfor %}
+
+Cordialement
+Le Stade Laurentin Natation.

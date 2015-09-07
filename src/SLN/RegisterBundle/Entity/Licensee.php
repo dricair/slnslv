@@ -691,6 +691,20 @@ Site: http://stadelaurentinnatatin.fr</p>');
         return $this->sexe;
     }
 
+
+    /**
+     * Get sexe as a string
+     *
+     * @return string
+     */
+    public function getSexeName()
+    {
+        $genders = $this::getGenders();
+        return $genders[$this->sexe];
+    }
+
+
+
     /**
      * Set inscription_ok
      *

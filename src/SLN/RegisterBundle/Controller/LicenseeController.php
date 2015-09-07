@@ -76,6 +76,8 @@ class LicenseeController extends Controller
               throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
           }
         }
+            
+        $previousGroupe = $licensee->getGroupe();
 
         $request = $this->getRequest();
         $form    = $this->createForm(new LicenseeType(), $licensee, array("admin" => $admin));
@@ -88,10 +90,25 @@ class LicenseeController extends Controller
 
             $this->get('session')->getFlashBag()->add(
               'notice',
-              sprintf("Le licencié '%s %s' a été %s avec succès.", $licensee->getPrenom(), $licensee->getNom(), $id = 0 ? "ajouté" : "modifié")
+              sprintf("Le licencié '%s %s' a été %s avec succès.", $licensee->getPrenom(), $licensee->getNom(), $id == 0 ? "ajouté" : "modifié")
             );
 
             if ($admin) {
+              // Send a mail to the user if group has changed
+              if ($id != 0 and $licensee->getGroupe() and ($previousGroupe == null or
+                                                           $licensee->getGroupe()->getId() != $previousGroupe->getId())) {
+                
+                $message = \Swift_Message::newInstance()
+                 ->setSubject("Changement de groupe pour {$licensee->getPrenom()} {$licensee->getNom()}")
+                 ->setFrom('slnslv@free.fr')
+                 ->setTo($user->getEmail())
+                 ->setCc('cairaud@gmail.com')
+                 ->setBody($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.txt.twig', array('licensee' => $licensee)), "text/plain")
+                 ->addPart($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.html.twig', array('licensee' => $licensee)), "text/html");
+
+                $this->get('mailer')->send($message);
+              }
+
               return $this->redirect($this->generateUrl('SLNRegisterBundle_admin_licensee_edit', array(
                                      'id' => $licensee->getId(), $user_id => $licensee->getUser()->getId(),
                                      'admin' => $admin)
