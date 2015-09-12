@@ -15,9 +15,16 @@ h1, h2, h3 { color: #6495b3; }
     font-weight: bold;
 }
 
-form.form-horizontal p { 
+form.form-horizontal p.description { 
     margin-left: 25%; /* col-sm-offset-3 */
     width: 58.3333%;  /* col-sm-7 */
     padding-left: 10px;
 }
 
+#mail div.image {
+    width: 300px;
+    height: 300px;
+    float: left;
+    margin-right: 10px;
+    margin-left: 10px;
+}

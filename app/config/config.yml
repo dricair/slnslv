@@ -128,5 +128,9 @@ knp_menu:
     # the renderer to use, list is also available by default
     default_renderer: twig
 
-
+# Uploader
+oneup_uploader:
+    mappings:
+        gallery:
+            frontend: plupload
 

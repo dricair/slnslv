@@ -4,6 +4,13 @@
     {{ parent() }}
     <script src="//tinymce.cachefly.net/4.2/tinymce.min.js"></script>
     <script src="{{ asset('bundles/slnregister/js/mail.js') }}"></script>
+    <script type="text/javascript" src="http://bp.yahooapis.com/2.4.21/browserplus-min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="{{ asset('bundles/slnregister/js/plupload.full.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/slnregister/js/jquery.ui.plupload/jquery.ui.plupload.js') }}"></script>
+    <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.min.css" media="screen" />
+    <link href="{{ asset('bundles/slnregister/js/jquery.ui.plupload/css/jquery.ui.plupload.css') }}" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="{{ asset('bundles/slnregister/js/i18n/fr.js') }}"></script>
     <script type="text/javascript">
 
 tinymce.init({
@@ -27,6 +34,37 @@ tinymce.init({
 
 $( document ).ready(function() {
    setup_mail();
+
+    $("#fileupload").plupload(
+    {
+        runtimes: "html5,flash,silverlight",
+        url: "{{ oneup_uploader_endpoint('gallery') }}",
+        
+        // Maximum file size
+        max_file_size : '3mb',
+        chunk_size: '1mb',
+
+        // Specify what files to browse for
+        filters : [
+            {title : "Fichiers d'image", extensions : "jpg,gif,png"},
+        ],
+
+        // Enable ability to drag'n'drop files onto the widget (currently only HTML5 supports that)
+        dragdrop: true,
+ 
+        // Views to activate
+        views: {
+            list: true,
+            thumbs: true, // Show thumbs
+            active: 'thumbs'
+        },
+ 
+        // Flash settings
+        flash_swf_url : "{{ asset('bundles/slnregister/js/Moxie.swf') }}",
+     
+        // Silverlight settings
+        silverlight_xap_url : "{{ asset('bundles/slnregister/js/Moxie.xap') }}"
+    });
 });
     </script>
 {% endblock %}
@@ -37,5 +75,7 @@ $( document ).ready(function() {
 <h1>{{ title }}</h1>
 
   {% include 'SLNRegisterBundle:Mail:licensee_form.html.twig' with { 'form': form, 'title': title } %}
+
+  <div id="fileupload"></div>
 {% endblock %}
 

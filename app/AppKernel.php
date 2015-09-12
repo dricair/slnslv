@@ -23,6 +23,8 @@ class AppKernel extends Kernel
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle($this),
             new WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle(),
+            new Oneup\UploaderBundle\OneupUploaderBundle(),
+            new Liuggio\ExcelBundle\LiuggioExcelBundle(),
             new SLN\RegisterBundle\SLNRegisterBundle(),
         );
 

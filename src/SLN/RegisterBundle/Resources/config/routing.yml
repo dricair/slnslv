@@ -170,6 +170,12 @@ SLNRegisterBundle_admin_licensee_inscription:
     _method:  GET|POST
     id: \d+
 
+SLNRegisterBundle_admin_licensee_export:
+  pattern: /admin/licensee/export.xlsx
+  defaults: { _controller: SLNRegisterBundle:Licensee:export}
+  requirements:
+    _method:  GET
+
 
 #
 # Mail sending

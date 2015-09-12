@@ -228,7 +228,7 @@ use SLN\RegisterBundle\Entity\User;
                                                                             <span style="text-decoration: underline;font-weight: bold;">pratique sportive de la natation en 
                                                                             compétition</span> (Article L3622-2 du code de la santé publique)'),
                               Groupe::LOISIR      => array('title'      => "Dossier d'inscription Loisirs",
-                                                           'certificat' => Null)
+                                                           'certificat' => '1 certificat médical d\'aptitude à la pratique de la natation')
                              );
         $values = $groupeValues[$this->groupe->getCategorie()];
         $femme = $this->sexe == $this::FEMME;
@@ -243,7 +243,7 @@ use SLN\RegisterBundle\Entity\User;
           
         $html = sprintf('
 <p style="color:#888888;margin:2">Affilié à la F.F.N et agréé E.N.F<br/>
-Site: http://stadelaurentinnatatin.fr</p>');
+Site: http://stadelaurentinnatation.fr</p>');
         $pdf->WriteHTMLCell(/*w*/0, /*h*/0, /*x*/10, /*y*/20, $html, /*border*/0, /*ln*/1, /*fill*/0, /*reseth*/true, /*align*/'C', /*autopadding*/false);
 
         $html = sprintf('

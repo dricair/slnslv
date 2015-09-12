@@ -13,3 +13,8 @@ rest:
     type: rest
     resource : "routing_rest.yml"
     prefix: /api
+
+oneup_uploader:
+    resource: .
+    type: uploader
+
