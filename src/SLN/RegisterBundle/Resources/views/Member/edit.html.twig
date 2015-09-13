@@ -10,7 +10,7 @@
 
 {% if admin and id != 0 %}
 <div class="btn-group btn-group-justified">
-  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_create_for_user', {'id': id}) }}">Ajouter un licencié à ce compte</a>
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_create_for_user', {'user_id': id}) }}">Ajouter un licencié à ce compte</a>
 </div>
 
 <h1>Liste des licenciés attachés au compte</h1>

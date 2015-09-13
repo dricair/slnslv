@@ -8,7 +8,10 @@ namespace SLN\RegisterBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+use SLN\RegisterBundle\Entity\Member;
 use SLN\RegisterBundle\Entity\Licensee;
+use SLN\RegisterBundle\Entity\Repository\UserRepository;
 
 
 /**
@@ -40,7 +43,13 @@ class LicenseeType extends AbstractType
             ->add('autorisation_photos', 'checkbox', array('required'=>false));
 
         if ($options["admin"])
-            $builder->add('user', null, array("label" => "Rattaché au compte"));
+            $builder->add('user', 'entity', array("class" => 'SLNRegisterBundle:User',
+                                                  "query_builder" => function (UserRepository $er) {
+                                                     return $er->createQueryBuilder('u')
+                                                            ->select('u')
+                                                            ->addOrderBy('u.nom', 'ASC');
+                                                  },
+                                                  "label" => "Rattaché au compte"));
     }
 
     /**

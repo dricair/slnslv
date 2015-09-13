@@ -1,5 +1,6 @@
 Bugs:
 - Licensee admin -> tri Users par nom, 
+- Licensee admin -> from user, not correct one selected
 - Licensee admin -> accès aux feuilles d'inscription, erreur
 - Inscription si pas de groupe
 
@@ -8,9 +9,7 @@ Inscriptions:
 - Ajouter des photos
 - Remplir la feuille de licence
 - Envoyer un mail en cas de changement de groupe
-
-Admin:
-- Indiquer ce qui a été donné et valider l'inscription
+- Page d'inscription pour gérer photo/Licence/Inscription + paiements
 
 Licencié
 - Informations de compétitions

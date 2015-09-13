@@ -144,7 +144,7 @@ SLNRegisterBundle_admin_licensee_create:
     _method:  GET|POST
 
 SLNRegisterBundle_admin_licensee_create_for_user:
-  pattern: /admin/licensee/create/{$user_id}
+  pattern: /admin/licensee/create/{user_id}
   defaults: { _controller: SLNRegisterBundle:Licensee:edit, id:0, admin: true }
   requirements:
     _method:  GET|POST

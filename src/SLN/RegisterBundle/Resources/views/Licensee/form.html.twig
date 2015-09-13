@@ -13,7 +13,7 @@
     <div class="panel-body">
        {{ form_row(form.user) }}
 
-       <p><a href="{{ path('SLNRegisterBundle_member_create') }}"><span class="glyphicon glyphicon-plus"></span>Ajouter un compte utilisateur</a></p>
+       <p class="help"><a href="{{ path('SLNRegisterBundle_member_create') }}"><span class="glyphicon glyphicon-plus"></span>Ajouter un compte utilisateur</a></p>
        {% if id != 0 %}
        <p><a href="{{ path('SLNRegisterBundle_member_edit', {'id': licensee.user.id }) }}"><span class="glyphicon glyphicon-edit"></span>Editer le membre</a></p>
        {% endif %}
@@ -37,8 +37,8 @@
   <div class="panel panel-default">
     <div class="panel-heading">Groupe de natation</div>
     <div class="panel-body">
-      <p>Sélectionnez le groupe de natation (pour la saison prochaine) si vous le connaissez.</p>
-      <p class="note">Les entraineurs peuvent changer les groupes de natation en fonction du niveau</p>
+      <p class="help">Sélectionnez le groupe de natation (pour la saison prochaine) si vous le connaissez.</p>
+      <p class="help note">Les entraineurs peuvent changer les groupes de natation en fonction du niveau</p>
 
       {{ form_row(form.groupe) }}
 
