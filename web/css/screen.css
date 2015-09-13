@@ -15,6 +15,10 @@ h1, h2, h3 { color: #6495b3; }
     font-weight: bold;
 }
 
+.hidden {
+    display: none;
+}
+
 form.form-horizontal p.help { 
     margin-left: 25%; /* col-sm-offset-3 */
     width: 58.3333%;  /* col-sm-7 */

@@ -72,6 +72,11 @@ class MiscController extends Controller
 
                 return $this->redirect($this->generateUrl('SLNRegisterBundle_contact'));
             }
+
+            else {
+                $this->get('session')->getFlashBag()->add('error', "Des erreurs sont présentes dans le formulaire");
+            }
+
         }
 
         return $this->render('SLNRegisterBundle:Misc:contact.html.twig', array(

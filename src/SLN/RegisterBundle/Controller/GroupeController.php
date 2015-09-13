@@ -61,6 +61,11 @@ class GroupeController extends Controller {
             )));
         }
 
+        else if ($request->getMethod() == 'POST') {
+            $this->get('session')->getFlashBag()->add('error', "Des erreurs sont présentes dans le formulaire");
+        }
+
+
         return $this->render('SLNRegisterBundle:Groupe:edit.html.twig', array(
             'groupe'  => $groupe,
             'form'    => $form->createView(),

@@ -8,6 +8,7 @@
 namespace SLN\RegisterBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Entity\User;
@@ -172,6 +173,12 @@ use SLN\RegisterBundle\Entity\User;
      * @ORM\JoinColumn(name="groupe_id", referencedColumnName="id", nullable=True)
      */
     protected $groupe;
+
+    /**
+     * @var bool[] $groupe_jours Selected days for the groups
+     * @ORM\Column(type="array")
+     */
+    protected $groupe_jours;
 
     /**
      * Return Age in years
@@ -370,6 +377,30 @@ Site: http://stadelaurentinnatation.fr</p>');
         $this->setCertificatOk(False);
         $this->setAttestationOk(False);
         $this->setPaiementOk(False);
+
+        $this->groupe_jours = array();
+    }
+
+    /**
+     * Validate the values and throws an exception if this is not correct.
+     * @param ExecutionContextInterface $context Context
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context)
+    {
+        // Check that at least one day is selected when group is 'Multiple'
+        if ($this->groupe and $this->groupe->getMultiple()) {
+            $found = false;
+            $list_jours = $this->groupe->multipleList();
+            foreach ($this->groupe_jours as $jour) {
+                if (array_key_exists($jour, $list_jours)) $found = true;
+            }
+
+            if (!$found) 
+              $context->buildViolation('Veuillez sélectionner au moins un jour.')
+                  ->atPath('groupe_jours')
+                  ->addViolation();
+        }
     }
 
     /**
@@ -820,4 +851,29 @@ Site: http://stadelaurentinnatation.fr</p>');
     {
         return $this->bureau;
     }
+
+    /**
+     * Set groupe_jours
+     *
+     * @param array $groupeJours
+     * @return Licensee
+     */
+    public function setGroupeJours($groupeJours)
+    {
+        $this->groupe_jours = $groupeJours;
+
+        return $this;
+    }
+
+    /**
+     * Get groupe_jours
+     *
+     * @return array 
+     */
+    public function getGroupeJours()
+    {
+        return $this->groupe_jours;
+    }
+
+
 }

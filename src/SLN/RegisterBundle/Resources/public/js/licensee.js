@@ -2,6 +2,8 @@
 function setup_group_description() {
   var groupe_choice = $('#sln_registerbundle_licenseetype_groupe');
 
+  
+
   if (groupe_choice.length > 0) {
     console.log("Found groupe choice");
     var groupe_description = $('#groupe-description');
@@ -36,6 +38,7 @@ function update_groupe_description(groupe_description, data) {
   if ($.type(data) == "string") {
     groupe_description.find('.groupe-description').html(data);
     groupe_description.find('.groupe-horaires').html("");
+    groupe_description.find('#groupe_jours').hide();
   }
   else {
     var description_str = "<div class='panel panel-info'>" +
@@ -58,5 +61,18 @@ function update_groupe_description(groupe_description, data) {
                        "  <div class='panel-body'>" + horaires + "</div>" +
                        "</div>"
     groupe_description.find('.groupe-horaires').html(horaires_str);
+
+    var multiple_list = data["multiple_list"];
+    if (multiple_list) {
+      console.log('Multiple_list = ' + multiple_list);
+      groupe_description.find('div.checkbox').hide();
+      for (index = 0; index < data.multiple_list.length; index++) {
+        value = data.multiple_list[index];
+        groupe_description.find(':checkbox[value=' + value + ']').parents('div.checkbox').show();
+      }
+      groupe_description.find('#groupe_jours').show();
+    } else {
+      groupe_description.find('#groupe_jours').hide();
+    }
   }
 }

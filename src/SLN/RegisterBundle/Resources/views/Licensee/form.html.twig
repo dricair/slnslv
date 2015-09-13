@@ -43,6 +43,10 @@
       {{ form_row(form.groupe) }}
 
       <div id='groupe-description' data-function="{{ path('api_get_group', {'id': '__id__'}) }}" class="row">
+        <div id='groupe_jours'>
+          <p class='help'>Choisissez le ou les jours auxquels vous souhaitez vous inscrire. Attention, le tarif dépend du nombre de cours.</p>
+          {{ form_row(form.groupe_jours) }}
+        </div>
         <div class='groupe-description col-sm-6'></div>
         <div class='groupe-horaires col-sm-6'></div>
       </div>

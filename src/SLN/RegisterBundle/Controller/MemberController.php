@@ -89,6 +89,11 @@ class MemberController extends Controller
             return $this->redirect($this->generateUrl('SLNRegisterBundle_member_edit', array('id' => $user->getId())));
         }
 
+        else if ($request->getMethod() == 'POST') {
+            $this->get('session')->getFlashBag()->add('error', "Des erreurs sont présentes dans le formulaire");
+        }
+
+
         $licensees = null;
         if ($admin) {
             $licensees = $this->getLicenseeRepository()->getLicenseesForUser($user->getId());

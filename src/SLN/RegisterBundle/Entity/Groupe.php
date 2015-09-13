@@ -93,6 +93,13 @@ use SLN\RegisterBundle\Entity\Horaire;
      */
     protected $licensees;
 
+    /**
+     * @var bool $multiple True if independent time slots
+     * @ORM\Column(type="boolean")
+     * @Expose
+     */
+    protected $multiple;
+
      /**
       * @var Horaire[] $horaires List of Horaire slots
       * @ORM\Column(type="json_array")
@@ -126,6 +133,7 @@ use SLN\RegisterBundle\Entity\Horaire;
 
         $this->licensees = new ArrayCollection();
         $this->horaires = Array((array)new Horaire());
+        $this->multiple = false;
 
         // Default groupe used in Licensee
         $this->categorie = $this::ECOLE;
@@ -307,6 +315,27 @@ use SLN\RegisterBundle\Entity\Horaire;
     }
 
     /**
+     * Virtual property for Multiple field
+     *
+     * Return None if multiple if false
+     * Return a list of 'jour' indexes if multiple is true
+     *
+     * @return int[]|null List of 'jour' indexes if multiple, else null
+     *
+     * @VirtualProperty
+     */
+    public function multipleList() {
+        if (! $this->multiple) return null;
+
+        $ret = array();
+        foreach($this->horaires as $horaire) {
+            $ret[] = $horaire['jour'];
+        }
+        return $ret;
+    }
+
+
+    /**
      * Set created
      *
      * @param \DateTime $created
@@ -386,5 +415,28 @@ use SLN\RegisterBundle\Entity\Horaire;
         $this->horaires = $horaires;
 
         return $this;
+    }
+
+    /**
+     * Set multiple
+     *
+     * @param boolean $multiple
+     * @return Groupe
+     */
+    public function setMultiple($multiple)
+    {
+        $this->multiple = $multiple;
+
+        return $this;
+    }
+
+    /**
+     * Get multiple
+     *
+     * @return boolean 
+     */
+    public function getMultiple()
+    {
+        return $this->multiple;
     }
 }

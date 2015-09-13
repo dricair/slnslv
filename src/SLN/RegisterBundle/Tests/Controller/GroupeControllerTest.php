@@ -67,6 +67,7 @@ class GroupeControllerTest extends SLNTestCase
         /**
          * @todo check if user does not exist
          * @todo check modification
+         * @todo check multiple
          */
     }
 

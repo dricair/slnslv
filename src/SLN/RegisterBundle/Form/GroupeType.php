@@ -36,7 +36,9 @@ class GroupeType extends AbstractType
                   'allow_delete' => true,
                   'by_reference' => false,
                   'options' => array()
-                ));
+                ))
+            ->add('multiple', null, array(
+                  'label' => 'Horaires indépendents'));
     }
 
     /** @ignore */

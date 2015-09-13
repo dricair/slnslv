@@ -11,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use SLN\RegisterBundle\Entity\Member;
 use SLN\RegisterBundle\Entity\Licensee;
+use SLN\RegisterBundle\Entity\Horaire;
 use SLN\RegisterBundle\Entity\Repository\UserRepository;
 
 
@@ -37,6 +38,11 @@ class LicenseeType extends AbstractType
             ->add('sexe', 'choice', array(
                   'choices' => Licensee::getGenders(),))
             ->add('groupe', null, array("group_by" => 'categorieName'))
+            ->add('groupe_jours', 'choice', array(
+                  'label' => 'Choix des jours',
+                  'choices' => Horaire::getJours(),
+                  'multiple' => true,
+                  'expanded' => true))
             ->add('iuf', null, array("attr" => array("placeholder" => "01234567")))
             ->add('officiel', 'checkbox', array('required'=>false))
             ->add('bureau', 'checkbox', array('required'=>false))

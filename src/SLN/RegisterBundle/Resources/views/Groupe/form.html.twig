@@ -13,6 +13,10 @@
   <div class="panel panel-default">
     <div class="panel-heading">Horaires</div>
     <div class="add-row panel-body">
+      <p class='help'>Sélectionner l'option suivante si les licenciés peuvent choisir un ou plusieurs cours de façon 
+                      indépendente (Avec un impact sur le tarif)</p>
+      {{ form_row(form.multiple) }}
+
 {% set tr_open='<tr><td>' %}
 {% set tr_close='</tr></td>' %}
 {% set td='</td><td>' %}

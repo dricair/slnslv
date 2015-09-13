@@ -117,7 +117,11 @@ class LicenseeController extends Controller
               return $this->redirect($this->generateUrl('SLNRegisterBundle_homepage', array()));
             }
         }
- 
+
+        else if ($request->getMethod() == 'POST') {
+            $this->get('session')->getFlashBag()->add('error', "Des erreurs sont présentes dans le formulaire");
+        }
+
         return $this->render($inside_page ? 'SLNRegisterBundle:Licensee:form.html.twig' :
                                             'SLNRegisterBundle:Licensee:edit.html.twig', array(
             'licensee' => $licensee,

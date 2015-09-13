@@ -14,6 +14,8 @@ use SLN\RegisterBundle\Tests\Controller\SLNTestCase;
   */
 class MailControllerTest extends SLNTestCase
 {
+    public function testMail() {
+        }
 }
 
 

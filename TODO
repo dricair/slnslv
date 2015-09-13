@@ -1,14 +1,10 @@
 Bugs:
-- Licensee admin -> tri Users par nom, 
-- Licensee admin -> from user, not correct one selected
-- Licensee admin -> accès aux feuilles d'inscription, erreur
 - Inscription si pas de groupe
 
 Inscriptions:
 - Montrer ce qui manque
 - Ajouter des photos
 - Remplir la feuille de licence
-- Envoyer un mail en cas de changement de groupe
 - Page d'inscription pour gérer photo/Licence/Inscription + paiements
 
 Licencié
@@ -18,6 +14,7 @@ Divers:
 - Renouvellement des licences
 - Impression des cartes
 - assetic
+- Page avec les prix
 
 https://github.com/comur/ComurImageBundle
 https://jqueryui.com

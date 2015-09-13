@@ -35,6 +35,7 @@ class GroupeRestController extends Controller {
             throw $this->createNotFoundException();
         }
 
+        // Use the Expose and VirtualProperty of the Groupe object to serialize
         return $groupe;
     }
 }

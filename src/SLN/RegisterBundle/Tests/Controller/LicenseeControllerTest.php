@@ -71,6 +71,7 @@ class LicenseeControllerTest extends SLNTestCase
         // @todo check form
         // @todo check licensee is created
         // @todo check licensee is created on correct user
+        // @todo check selection of multiple depending on group
     }
 
 
