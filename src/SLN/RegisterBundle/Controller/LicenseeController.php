@@ -167,13 +167,11 @@ class LicenseeController extends Controller
      * @return Response Rendered page.
      */
     public function listAction($admin=FALSE) {
-        $groupes = array();
         $officiels = array();
         $bureau = array();
-        $total = 0;
 
         $no_group = $this->getLicenseeRepository()->getAllNoGroups();
-        $total += count($no_group);
+        $total = count($no_group);
 
         foreach ($no_group as $key => $licensee) {
             $remove = false;
@@ -185,24 +183,14 @@ class LicenseeController extends Controller
         }
 
         $licensees = $this->getLicenseeRepository()->getAllByGroups();
+        $total += count($licensees);
 
         foreach($licensees as $licensee) {
-            if ($licensee->getGroupe() == Null)
-                $groupe = "Pas de groupe";
-            else
-                $groupe = $licensee->getGroupe()->getNom();
-
-            if (!array_key_exists($groupe, $groupes)) {
-                $groupes[$groupe] = array("num" => 0, "licensees" => array());
-            }
-
-            $groupes[$groupe]["num"] += 1;
-            $groupes[$groupe]["licensees"][] = $licensee;
-            $total += 1;
-
             if ($licensee->getOfficiel()) $officiels[] = $licensee;
             if ($licensee->getBureau()) $bureau[] = $licensee;
         }
+
+        $groupes = Licensee::sortByGroups($licensees);
 
         return $this->render('SLNRegisterBundle:Licensee:list.html.twig', array('no_group' => $no_group,
                                                                                 'groupes' => $groupes, 

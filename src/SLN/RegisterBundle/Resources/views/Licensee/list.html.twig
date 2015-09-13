@@ -21,7 +21,21 @@
 
 <p>{{ groupe['num'] }} licencié(e)s</p>
 
-  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': groupe['licensees'], 'admin': admin } %}
+  {% if groupe['multiple'] %}
+    {% for jour,values in groupe['jours'] %}
+      {% if jour == -1 %}
+<h3>Pas de jour selectionné</h3>
+      {% else %}
+<h3>Jour du {{ values['jour'] }}</h3>
+      {% endif %}
+
+<p>{{ values['num'] }} licencié(e)s</p>
+  
+      {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': values['licensees'], 'admin': admin } %}
+    {% endfor %}
+  {% else %}
+    {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': groupe['licensees'], 'admin': admin } %}
+  {% endif %}
 {% endfor %}
 
 <h1>Fonctions spéciales</h1>

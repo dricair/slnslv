@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 use SLN\RegisterBundle\Entity\Groupe;
+use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Form\GroupeType;
 
 /**
@@ -93,10 +94,11 @@ class GroupeController extends Controller {
         }
 
         $licensees =  $em->getRepository('SLNRegisterBundle:Licensee')->getAllForGroupe($groupe);
+        $groupes = Licensee::sortByGroups($licensees);
 
         return $this->render('SLNRegisterBundle:Groupe:show.html.twig', array(
           'groupe' => $groupe,
-          'licensees' => $licensees,
+          'licensees' => $groupes[$groupe->getNom()],
           'admin' => $admin));
     }
 

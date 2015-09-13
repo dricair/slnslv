@@ -363,6 +363,71 @@ Site: http://stadelaurentinnatation.fr</p>');
         return $pdf;
     }
 
+
+    /**
+     * Sort a list of licensees by groups or sub-groups
+     *
+     * When group is 'multiple', create sub-lists
+     *
+     * @param Licensee[] $licensees List of licensees to group
+     *
+     * @return array[] Licensees by groups.
+     */
+    public static function sortByGroups($licensees) {
+        $groupes = array();
+
+        foreach($licensees as $licensee) {
+            if ($licensee->getGroupe() == Null) continue;
+            $groupe = $licensee->getGroupe();
+            $groupe_nom = $groupe->getNom();
+
+            $multiple = $groupe->getMultiple();
+            $days = $groupe->multipleList();
+            $days[] = -1;
+            sort($days);
+            if (!array_key_exists($groupe_nom, $groupes)) {
+                $jours = Horaire::getJours();
+                if ($multiple) {
+                    $groupes[$groupe_nom] = array("num" => 0, "multiple" => true, "jours" => array());
+                    foreach($days as $day) {
+                        $jour_nom = "";
+                        if ($day != -1) $jour_nom = $jours[$day];
+                        $groupes[$groupe_nom]["jours"][$day] = array("num" => 0, "jour" => $jour_nom, "licensees" => array());
+                    }
+                } else {
+                    $groupes[$groupe_nom] = array("num" => 0, "licensees" => array(), "multiple" => false);
+                }
+            }
+
+            $groupes[$groupe_nom]["num"] += 1;
+            if ($multiple) {
+                $groupe_jours = $licensee->getGroupeJours();
+                foreach ($days as $day) {
+                    if(in_array($day, $groupe_jours)) {
+                        $groupes[$groupe_nom]["jours"][$day]["licensees"][] = $licensee;
+                        $groupes[$groupe_nom]["jours"][$day]["num"] += 1;
+                    }
+                }
+                if (count($groupe_jours) == 0) {
+                    if (!array_key_exists(-1, $groupes[$groupe_nom]["jours"]))
+                        $groupes[$groupe_nom]["jours"][-1] = array("num" => 0, "licensees" => array());
+                    $groupes[$groupe_nom]["jours"][-1]["licensees"][] = $licensee;
+                    $groupes[$groupe_nom]["jours"][-1]["num"] += 1;
+                }
+            } else {
+                $groupes[$groupe_nom]["licensees"][] = $licensee;
+            }
+        }
+
+        foreach ($groupes as $groupe) {
+            if ($groupe["multiple"] and count($groupe["jours"][-1]) == 0)
+                unset($groupe["jour"][-1]);
+        }
+        
+        return $groupes;
+    }
+
+
     /** @ignore */
     public function __construct()
     {
@@ -393,7 +458,7 @@ Site: http://stadelaurentinnatation.fr</p>');
             $found = false;
             $list_jours = $this->groupe->multipleList();
             foreach ($this->groupe_jours as $jour) {
-                if (array_key_exists($jour, $list_jours)) $found = true;
+                if (in_array($jour, $list_jours)) $found = true;
             }
 
             if (!$found) 

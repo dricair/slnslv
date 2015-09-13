@@ -29,7 +29,23 @@
 
 <h2>Liste des licenciés</h2>
 
-  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': licensees, 'admin': admin } %}
+<p>{{ licensees['num'] }} licenciés</p>
+
+  {% if licensees['multiple'] %}
+    {% for jour,values in licensees['jours'] %}
+      {% if jour == -1 %}
+<h3>Pas de jour selectionné</h3>
+      {% else %}
+<h3>Jour du {{ values['jour'] }}</h3>
+      {% endif %}
+
+<p>{{ values['num'] }} licencié(e)s</p>
+  
+      {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': values['licensees'], 'admin': admin } %}
+    {% endfor %}
+  {% else %}
+    {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': licensees['licensees'], 'admin': admin } %}
+  {% endif %}
   
 {% endblock %}
   
