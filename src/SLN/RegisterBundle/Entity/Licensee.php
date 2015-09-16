@@ -100,6 +100,48 @@ use SLN\RegisterBundle\Entity\User;
     protected $date_licence;
 
     /**
+     * var bool[] $fonctions Special functions
+     * @ORM\Column(type="array")
+     */
+    protected $fonctions;
+
+    const ENTRAINEUR=0;
+    const BUREAU=1;
+    const OFFICIEL=2;
+
+    /**
+     * Return an array of the possible fonctions
+     *
+     * @return string[] List of strings for fonctions
+     */
+    public static function getFonctionNames() {
+        return array(self::ENTRAINEUR => "Entraineur", self::BUREAU => "Membre du bureau", self::OFFICIEL => "Officiel");
+    }
+
+
+    /**
+     * var bool[] $inscription State for inscription
+     * @ORM\Column(type="array")
+     */
+    protected $inscription;
+
+    const FEUILLE=0;
+    const PHOTO=1;
+    const CERTIFICAT=2;
+    const PAIEMENT=3;
+
+    /**
+     * Return an array of the possible inscription states
+     *
+     * @return string[] List of strings for inscription
+     */
+    public static function getInscriptionNames() {
+        return array(self::FEUILLE => "Feuille d'inscription", self::PHOTO => "Photos", 
+                     self::CERTIFICAT => "Certificat médical", self::PAIEMENT => "Paiement total");
+    }
+
+
+    /**
      * @var bool $officiel True if licensee is an officiel
      * @ORM\Column(type="boolean")
      */
@@ -444,6 +486,8 @@ Site: http://stadelaurentinnatation.fr</p>');
         $this->setPaiementOk(False);
 
         $this->groupe_jours = array();
+        $this->fonction = array();
+        $this->inscription = array();
     }
 
     /**
@@ -941,4 +985,49 @@ Site: http://stadelaurentinnatation.fr</p>');
     }
 
 
+    /**
+     * Set fonctions
+     *
+     * @param array $fonctions
+     * @return Licensee
+     */
+    public function setFonctions($fonctions)
+    {
+        $this->fonctions = $fonctions;
+
+        return $this;
+    }
+
+    /**
+     * Get fonctions
+     *
+     * @return array 
+     */
+    public function getFonctions()
+    {
+        return $this->fonctions;
+    }
+
+    /**
+     * Set inscription
+     *
+     * @param array $inscription
+     * @return Licensee
+     */
+    public function setInscription($inscription)
+    {
+        $this->inscription = $inscription;
+
+        return $this;
+    }
+
+    /**
+     * Get inscription
+     *
+     * @return array 
+     */
+    public function getInscription()
+    {
+        return $this->inscription;
+    }
 }

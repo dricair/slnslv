@@ -44,6 +44,11 @@ class LicenseeType extends AbstractType
                   'multiple' => true,
                   'expanded' => true))
             ->add('iuf', null, array("attr" => array("placeholder" => "01234567")))
+            ->add('fonctions', 'choice', array(
+                  'label' => 'Fonctions spéciales',
+                  'choices' => Licensee::getFonctionNames(),
+                  'multiple' => true,
+                  'expanded' => true))
             ->add('officiel', 'checkbox', array('required'=>false))
             ->add('bureau', 'checkbox', array('required'=>false))
             ->add('autorisation_photos', 'checkbox', array('required'=>false));
@@ -55,7 +60,12 @@ class LicenseeType extends AbstractType
                                                             ->select('u')
                                                             ->addOrderBy('u.nom', 'ASC');
                                                   },
-                                                  "label" => "Rattaché au compte"));
+                                                  "label" => "Rattaché au compte"))
+                    ->add('inscription', 'choice', array(
+                          'label' => 'Etat de l\'inscription',
+                          'choices' => Licensee::getInscriptionNames(),
+                          'multiple' => true,
+                          'expanded' => true));
     }
 
     /**
