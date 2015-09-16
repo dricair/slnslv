@@ -142,48 +142,6 @@ use SLN\RegisterBundle\Entity\User;
 
 
     /**
-     * @var bool $officiel True if licensee is an officiel
-     * @ORM\Column(type="boolean")
-     */
-    protected $officiel;
-
-    /**
-     * @var bool $bureau True if licensee is member of the Bureau
-     * @ORM\Column(type="boolean")
-     */
-    protected $bureau;
-
-    /**
-     * @var bool $inscription_ok True if inscription is ok.
-     * @ORM\Column(type="boolean")
-     */
-    protected $inscription_ok;
-
-    /**
-     * @var bool $attestation_ok True if medical attestion is verified
-     * @ORM\Column(type="boolean")
-     */
-    protected $attestation_ok;
-
-    /**
-     * @var bool $photo_ok True if provided photo is ok
-     * @ORM\Column(type="boolean")
-     */
-    protected $photo_ok;
-
-    /**
-     * @var bool $certificat_ok True if medical attestion is verified
-     * @ORM\Column(type="boolean")
-     */
-    protected $certificat_ok;
-
-    /**
-     * @var bool $paiement_ok True if payment is ok.
-     * @ORM\Column(type="boolean")
-     */
-    protected $paiement_ok;
-
-    /**
      * @var bool $autorisation_photos True if authorization for photos is ok
      * @ORM\Column(type="boolean")
      */
@@ -477,13 +435,6 @@ Site: http://stadelaurentinnatation.fr</p>');
         $this->setUpdated(new \DateTime());
         $this->setNaissance(new \DateTime("2000-01-01"));
         $this->setAutorisationPhotos(True);
-        $this->setInscriptionOk(False);
-        $this->setBureau(false);
-        $this->setOfficiel(false);
-        $this->setPhotoOk(False);
-        $this->setCertificatOk(False);
-        $this->setAttestationOk(False);
-        $this->setPaiementOk(False);
 
         $this->groupe_jours = array();
         $this->fonction = array();
@@ -622,75 +573,6 @@ Site: http://stadelaurentinnatation.fr</p>');
     public function getIuf()
     {
         return $this->iuf;
-    }
-
-    /**
-     * Set attestation_ok
-     *
-     * @param boolean $attestationOk
-     * @return Licensee
-     */
-    public function setAttestationOk($attestationOk)
-    {
-        $this->attestation_ok = $attestationOk;
-
-        return $this;
-    }
-
-    /**
-     * Get attestation_ok
-     *
-     * @return boolean 
-     */
-    public function getAttestationOk()
-    {
-        return $this->attestation_ok;
-    }
-
-    /**
-     * Set photo_ok
-     *
-     * @param boolean $photoOk
-     * @return Licensee
-     */
-    public function setPhotoOk($photoOk)
-    {
-        $this->photo_ok = $photoOk;
-
-        return $this;
-    }
-
-    /**
-     * Get photo_ok
-     *
-     * @return boolean 
-     */
-    public function getPhotoOk()
-    {
-        return $this->photo_ok;
-    }
-
-    /**
-     * Set certificat_ok
-     *
-     * @param boolean $certificatOk
-     * @return Licensee
-     */
-    public function setCertificatOk($certificatOk)
-    {
-        $this->certificat_ok = $certificatOk;
-
-        return $this;
-    }
-
-    /**
-     * Get certificat_ok
-     *
-     * @return boolean 
-     */
-    public function getCertificatOk()
-    {
-        return $this->certificat_ok;
     }
 
     /**
@@ -846,52 +728,6 @@ Site: http://stadelaurentinnatation.fr</p>');
 
 
     /**
-     * Set inscription_ok
-     *
-     * @param boolean $inscriptionOk
-     * @return Licensee
-     */
-    public function setInscriptionOk($inscriptionOk)
-    {
-        $this->inscription_ok = $inscriptionOk;
-
-        return $this;
-    }
-
-    /**
-     * Get inscription_ok
-     *
-     * @return boolean 
-     */
-    public function getInscriptionOk()
-    {
-        return $this->inscription_ok;
-    }
-
-    /**
-     * Set paiement_ok
-     *
-     * @param boolean $paiementOk
-     * @return Licensee
-     */
-    public function setPaiementOk($paiementOk)
-    {
-        $this->paiement_ok = $paiementOk;
-
-        return $this;
-    }
-
-    /**
-     * Get paiement_ok
-     *
-     * @return boolean 
-     */
-    public function getPaiementOk()
-    {
-        return $this->paiement_ok;
-    }
-
-    /**
      * Set groupe
      *
      * @param Groupe $groupe
@@ -914,52 +750,6 @@ Site: http://stadelaurentinnatation.fr</p>');
         return $this->groupe;
     }
 
-
-    /**
-     * Set officiel
-     *
-     * @param boolean $officiel
-     * @return Licensee
-     */
-    public function setOfficiel($officiel)
-    {
-        $this->officiel = $officiel;
-
-        return $this;
-    }
-
-    /**
-     * Get officiel
-     *
-     * @return boolean 
-     */
-    public function getOfficiel()
-    {
-        return $this->officiel;
-    }
-
-    /**
-     * Set bureau
-     *
-     * @param boolean $bureau
-     * @return Licensee
-     */
-    public function setBureau($bureau)
-    {
-        $this->bureau = $bureau;
-
-        return $this;
-    }
-
-    /**
-     * Get bureau
-     *
-     * @return boolean 
-     */
-    public function getBureau()
-    {
-        return $this->bureau;
-    }
 
     /**
      * Set groupe_jours

@@ -17,8 +17,6 @@
         {% if admin %}<a href="{{ path('SLNRegisterBundle_groupe_show', { id: licensee.groupe.id }) }}">{{ licensee.groupe.nom }}</a>
         {% else %}{{ licensee.groupe.nom }}{% endif %}
       {% else %} Pas de groupe sélectionné.{% endif %}
-      {% if licensee.officiel %} </br>Officiel {% endif %}
-      {% if licensee.bureau %} </br>Membre du bureau {% endif %}</td>
   <td>
     <a href="{% if admin %}{{ path('SLNRegisterBundle_admin_licensee_edit', { id: licensee.getId }) }}
              {% else %}{{ path('SLNRegisterBundle_licensee_edit', { id: licensee.getId }) }}{% endif %}" title='Modifier ce licencié'>

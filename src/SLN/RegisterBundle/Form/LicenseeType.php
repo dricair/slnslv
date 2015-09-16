@@ -49,8 +49,6 @@ class LicenseeType extends AbstractType
                   'choices' => Licensee::getFonctionNames(),
                   'multiple' => true,
                   'expanded' => true))
-            ->add('officiel', 'checkbox', array('required'=>false))
-            ->add('bureau', 'checkbox', array('required'=>false))
             ->add('autorisation_photos', 'checkbox', array('required'=>false));
 
         if ($options["admin"])

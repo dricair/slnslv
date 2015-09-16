@@ -167,35 +167,40 @@ class LicenseeController extends Controller
      * @return Response Rendered page.
      */
     public function listAction($admin=FALSE) {
-        $officiels = array();
-        $bureau = array();
+        $fonctions = array();
+        foreach(Licensee::getFonctionNames() as $fonction)
+            $fonctions[$fonction] = array();
 
         $no_group = $this->getLicenseeRepository()->getAllNoGroups();
         $total = count($no_group);
 
         foreach ($no_group as $key => $licensee) {
-            $remove = false;
-            if ($licensee->getOfficiel() || $licensee->getBureau())
-                unset($no_group[$key]);
+            $licensee_fonctions = $licensee->getFonctions();
+            foreach(Licensee::getFonctionNames() as $index => $fonction) {
+                if (in_array($index, $licensee_fonctions))
+                    $fonctions[$fonction][] = $licensee;
+            }
 
-            if ($licensee->getOfficiel()) $officiels[] = $licensee;
-            if ($licensee->getBureau()) $bureau[] = $licensee;
+            if (count($licensee_fonctions) > 0)
+                unset($no_group[$key]);
         }
 
         $licensees = $this->getLicenseeRepository()->getAllByGroups();
         $total += count($licensees);
 
         foreach($licensees as $licensee) {
-            if ($licensee->getOfficiel()) $officiels[] = $licensee;
-            if ($licensee->getBureau()) $bureau[] = $licensee;
+            $licensee_fonctions = $licensee->getFonctions();
+            foreach(Licensee::getFonctionNames() as $index => $fonction) {
+                if (in_array($index, $licensee_fonctions))
+                    $fonctions[$fonction][] = $licensee;
+            }
         }
 
         $groupes = Licensee::sortByGroups($licensees);
 
         return $this->render('SLNRegisterBundle:Licensee:list.html.twig', array('no_group' => $no_group,
                                                                                 'groupes' => $groupes, 
-                                                                                'officiels' => $officiels,
-                                                                                'bureau' => $bureau,
+                                                                                'fonctions' => $fonctions,
                                                                                 'total' => $total, 
                                                                                 'admin' => $admin));
     }

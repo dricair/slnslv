@@ -77,7 +77,7 @@ class LoadLicenseeData extends AbstractFixture implements OrderedFixtureInterfac
         $licensee->setIuf("44444444");
         $licensee->setUser($this->getReference('user-admin'));
         $licensee->setGroupe($this->getReference('groupe-loisirs'));
-        $licensee->setOfficiel(True);
+        $licensee->setFonctions(array(Licensee::OFFICIEL));
 
         $manager->persist($licensee);
         $manager->flush();
@@ -90,7 +90,7 @@ class LoadLicenseeData extends AbstractFixture implements OrderedFixtureInterfac
         $licensee->setNaissance(new \Datetime("1980-04-04"));
         $licensee->setIuf("");
         $licensee->setUser($this->getReference('user-admin'));
-        $licensee->setBureau(True);
+        $licensee->setFonctions(array(Licensee::BUREAU));
 
         $manager->persist($licensee);
         $manager->flush();

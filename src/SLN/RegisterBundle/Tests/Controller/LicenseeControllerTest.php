@@ -31,8 +31,9 @@ class LicenseeControllerTest extends SLNTestCase
         $this->assertTrue($crawler->filter('h2:contains("Loisirs")')->count() > 0);
         $this->assertTrue($crawler->filter('h2:contains("Loisirs")')->count() > 0);
         //$this->assertTrue($crawler->filter('h1:contains("Fonctions spéciales")')->count() > 0); @todo this should match
-        $this->assertTrue($crawler->filter('h2:contains("Officiels")')->count() > 0);
-        $this->assertTrue($crawler->filter('h2:contains("Membres du bureau")')->count() > 0);
+        $this->assertTrue($crawler->filter('h2:contains("Officiel")')->count() > 0);
+        $this->assertTrue($crawler->filter('h2:contains("Membre du bureau")')->count() > 0);
+        $this->assertTrue($crawler->filter('h2:contains("Entraineur")')->count() > 0);
         
     }
 

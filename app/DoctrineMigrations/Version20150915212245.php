@@ -39,7 +39,7 @@ class Version20150915212245 extends AbstractMigration implements ContainerAwareI
     public function postUp(Schema $schema) {
         echo "Postup migration\n"; 
         $em = $this->container->get('doctrine.orm.entity_manager');
-        foreach ($em->getRepository('SLNRegisterBundle:Licensee')->getAll() as $licensee) {
+        foreach ($em->getRepository('SLNRegisterBundle:Licensee')->findAll() as $licensee) {
             $fonctions = array();
             if ($licensee->getOfficiel()) $fonctions[] = Licensee::OFFICIEL;
             if ($licensee->getBureau())   $fonctions[] = Licensee::BUREAU;
