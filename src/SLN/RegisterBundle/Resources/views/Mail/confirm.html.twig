@@ -1,0 +1,67 @@
+{% extends 'SLNRegisterBundle::layout.html.twig' %}
+
+{% block title %}Confirmer l'envoi du mail{% endblock %}
+
+{% block javascripts %} 
+  {{ parent() }}
+
+  <script src="{{ asset('bundles/slnregister/js/mail.js') }}"></script>
+  <script type="text/javascript">
+  $(function() {
+    $( "#progressbar" ).progressbar({
+      max: {{ licensees|length }},
+      value: 0
+    });
+
+    setup_mail_send();
+  });
+  </script>
+{% endblock %}
+
+{% block body %}
+<h1>Confirmer l'envoi du mail</h1>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Destinataires du mail</div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-6">{{ licensees|length }} licenciés sélectionnés</div>
+      <div class="col-sm-6"></div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div id="mail_licensee_list">
+        {% for licensee in licensees %}
+          <p>{{ licensee }}</p>
+        {% endfor %}
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div id="mail_progressbar">
+          <p id="progresslabel">Aucun mail envoyé pour le moment.</p>
+          <div id="progressbar">
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" id="send_mail" data-function="{{ path('api_get_email') }}" data-num={{ licensees|length }}>Envoyer le mail...</button>
+        <div id="mail_status">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Message à envoyer</div>
+  <div class="panel-body">
+    {% set licensee = null %}
+    {% if licensees[0] is defined %}
+    {% set licensee = licensees[0] %}
+    {% endif %}
+    {% include 'SLNRegisterBundle:Mail:mail_content.html.twig' with { 'licensee': licensee, 'title_value': title, 'body_value': body, 'standalone': false } %}
+  </div>
+</div>
+
+
+{% endblock %}
+

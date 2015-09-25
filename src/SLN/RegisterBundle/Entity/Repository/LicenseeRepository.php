@@ -89,15 +89,18 @@ class LicenseeRepository extends EntityRepository {
     /**
      * Get all licensees that have no group selected.
      *
+     * @param bool $builder If true, return the QueryBuilder instead of the result
+     *
      * @return Licensee[] List of Licensee
      */
-    public function getAllNoGroups() {
+    public function getAllNoGroups($builder=false) {
         $qb = $this->createQueryBuilder('l')
                    ->select('l')
                    ->where('l.groupe IS NULL')
                    ->addOrderBy('l.nom',  'ASC')
                    ->addOrderBy('l.prenom', 'ASC');
 
+        if ($builder) return $qb;
         return $qb->getQuery()
                   ->getResult();
     }
@@ -106,10 +109,11 @@ class LicenseeRepository extends EntityRepository {
      * Get all licensees for a specific group
      *
      * @param Groupe $groupe Selected Groupe
+     * @param bool $builder If true, return the QueryBuilder instead of the result
      *
      * @return Licensee[] List of Licensee
      */
-    public function getAllForGroupe(Groupe $groupe) {
+    public function getAllForGroupe(Groupe $groupe, $builder=false) {
         $qb = $this->createQueryBuilder('l')
                    ->select('l')
                    ->where('l.groupe = :groupe_id')
@@ -117,8 +121,10 @@ class LicenseeRepository extends EntityRepository {
                    ->addOrderBy('l.prenom', 'ASC')
                    ->setParameter('groupe_id', $groupe->getId());
 
+        if ($builder) return $qb;
         return $qb->getQuery()
                   ->getResult();
     }
+
 
 }

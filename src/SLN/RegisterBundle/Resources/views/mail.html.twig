@@ -1,0 +1,30 @@
+{% if standalone|default(true) %}
+<html>
+<body>
+{% endif %}
+{% block body %}
+<div style='margin: auto; max-width: 600px; border: 0px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;'>
+  <table style='width: 100%; border-spacing: 0; border-collapse: collapse;'>
+  <tr style='background-color: #A8CAFF; color: #FFF; border: 1px solid grey;'>
+    <td width="150px"><img src="http://stadelaurentinnatation.fr/register/web/bundles/slnregister/images/logo_club_t.png" alt="Stade Laurentin Natation" 
+        title="Logo club" width="150px" height="150px"/></td>
+    <td align="center">
+      <h2>{% block title %}{% endblock %}</h2>
+      {% if licensee|default(null) %}
+      <p><b>Message à l'attention de {{ licensee.getPrenom }} {{ licensee.getNom }}</b></p>
+      {% endif %}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+    {% block content %}{% endblock %}
+    </td>
+  </tr>
+  </table>
+</div>
+{% endblock %}
+{% if standalone|default(true) %}
+</body>
+</html>
+{% endif %}
+ 

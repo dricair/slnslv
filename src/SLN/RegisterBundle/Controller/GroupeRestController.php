@@ -12,6 +12,7 @@ namespace SLN\RegisterBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\View;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Request;
 
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Form\GroupeType;

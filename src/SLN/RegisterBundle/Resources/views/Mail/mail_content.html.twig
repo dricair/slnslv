@@ -1,15 +1,12 @@
+{% extends 'SLNRegisterBundle::mail.html.twig' %}
 
-<div id="mail">
-  <h2 class="editable" id="title">Titre du mail</h2>
+{% block title %}{{ title_value|raw }}{% endblock %}
 
-  <div class="image">
-    <div class="btn-group">
-        <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload"></span>Sélectionner une image...</button>
-        <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span>Effacer l'image</button>
-    </div>
-  </div>
-  <div class="editable" id="body">Texte ici</div>
-</div>
+{% block content %}
+<h2 style='color: #6495B3; font-size: 24px; margin-top: 20px; margin-bottom: 10px;'>{{ title_value|raw }}</h2>
+
+{{ body_value|raw }}
+{% endblock %}
 
 
 

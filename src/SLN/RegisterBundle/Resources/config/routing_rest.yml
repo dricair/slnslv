@@ -8,4 +8,9 @@ licensees:
     resource: "SLNRegisterBundle:LicenseeRest"
     name_prefix: api_
 
+mail:
+    type: rest
+    resource: "SLNRegisterBundle:MailRest"
+    name_prefix: api_
+
 

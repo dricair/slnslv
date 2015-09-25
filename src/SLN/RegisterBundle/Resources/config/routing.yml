@@ -192,6 +192,12 @@ SLNRegisterBundle_mail_licensee_select:
   requirements:
     _method: GET|POST
 
+SLNRegisterBundle_mail_confirm:
+  pattern: /admin/mail/confirm
+  defaults: { _controller: SLNRegisterBundle:Mail:confirm }
+  requirements:
+    _method: GET
+
 
 
 #

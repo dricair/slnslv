@@ -365,6 +365,16 @@ Site: http://stadelaurentinnatation.fr</p>');
 
 
     /**
+     * String for the entity
+     *
+     * @return string String representation for the entity
+     **/
+    public function __toString() {
+        return sprintf("%s %s (%s)", $this->prenom, $this->nom, $this->groupe ? $this->groupe->getNom() : "Pas de groupe");
+    }
+
+
+    /**
      * Sort a list of licensees by groups or sub-groups
      *
      * When group is 'multiple', create sub-lists

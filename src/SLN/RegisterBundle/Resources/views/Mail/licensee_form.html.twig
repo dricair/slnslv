@@ -1,4 +1,4 @@
-<form action="."  method="post" {{ form_enctype(form) }} class="form-horizontal" role="form">
+<form action="{{ path('SLNRegisterBundle_mail_licensee') }}"  method="post" {{ form_enctype(form) }} class="form-horizontal" role="form" id="my_form">
   {{ form_errors(form) }}
 
   <div class="panel panel-default">
@@ -23,7 +23,10 @@
             <button type="button" class="btn btn-primary" id="del_all">Tout supprimer</button>
           </div>
         </div>
-        <div class="col-sm-5">{{ form_widget(form.licensees) }}</div>
+        <div class="col-sm-5">
+          {{ form_errors(form.licensees) }}
+          <select id="{{ form.licensees.vars.id }}" name="{{ form.licensees.vars.full_name }}" multiple="multiple" class="form-control" size="10"></select>
+        </div>
       </div>
     </div>
   </div>
@@ -31,7 +34,29 @@
   <div class="panel panel-default">
     <div class="panel-heading">Texte du mail</div>
     <div class="panel-body">
-    {% include 'SLNRegisterBundle:Mail:mail_content.html.twig' with { 'form': form, 'title': title } %}
+      {{ form_errors(form.title) }}
+      <h2 class="editable" id="title">{{ form.title.vars.value|raw }}</h2>
+      {{ form_errors(form.body) }}
+      <div class="editable" id="body">{{ form.body.vars.value|raw }}</div>
     </div>
   </div>
+
+  {#<div class="panel panel-default">
+    <div class="panel-heading">Fichiers attachés</div>
+    <div class="panel-body">
+      <p>Si besoin, vous pouvez ajouter des fichiers à attacher au message.</p>
+      <div id="fileupload"></div>
+    </div>
+  </div>#}
+
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-7">
+      <input type="submit" class="btn btn-primary" id="_submit" name="_submit" value="Etape suivante »" />
+    </div>
+  </div>
+
+  {{ form_widget(form.title, {'attr': {'class': 'hidden'}}) }}
+  {{ form_widget(form.body, {'attr': {'class': 'hidden'}}) }}
+  {% do form.licensees.setRendered %}
+  {{ form_rest(form) }}
 </form>

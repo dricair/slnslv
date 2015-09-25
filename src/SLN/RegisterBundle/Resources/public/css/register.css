@@ -1,93 +1,17 @@
-/*
-div.flash-notice { text-align: center; padding: 10px; background: #DFF2BF; border: 1px solid; color: #4F8A10; margin-bottom: 10px; 
-                   box-shadow: 4px 3px 15px rgba(0,0,0,0.9); } 
-div.description  { text-align: left; padding: 10px; background: #DFF2BF; border: 1px solid; color: #4F8A10; margin-bottom: 10px; 
-                   box-shadow: 4px 3px 15px rgba(0,0,0,0.9); } 
+#mail_licensee_list {
+    border: 1px solid black;
+    margin: 10px;
+    padding: 10px;
+    height: 200px; 
+    overflow: auto;
+}
 
-h1.register { font-size: 18px; font-weight: bold; margin-top: 10px; }
-form.register { font-size: 14px; }
-form.register div { clear: left; margin-bottom: 10px; min-height: 26px; } 
-form.register div div { clear: none; display: inline-block; }
-form.register label { display: inline-block; margin-right: 10px; text-align: right; width: 200px; font-weight: bold; vertical-align: top; padding-top: 10px; }
-form.register label .radio { display: inline-block; margin-right: 5px; text-align: left; width: auto; font-weight: bold; vertical-align: top; padding-top: 10px; }
-form.register input[type="text"],
-form.register input[type="time"],
-form.register input[type="email"],
-form.register input[type="password"] { display: inline-block; width: 300px; line-height: 20px; min-height: 20px; }
-form.register input[type="time"] { width: 100px; }
-form.register textarea { display: inline-block; width: 300px; height: 150px; line-height: 16px; }
-form.register input[type="submit"] { margin-left: 220px; width: 312px; line-height: 20px; min-height: 20px; }
-form.register p.form_error { text-align: left; padding: 10px; padding-left: 210px; background: #ffdcdc; border: 1px solid #ff0000; color: #ff0000; 
-                             margin-bottom: 10px; box-shadow: 4px 3px 15px rgba(0,0,0,0.9); }
-form.register fieldset { width: 95%; border: 1px solid white; padding: 10px; background-color: #a8caff; margin-bottom: 20px; }
-form.register legend { border: 1px solid white; padding: 10px; background-color: #a8caff; font-weight: bold; color: white; }
-form.register .help { margin-top: 20px; margin-bottom: 2px; margin-left: 20px; }
-
-a.btn { display: inline-block; width: 90%; text-align: center; vertical-align: middle; border: 1px solid grey; 
-        white-space: no-wrap; padding: 6px 12px; border-radius: 5px; background: white; }
-a.btn:hover { background: transparent; }
-
-span.important { text-decoration: underline; font-weight: bold; }
-
-form.register a.add_row_link { padding-left: 18px; background: url(../images/icon_addrow.gif) no-repeat left center; }
-
-table.register { width: 100%; border: 1px solid white; padding: 10px; text-align: left; }
-table.register th { font-weight: bold; color: white; background-color: #a8caff; padding: 10px; }
-table.register td { padding: 10px; }
-table.register tr.odd { background-color: lightgrey; }
-table.register tr.even {  }
-
-.main-col p { margin-top: 6px; margin-bottom: 6px; }
-.main-col ul { margin-top: 12px; margin-bottom: 12px; margin-left: 20px;}
-.main-col li { line-height: 1.2em;}
+#mail_licensee_list p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
 
 
-#register_choice table { width: 100%; border: 0px; }
-#register_choice .left, 
-#register_choice .right { width: 45%; border: 1px solid white; padding: 10px; padding-left: 30px; background-color: #a8caff; }
-#register_choice .middle { width: 10%; }
-#register_choice th { font-weight: bold; color: white; }
-#register_choice li { margin-bottom: 10px; }
-#register_choice .bottom td { padding-top: 20px; padding-bottom: 20px; text-align: center; }
-
-#groupe-description { width: 100%; border: 1px black }
-#groupe-description .groupe-description { width: 50% }
-#groupe-description .title { font-weight: bold }
-
-#inscriptions { width: 100%; }
-#inscriptions .header table { width: 100%; border: 0px; color: lightgrey; }
-#inscriptions .header td { text-align: center; vertical-align: middle; color: grey; }
-#inscriptions .header td.col1,
-#inscriptions .header td.col3 { width: 20% }
-#inscriptions .header tr { height: 50px; }
-#inscriptions .header .col1 img { width: 120px; height: auto; }
-#inscriptions .header .col2 img { width: 400px; height: auto; }
-#inscriptions .header .col3 img { width: 140px; height: auto; }
-#inscriptions .header table a { color: grey; text-decoration: underline; }
-
-#inscriptions h2 { color: #1f487c; text-align: center; font-size: 24px; font-weight: bold; text-transform: uppercase; margin-top: 18px; margin-bottom: 12px;  }
-
-#inscriptions .instructions { border: 1px solid black; padding: 2px; margin-top: 20px; margin-bottom: 20px; }
-#inscriptions .instructions h2 { margin-top: 0px; margin-bottom: 0px; }
-#inscriptions .instructions ul { margin-top: 2px; margin-bottom: 2px; }
-#inscriptions .instructions li { margin-left: 20px; line-height: 1.2em; }
-
-#inscriptions .renseignements_licencie table { width: 100%; border: 0px; }
-#inscriptions .renseignements_licencie td { padding: 5px; }
-#inscriptions .renseignements_licencie .label { color: grey; width: 20%; text-align: right; padding-right: 10px; }
-#inscriptions .renseignements_licencie .valeur { font-weight: bold; width: 30%; }
-
-#inscriptions .attestation li { margin-left: 20px; line-height: 1.2em; margin-bottom: 6px;}
-#inscriptions .attestation .important { text-align: center; color: red; font-weight: bold; text-decoration: underline; margin: 20px; }
-#inscriptions .signature table { border-spacing: 20px; border-collapse: separate; width: 100%;}
-#inscriptions .signature td { text-align: right; }
-#inscriptions .signature td.signature { border: 1px dotted lightgrey; color: grey; height: 100px; width: 500px; text-align: left; vertical-align: top; margin: 10px; }
-
-#inscriptions .footer { border: 1px solid grey; padding: 5px; width: 100%; }
-#inscriptions .footer p { color: grey; text-align: center; margin: 1px; margin-top: -5px; }
-#inscriptions .footer table { border: 0px; border-spacing: 5px; border-collapse: separate; width: 100%; }
-#inscriptions .footer td { text-align: center; vertical-align: middle; color: grey; }
-#inscriptions .footer .values td { border: 1px solid grey;  color: grey; height: 30px; }
-*/
-
-
+#mail_progressbar {
+  margin-bottom: 20px;
+}
