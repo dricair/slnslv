@@ -25,7 +25,11 @@
         </div>
         <div class="col-sm-5">
           {{ form_errors(form.licensees) }}
-          <select id="{{ form.licensees.vars.id }}" name="{{ form.licensees.vars.full_name }}" multiple="multiple" class="form-control" size="10"></select>
+          <select id="{{ form.licensees.vars.id }}" name="{{ form.licensees.vars.full_name }}" multiple="multiple" class="form-control" size="10">
+          {% for licensee in defaultLicensees %}
+            <option value="{{ licensee.id }}">{{ licensee }}</option>
+          {% endfor %}
+          </select>
         </div>
       </div>
     </div>

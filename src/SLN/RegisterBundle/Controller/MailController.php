@@ -25,25 +25,46 @@ class MailController extends Controller {
     /**
      * Send a mail to a licensee or list of licensees, with facilities to chose them
      *
-     * @param int $default Licensee selected by default, none if Null
+     * @param int $defaultLicensee Licensee selected by default, none if Null
+     * @param int $defaultGroup Groupe selected by default, none if Null
      */
-    public function licenseeAction(Request $request, $default=null) {
+    public function licenseeAction(Request $request, $defaultLicensee = null, $defaultGroup=null) {
         $title = "Envoi de mails";
 
-        $defaultGroup = null;
-        $em = $this->getDoctrine()->getManager();
+        $defaultLicensees = array();
 
-        if ($default)
-          $defaultGroup = $em->getRepository('SLNRegisterBundle:Groupe')->find($default);
-        
         $select = new LicenseeSelect();
+
+        // Restore from session data (Back button)
+        $session = $request->getSession();
+        if ($request->query->get('restore', false) and $session->has('mail/licensees')) {
+            $licensee_list = $session->get('mail/licensees');
+            $select->title = $session->get('mail/title');
+            $select->body = $session->get('mail/body');
+            
+            $repository = $this->getLicenseeRepository();
+            $defaultLicensees = $repository->findById($licensee_list);
+        }
+         
+        else {
+            if ($defaultGroup) {
+                $defaultGroup = $em->getRepository('SLNRegisterBundle:Groupe')->find($defaultGroup);
+                if (is_object($defaultGroup))
+                    foreach($this->getLicenseeRepository()->getAllForGroupe($defaultGroup) as $licensee)
+                        $defaultLicensees[] = $licensee;
+            }
+
+            if ($defaultLicensee) {
+                $licensee = $this->getLicenseeRepository()->find($defaultLicensee);
+                if (is_object($licensee)) $defaultLicensee[] = $licensee;
+            }
+        }
 
         $request = $this->getRequest();
         $form = $this->createForm(new LicenseeSelectType(), $select, array("defaultGroup" => $defaultGroup));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $session = $request->getSession();
 
             // store an attribute for reuse during a later user request
             $licensee_list = array();
@@ -66,7 +87,7 @@ class MailController extends Controller {
             return $this->redirect($this->generateUrl('SLNRegisterBundle_mail_confirm'));
         }
 
-        return $this->render('SLNRegisterBundle:Mail:edit.html.twig', array('form' => $form->createView(), 'title' => $title ));
+        return $this->render('SLNRegisterBundle:Mail:edit.html.twig', array('form' => $form->createView(), 'title' => $title, 'defaultLicensees' => $defaultLicensees ));
     }
 
 

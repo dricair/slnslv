@@ -15,7 +15,12 @@ use SLN\RegisterBundle\Tests\Controller\SLNTestCase;
 class MailControllerTest extends SLNTestCase
 {
     public function testMail() {
-        }
+        // @todo Edit and send mail
+        // @todo Back from confirm to edit page
+        // @todo Default licencee
+        // @todo Default Groupe
+        // @todo Attach file
+    }
 }
 
 

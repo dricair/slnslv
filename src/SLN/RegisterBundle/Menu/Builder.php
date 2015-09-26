@@ -64,7 +64,11 @@ class Builder extends ContainerAware {
     			->setAttribute('divider_append', true);
 
             $menu['Admin']->addChild('Liste des groupes', array('route' => 'SLNRegisterBundle_groupe_list'))
-                ->setAttribute('icon', 'th-list');
+                ->setAttribute('icon', 'th-list')
+    			->setAttribute('divider_append', true);
+
+            $menu['Admin']->addChild('Envoyer des mails', array('route' => 'SLNRegisterBundle_mail_licensee'))
+                ->setAttribute('icon', 'enveloppe');
         }
 
         // access service from the container

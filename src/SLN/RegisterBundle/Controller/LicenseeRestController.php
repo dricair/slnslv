@@ -12,6 +12,7 @@ namespace SLN\RegisterBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\View;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Request;
 
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Entity\Licensee;
@@ -27,7 +28,11 @@ class LicenseeRestController extends Controller {
      * @param int $id Id for the Groupe
      * @return Licensee[] List of licensees
      */
-    public function getLicenseesInGroupAction($id){
+    public function getLicenseesInGroupAction(Request $request, $id){
+        if (!$this->getUser()->hasRole('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
