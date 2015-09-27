@@ -129,6 +129,7 @@ use SLN\RegisterBundle\Entity\User;
     const PHOTO=1;
     const CERTIFICAT=2;
     const PAIEMENT=3;
+    const LICENCE=4;
 
     /**
      * Return an array of the possible inscription states
@@ -137,7 +138,8 @@ use SLN\RegisterBundle\Entity\User;
      */
     public static function getInscriptionNames() {
         return array(self::FEUILLE => "Feuille d'inscription", self::PHOTO => "Photos", 
-                     self::CERTIFICAT => "Certificat médical", self::PAIEMENT => "Paiement total");
+                     self::CERTIFICAT => "Certificat médical", self::PAIEMENT => "Paiement total",
+                     self::LICENCE => "Feuille de licence");
     }
 
 
