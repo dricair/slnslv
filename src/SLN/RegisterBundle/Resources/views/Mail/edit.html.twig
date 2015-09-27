@@ -48,10 +48,14 @@ $( document ).ready(function() {
         // Specify what files to browse for
         filters : [
             {title : "Fichiers d'image", extensions : "jpg,gif,png"},
+            {title : "Documents PDF", extensions : "pdf"},
         ],
 
         // Enable ability to drag'n'drop files onto the widget (currently only HTML5 supports that)
         dragdrop: true,
+
+        // Immediatly uploads
+        autostart: true,
  
         // Views to activate
         views: {
