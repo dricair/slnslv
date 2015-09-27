@@ -440,6 +440,41 @@ Site: http://stadelaurentinnatation.fr</p>');
     }
 
 
+    /**
+     * Get the inscription status: number of missing elements
+     *
+     * @return Int Number of missing elements
+     */
+    public function inscriptionMissingNum() {
+        $missing = 0;
+        $names = self::getInscriptionNames();
+
+        foreach($names as $value => $name) {
+           if (!in_array($value, $this->inscription))
+               $missing += 1;
+        }
+
+        return $missing;
+    }
+
+    /**
+     * Get the inscription status: string of missing elements
+     *
+     * @return String List of missing elements
+     */
+    public function inscriptionMissingString() {
+        $missing = [];
+        $names = self::getInscriptionNames();
+
+        foreach($names as $value => $name) {
+           if (!in_array($value, $this->inscription))
+               $missing[] = $name;
+        }
+
+        return "Eléments manquants: " . implode(", ", $missing);
+    }
+
+
     /** @ignore */
     public function __construct()
     {

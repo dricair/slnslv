@@ -8,8 +8,18 @@
   <th>Actions</th>
 </tr>
 {% for licensee in licensees %}
+  {% set missingNum = licensee.inscriptionMissingNum %}
+  {% set missingStr = licensee.inscriptionMissingString %}
+
 <tr>
-  <td>{{ licensee.nom }}</td>
+  <td>
+    {{ licensee.nom }}
+    {% if missingNum > 1 %}
+      &nbsp;<span class="glyphicon glyphicon-exclamation-sign red-color" title="{{ missingStr }}"></span>
+    {% elseif missingNum == 1 %}
+      &nbsp;<span class="glyphicon glyphicon-exclamation-sign orange-color" title="{{ missingStr }}"></span>
+    {% endif %}
+  </td>
   <td>{{ licensee.prenom }}</td>
   <td>{{ licensee.naissance|date('d/m/Y') }}</td>
   <td>
