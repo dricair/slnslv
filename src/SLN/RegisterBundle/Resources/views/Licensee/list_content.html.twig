@@ -14,9 +14,9 @@
 <tr>
   <td>
     {{ licensee.nom }}
-    {% if missingNum > 1 %}
+    {% if missingNum > 2 %}
       &nbsp;<span class="glyphicon glyphicon-exclamation-sign red-color" title="{{ missingStr }}"></span>
-    {% elseif missingNum == 1 %}
+    {% elseif missingNum > 0 %}
       &nbsp;<span class="glyphicon glyphicon-exclamation-sign orange-color" title="{{ missingStr }}"></span>
     {% endif %}
   </td>
