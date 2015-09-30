@@ -75,6 +75,13 @@ use SLN\RegisterBundle\Entity\Horaire;
     const ECOLE=0;
     const COMPETITION=1;
     const LOISIR=2;
+
+    /**
+     * @var int $order Order to print to the screen
+     * @ORM\Column(type="integer")
+     */
+    protected $order;
+
     
     /**
      * Return array to convert category values to strings
@@ -438,5 +445,28 @@ use SLN\RegisterBundle\Entity\Horaire;
     public function getMultiple()
     {
         return $this->multiple;
+    }
+
+    /**
+     * Set order
+     *
+     * @param integer $order
+     * @return Groupe
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+
+        return $this;
+    }
+
+    /**
+     * Get order
+     *
+     * @return integer 
+     */
+    public function getOrder()
+    {
+        return $this->order;
     }
 }

@@ -78,7 +78,8 @@ class LicenseeRepository extends EntityRepository {
                    ->select('l')
                    ->join('l.groupe', 'g')
                    ->where('g IS NOT NULL')
-                   ->addOrderBy('g.id',  'ASC')
+                   ->addOrderBy('g.categorie',  'ASC')
+                   ->addOrderBy('g.order',  'ASC')
                    ->addOrderBy('l.nom',  'ASC')
                    ->addOrderBy('l.prenom', 'ASC');
 
