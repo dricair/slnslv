@@ -24,7 +24,8 @@ class MailRestController extends Controller {
     /**
      * Number of licensees to send before giving an answer
      */
-    const MAX_SENT = 1;
+    const USE_SENDGRID = true;
+    const MAX_SENT = self::USE_SENDGRID ? 5 : 1;
 
     /**
      * Send the emails that are in the current session
@@ -34,6 +35,12 @@ class MailRestController extends Controller {
     public function getEmailAction(Request $request) {
         if (!$this->getUser()->hasRole('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
+        }
+
+        // Development version: force a destination address
+        $delivery_address = null;
+        if ($this->container->hasParameter('swiftmailer.single_address') && $this->container->getParameter('swiftmailer.single_address')) {
+            $delivery_address = $this->container->getParameter('swiftmailer.single_address');
         }
 
         // Get session information
@@ -61,22 +68,36 @@ class MailRestController extends Controller {
             if (!is_object($licensee)) {
                 $failures[] = "Le licencié {$licensee_id} n'existe pas";
             } else {
-              $message = \Swift_Message::newInstance()
-               ->setSubject($text_title)
-               ->setFrom('slnslv@free.fr')
-               ->setTo($licensee->getUser()->getEmail())
-               ->setBody($this->renderView('SLNRegisterBundle:Mail:mail_content.txt.twig', 
-                                           array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $text_body)), "text/plain")
-               ->addPart($this->renderView('SLNRegisterBundle:Mail:mail_content.html.twig', 
-                                           array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $body)), "text/html");
+              if (self::USE_SENDGRID) {
+                $sendgrid = new \SendGrid($this->container->getParameter('mailer_key'));
+                $email = new \SendGrid\Email();
+                $email->addTo($delivery_address ? $delivery_address : $licensee->getUser()->getEmail())
+                      ->setFrom('slnslv@free.fr')
+                      ->setSubject($text_title)
+                      ->setHtml($this->renderView('SLNRegisterBundle:Mail:mail_content.html.twig', 
+                                                  array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $body)))
+                      ->setText($this->renderView('SLNRegisterBundle:Mail:mail_content.txt.twig', 
+                                                  array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $text_body)));
 
-              $fails = array();
-              $this->get('mailer')->send($message, $fails);
-
-              if (count($fails) > 0) {
-                  $s = "";
-                  foreach ($fails as $f) { $s += "$f "; }
-                  $failures[] = "$licensee: erreur d'envoi pour les adresses: $s";
+                $sendgrid->send($email);
+              } else {
+                $message = \Swift_Message::newInstance()
+                 ->setSubject($text_title)
+                 ->setFrom('slnslv@free.fr')
+                 ->setTo($licensee->getUser()->getEmail())
+                 ->setBody($this->renderView('SLNRegisterBundle:Mail:mail_content.txt.twig', 
+                                             array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $text_body)), "text/plain")
+                 ->addPart($this->renderView('SLNRegisterBundle:Mail:mail_content.html.twig', 
+                                             array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $body)), "text/html");
+  
+                $fails = array();
+                $this->get('mailer')->send($message, $fails);
+  
+                if (count($fails) > 0) {
+                    $s = "";
+                    foreach ($fails as $f) { $s += "$f "; }
+                    $failures[] = "$licensee: erreur d'envoi pour les adresses: $s";
+                }
               }
             }
 

@@ -93,14 +93,10 @@ class MiscController extends Controller
      * @return Response Rendered response
      */
     public function testAction($id) {
-      $message = \Swift_Message::newInstance()
-        ->setSubject('Hello Email')
-        ->setFrom('postmaster@stadelaurentinnatation.fr')
-        ->setTo('cairaud@gmail.com')
-        ->setBody($this->renderView('SLNRegisterBundle:Misc:test.text.twig', array('id' => $id)));
-      $this->get('mailer')->send($message);
-
-      return $this->render('SLNRegisterBundle:Misc:test.html.twig', array('message'=> $message));
+      ob_start();
+      var_dump($this->container->getParameter('swiftmailer.single_address'));
+      return new Response(ob_get_clean());
+      //return new Response($this->container->hasParameter('delivery_address') ? $this->container->getParameter('delivery_address') : "None");
     }
 
 }
