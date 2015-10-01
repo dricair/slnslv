@@ -95,19 +95,19 @@ class LicenseeController extends Controller
 
             if ($admin) {
               // Send a mail to the user if group has changed
-              if ($id != 0 and $licensee->getGroupe() and ($previousGroupe == null or
-                                                           $licensee->getGroupe()->getId() != $previousGroupe->getId())) {
-                
-                $message = \Swift_Message::newInstance()
-                 ->setSubject("Changement de groupe pour {$licensee->getPrenom()} {$licensee->getNom()}")
-                 ->setFrom('slnslv@free.fr')
-                 ->setTo($user->getEmail())
-                 ->setCc('cairaud@gmail.com')
-                 ->setBody($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.txt.twig', array('licensee' => $licensee)), "text/plain")
-                 ->addPart($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.html.twig', array('licensee' => $licensee)), "text/html");
+              // TODO if ($id != 0 and $licensee->getGroupe() and ($previousGroupe != null and
+              // TODO                                              $licensee->getGroupe()->getId() != $previousGroupe->getId())) {
+              // TODO   
+              // TODO   $message = \Swift_Message::newInstance()
+              // TODO    ->setSubject("Changement de groupe pour {$licensee->getPrenom()} {$licensee->getNom()}")
+              // TODO    ->setFrom('slnslv@free.fr')
+              // TODO    ->setTo($user->getEmail())
+              // TODO    ->setCc('cairaud@gmail.com')
+              // TODO    ->setBody($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.txt.twig', array('licensee' => $licensee)), "text/plain")
+              // TODO    ->addPart($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.html.twig', array('licensee' => $licensee)), "text/html");
 
-                $this->get('mailer')->send($message);
-              }
+              // TODO   $this->get('mailer')->send($message);
+              // TODO }
 
               return $this->redirect($this->generateUrl('SLNRegisterBundle_admin_licensee_edit', array(
                                      'id' => $licensee->getId(), $user_id => $licensee->getUser()->getId(),

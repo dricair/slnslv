@@ -441,20 +441,34 @@ Site: http://stadelaurentinnatation.fr</p>');
 
 
     /**
+     * Get the inscription status: array of missing elements
+     *
+     * @return string[] List of missing elements
+     */
+    public function inscriptionMissingList() {
+        $missing = array();
+        $names = self::getInscriptionNames();
+
+        if (!$this->groupe) return $missing;
+
+        foreach($names as $value => $name) {
+            if ($this->groupe->getCategorie() == Groupe::LOISIR && $value == self::LICENCE)
+                continue;
+            if (!in_array($value, $this->inscription))
+                $missing[] = $name;
+        }
+
+        return $missing;
+    }
+
+
+    /**
      * Get the inscription status: number of missing elements
      *
      * @return Int Number of missing elements
      */
     public function inscriptionMissingNum() {
-        $missing = 0;
-        $names = self::getInscriptionNames();
-
-        foreach($names as $value => $name) {
-           if (!in_array($value, $this->inscription))
-               $missing += 1;
-        }
-
-        return $missing;
+        return count($this->inscriptionMissingList());
     }
 
     /**
@@ -463,14 +477,7 @@ Site: http://stadelaurentinnatation.fr</p>');
      * @return String List of missing elements
      */
     public function inscriptionMissingString() {
-        $missing = [];
-        $names = self::getInscriptionNames();
-
-        foreach($names as $value => $name) {
-           if (!in_array($value, $this->inscription))
-               $missing[] = $name;
-        }
-
+        $missing = $this->inscriptionMissingList();
         return "Eléments manquants: " . implode(", ", $missing);
     }
 
