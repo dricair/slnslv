@@ -41,6 +41,8 @@
     {% endif %}
     <a href="{{ path('SLNRegisterBundle_admin_licensee_inscription', { id: licensee.getId }) }}" title="Fiche d'inscription pour ce licencié" target="_blank">
       <span class="glyphicon glyphicon-print"></span></a>
+    <a href="{{ path('SLNRegisterBundle_mail_licensee_select', { defaultLicensee: licensee.getId }) }}" title="Envoyer un mail à ce licencié">
+      <span class="glyphicon glyphicon-envelope"></span></a>
   {% endif %}
   </td>
 </tr>

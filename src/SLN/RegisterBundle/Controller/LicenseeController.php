@@ -156,7 +156,7 @@ class LicenseeController extends Controller
         $em->persist($user);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('SLNRegisterBundle_homepage'));
+        return $this->redirect($this->generateUrl($admin ? 'SLNRegisterBundle_admin_licensee_list' : 'SLNRegisterBundle_homepage'));
     }
 
     /** 

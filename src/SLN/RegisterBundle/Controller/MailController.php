@@ -56,7 +56,7 @@ class MailController extends Controller {
 
             if ($defaultLicensee) {
                 $licensee = $this->getLicenseeRepository()->find($defaultLicensee);
-                if (is_object($licensee)) $defaultLicensee[] = $licensee;
+                if (is_object($licensee)) $defaultLicensees[] = $licensee;
             }
         }
 
