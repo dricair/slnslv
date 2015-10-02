@@ -35,14 +35,23 @@ class LicenseeRestController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
+        $day = -1;
+        if (strpos($id, ".") !== false) {
+            $val = explode(".", $id);
+            $id = $val[0];
+            $day = intval($val[1]);
+        }
+
         $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
         if(!is_object($groupe)){
             throw $this->createNotFoundException();
         }
 
         $licensees = [];
-        foreach($em->getRepository('SLNRegisterBundle:Licensee')->getAllForGroupe($groupe) as $licensee) 
-            $licensees[] = array("id" => $licensee->getId(), "name" => $licensee->getPrenom() . " " . $licensee->getNom());
+        foreach($em->getRepository('SLNRegisterBundle:Licensee')->getAllForGroupe($groupe) as $licensee) {
+            if ($day == -1 or !$groupe->getMultiple() or in_array($day, $licensee->getGroupeJours()))
+                $licensees[] = array("id" => $licensee->getId(), "name" => $licensee->getPrenom() . " " . $licensee->getNom());
+        }
         
         return $licensees;
     }

@@ -9,8 +9,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use SLN\RegisterBundle\Entity\Groupe;
+use SLN\RegisterBundle\Entity\Horaire;
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Entity\Repository\LicenseeRepository;
+use SLN\RegisterBundle\Entity\Repository\GroupeRepository;
 
 /**
  * Form to select a list of licensees
@@ -25,11 +27,26 @@ class LicenseeSelectType extends AbstractType
     */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $defaultGroup = $options["defaultGroup"];
+        $em = $options["em"];
         if (!$defaultGroup) $defaultGroup = new Groupe();
 
+        $groupChoices = [];
+        foreach ($em->getRepository('SLNRegisterBundle:Groupe')->findAll() as $groupe) {
+            $category = $groupe->getCategorieName();
+            if (!array_key_exists($category, $groupChoices)) $groupChoices[$category] = [];
+            $groupChoices[$category][$groupe->getId()] = $groupe->getNom();
+
+            if ($groupe->getMultiple()) {
+                $jours = Horaire::getJours();
+                foreach($groupe->multipleList() as $jour) {
+                    $groupChoices[$category][sprintf("%s.%s", $groupe->getId(), $jour)] = sprintf("%s du %s", $groupe->getNom(), $jours[$jour]);
+                }
+            }
+        }
+
         $builder
-            ->add('groupe', 'entity', array(
-                  'class' => 'SLNRegisterBundle:Groupe'))
+            ->add('groupe', 'choice', array(
+                  'choices' => $groupChoices))
             ->add('licensees', 'entity', array(
                   'class' => 'SLNRegisterBundle:Licensee',
                   'multiple' => true,
@@ -46,7 +63,7 @@ class LicenseeSelectType extends AbstractType
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
-        $resolver->setDefaults(array("defaultGroup" => null));
+        $resolver->setDefaults(array("defaultGroup" => null, "em" => null));
     }
 
     /** @ignore */

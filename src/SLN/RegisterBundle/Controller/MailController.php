@@ -48,7 +48,7 @@ class MailController extends Controller {
          
         else {
             if ($defaultGroup) {
-                $defaultGroup = $em->getRepository('SLNRegisterBundle:Groupe')->find($defaultGroup);
+                $defaultGroup = $this->getGroupeRepository()->find($defaultGroup);
                 if (is_object($defaultGroup))
                     foreach($this->getLicenseeRepository()->getAllForGroupe($defaultGroup) as $licensee)
                         $defaultLicensees[] = $licensee;
@@ -61,7 +61,8 @@ class MailController extends Controller {
         }
 
         $request = $this->getRequest();
-        $form = $this->createForm(new LicenseeSelectType(), $select, array("defaultGroup" => $defaultGroup));
+        $form = $this->createForm(new LicenseeSelectType(), $select, array("defaultGroup" => $defaultGroup, 
+                                                                           "em" => $this->getDoctrine()->getManager()));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -133,6 +134,17 @@ class MailController extends Controller {
         $em = $this->getDoctrine()
                    ->getManager();
         return $em->getRepository('SLNRegisterBundle:Licensee');
+    }
+
+    /**
+     * Get repository for the groups
+     *
+     * @return GroupeRepository Repository for Groupe instances.
+     */
+    protected function getGroupeRepository() {
+        $em = $this->getDoctrine()
+                   ->getManager();
+        return $em->getRepository('SLNRegisterBundle:Groupe');
     }
 }
 

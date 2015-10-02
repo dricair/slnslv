@@ -192,6 +192,18 @@ use SLN\RegisterBundle\Entity\Horaire;
     }
 
     /**
+     * Force id. Only used to explode groupes by day in case of Multiple
+     *
+     * @return integer 
+     */
+    public function forceId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Set nom
      *
      * @param string $nom
