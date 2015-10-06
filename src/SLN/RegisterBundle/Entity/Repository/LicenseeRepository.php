@@ -127,5 +127,47 @@ class LicenseeRepository extends EntityRepository {
                   ->getResult();
     }
 
+    /**
+     * Get all licensees that have a specific function
+     *
+     * @param int $fonction Fonction index to look for
+     *
+     * @return Licensee[] List of Licensee
+     */
+    public function getAllForFonction($fonction) {
+        $qb = $this->createQueryBuilder('l');
+        $qb->select('l')
+           ->where($qb->expr()->like('l.fonctions', ':fonction'))
+           ->addOrderBy('l.nom',  'ASC')
+           ->addOrderBy('l.prenom', 'ASC')
+           ->setParameter('fonction', "%i:$fonction;%");
 
+        // Search is approximative (Index or value ?)
+        $licensees = [];
+        foreach($qb->getQuery()->getResult() as $licensee) {
+            if (in_array($fonction, $licensee->getFonctions())) $licensees[] = $licensee;
+        }
+
+        return $licensees;
+    }
+
+    /**
+     * Return true if the User for the given Licensee has any Licensee in the given
+     * group
+     *
+     * @param Licensee $licensee Licensee to link the User
+     * @param int $groupe_id Id of the groupe to look at for the licensees
+     *
+     * @return bool True if one of the licensees is in the Groupe
+     */
+    public function userHasInGroup(Licensee $licensee, $groupe_id) {
+        $qb = $this->createQueryBuilder('l')
+                   ->select('COUNT(l)')
+                   ->where('l.user = :user_id')
+                   ->andWhere('l.groupe = :groupe_id')
+                   ->setParameter('user_id', $licensee->getUser()->getId())
+                   ->setParameter('groupe_id', $groupe_id);
+
+        return $qb->getQuery()->getSingleScalarResult() > 0;
+    }
 }

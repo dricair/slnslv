@@ -35,24 +35,44 @@ class LicenseeRestController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $day = -1;
+        $extra = -1;
         if (strpos($id, ".") !== false) {
             $val = explode(".", $id);
             $id = $val[0];
-            $day = intval($val[1]);
+            $extra = intval($val[1]);
         }
 
-        $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
-        if(!is_object($groupe)){
-            throw $this->createNotFoundException();
+        $licenseeRepository = $em->getRepository('SLNRegisterBundle:Licensee');
+        $groupeRepository = $em->getRepository('SLNRegisterBundle:Groupe');
+
+        if ($id >= Licensee::FONCTIONS_OFFSET) {
+            // Special functions use a group index for the lookup
+            $id = $id - Licensee::FONCTIONS_OFFSET;
+            $fonctions = Licensee::getFonctionNames();
+            if (!array_key_exists($id, $fonctions))
+                throw $this->createNotFoundException("La fonction $id n'existe pas");
+
+            $licensees = [];
+            foreach($licenseeRepository->getAllForFonction($id) as $licensee) {
+                if ($id != Licensee::OFFICIEL or $extra == -1 or $licenseeRepository->userHasInGroup($licensee, $extra))
+                    $licensees[] = array("id" => $licensee->getId(), "name" => $licensee->getPrenom() . " " . $licensee->getNom());
+            }
         }
 
-        $licensees = [];
-        foreach($em->getRepository('SLNRegisterBundle:Licensee')->getAllForGroupe($groupe) as $licensee) {
-            if ($day == -1 or !$groupe->getMultiple() or in_array($day, $licensee->getGroupeJours()))
-                $licensees[] = array("id" => $licensee->getId(), "name" => $licensee->getPrenom() . " " . $licensee->getNom());
+        else {
+            $groupe = $groupeRepository->find($id);
+            if(!is_object($groupe)){
+                throw $this->createNotFoundException("Le groupe $id n'existe pas");
+            }
+
+            $licensees = [];
+            foreach($licenseeRepository->getAllForGroupe($groupe) as $licensee) {
+                if ($extra == -1 or !$groupe->getMultiple() or in_array($extra, $licensee->getGroupeJours()))
+                    $licensees[] = array("id" => $licensee->getId(), "name" => $licensee->getPrenom() . " " . $licensee->getNom());
+            }
+            
         }
-        
+
         return $licensees;
     }
 }

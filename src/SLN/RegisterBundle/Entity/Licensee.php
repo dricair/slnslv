@@ -110,6 +110,12 @@ use SLN\RegisterBundle\Entity\User;
     const OFFICIEL=2;
 
     /**
+     * Offset for special functions. They are selected as a special
+     * group with ID SPECIAL_OFFSET + special value
+     */
+    const FONCTIONS_OFFSET = 100;
+
+    /**
      * Return an array of the possible fonctions
      *
      * @return string[] List of strings for fonctions
@@ -181,6 +187,7 @@ use SLN\RegisterBundle\Entity\User;
      * @ORM\Column(type="array")
      */
     protected $groupe_jours;
+
 
     /**
      * Return Age in years
@@ -480,6 +487,7 @@ Site: http://stadelaurentinnatation.fr</p>');
         $missing = $this->inscriptionMissingList();
         return "Eléments manquants: " . implode(", ", $missing);
     }
+
 
 
     /** @ignore */

@@ -60,6 +60,9 @@ class MailRestController extends Controller {
         // Pop licensees from the list and send a mail
         $failures = array();
 
+        // Assets for attached files
+        $assets = $this->container->get('templating.helper.assets');
+
         $sent = 0;
         for ($i = 0; $i < self::MAX_SENT and count($licensee_list) > 0; $i++) {
             $licensee_id = array_pop($licensee_list);
@@ -78,6 +81,9 @@ class MailRestController extends Controller {
                                                   array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $body)))
                       ->setText($this->renderView('SLNRegisterBundle:Mail:mail_content.txt.twig', 
                                                   array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $text_body)));
+
+                if (false) 
+                    $email->addAttachment("/docs/Cedric/Programmation/PHP/slnslv/web/uploads/Suivi individuel - {$licensee->getNom()} {$licensee->getPrenom()}.pdf");
 
                 $sendgrid->send($email);
               } else {

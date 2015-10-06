@@ -93,8 +93,11 @@ class MiscController extends Controller
      * @return Response Rendered response
      */
     public function testAction($id) {
+      $manager = $this->get('oneup_uploader.orphanage_manager')->get('gallery');
+      $files = $manager->getFiles();
+      
       ob_start();
-      var_dump($this->container->getParameter('swiftmailer.single_address'));
+      var_dump($files);
       return new Response(ob_get_clean());
       //return new Response($this->container->hasParameter('delivery_address') ? $this->container->getParameter('delivery_address') : "None");
     }

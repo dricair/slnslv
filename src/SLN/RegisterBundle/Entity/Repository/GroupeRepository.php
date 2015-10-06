@@ -32,5 +32,4 @@ class GroupeRepository extends EntityRepository
         return $qb->getQuery()
                   ->getResult();
     }
-
 }
