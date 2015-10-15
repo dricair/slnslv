@@ -13,10 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use SLN\RegisterBundle\Entity\LicenseeSelect;
-use SLN\RegisterBundle\Form\LicenseeSelectType;
-
-require_once("Html2Text.php");
+use SLN\RegisterBundle\Entity\LicenseeMail;
+use SLN\RegisterBundle\Form\Type\LicenseeMailFormType;
 
 /**
  * Mail controller.
@@ -25,70 +23,55 @@ class MailController extends Controller {
     /**
      * Send a mail to a licensee or list of licensees, with facilities to chose them
      *
+     * @param int $id Mail to edit (0 if none)
      * @param int $defaultLicensee Licensee selected by default, none if Null
      * @param int $defaultGroup Groupe selected by default, none if Null
      */
-    public function licenseeAction(Request $request, $defaultLicensee = null, $defaultGroup=null) {
+    public function mailAction(Request $request, $id=0, $defaultLicensee = null, $defaultGroup=null) {
         $title = "Envoi de mails";
 
         $defaultLicensees = array();
 
-        $select = new LicenseeSelect();
-
-        // Restore from session data (Back button)
-        $session = $request->getSession();
-        if ($request->query->get('restore', false) and $session->has('mail/licensees')) {
-            $licensee_list = $session->get('mail/licensees');
-            $select->title = $session->get('mail/title');
-            $select->body = $session->get('mail/body');
-            
-            $repository = $this->getLicenseeRepository();
-            $defaultLicensees = $repository->findById($licensee_list);
-        }
-         
+        if ($id == 0) $mail = new LicenseeMail();
         else {
-            if ($defaultGroup) {
-                $defaultGroup = $this->getGroupeRepository()->find($defaultGroup);
-                if (is_object($defaultGroup))
-                    foreach($this->getLicenseeRepository()->getAllForGroupe($defaultGroup) as $licensee)
-                        $defaultLicensees[] = $licensee;
-            }
+            $mail = $this->getLicenseeMailRepository()->find($id);
 
-            if ($defaultLicensee) {
-                $licensee = $this->getLicenseeRepository()->find($defaultLicensee);
-                if (is_object($licensee)) $defaultLicensees[] = $licensee;
+            if (!$mail) {
+                throw $this->createNotFoundException('Ce mail n\'existe pas dans la base de données.');
             }
+        }
+
+        if ($defaultGroup) {
+            $defaultGroup = $this->getGroupeRepository()->find($defaultGroup);
+            if (is_object($defaultGroup))
+                foreach($this->getLicenseeRepository()->getAllForGroupe($defaultGroup) as $licensee)
+                    $defaultLicensees[] = $licensee;
+        }
+
+        if ($defaultLicensee) {
+            $licensee = $this->getLicenseeRepository()->find($defaultLicensee);
+            if (is_object($licensee)) $defaultLicensees[] = $licensee;
         }
 
         $request = $this->getRequest();
-        $form = $this->createForm(new LicenseeSelectType(), $select, array("defaultGroup" => $defaultGroup, 
+        $form = $this->createForm(new LicenseeMailFormType(), $mail, array("defaultGroup" => $defaultGroup, 
                                                                            "em" => $this->getDoctrine()->getManager()));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
 
-            // store an attribute for reuse during a later user request
-            $licensee_list = array();
-            foreach ($select->licensees as $licensee) {
-                $licensee_list[] = $licensee;
-            }
+            $mail->setSender($this->getUser());
 
-            $ht = new \Html2Text\Html2Text($select->body);
-            $text_body = $ht->getText();
-            $ht = new \Html2Text\Html2Text($select->title);
-            $text_title = $ht->getText();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($mail);
+            $em->flush();
 
-            $session->set('mail/licensees', $licensee_list);
-            $session->set('mail/title', $select->title);
-            $session->set('mail/body', $select->body);
-            $session->set('mail/text_body', $text_body);
-            $session->set('mail/text_title', $text_title);
-            $session->set('mail/from', $request->getUri());
-
-            return $this->redirect($this->generateUrl('SLNRegisterBundle_mail_confirm'));
+            return $this->redirect($this->generateUrl('SLNRegisterBundle_mail_confirm', array('id' => $mail->getId())));
         }
 
-        return $this->render('SLNRegisterBundle:Mail:edit.html.twig', array('form' => $form->createView(), 'title' => $title, 'defaultLicensees' => $defaultLicensees ));
+        return $this->render('SLNRegisterBundle:Mail:edit.html.twig', array('form' => $form->createView(), 
+                                                                            'title' => $title, 
+                                                                            'defaultLicensees' => $defaultLicensees ));
     }
 
 
@@ -96,32 +79,18 @@ class MailController extends Controller {
      * Page to confirm the sending of the mail, with the list of licensees. This page contains a button to start
      * sending the mails (Using AJAX)
      *
-     * Licensee list and mail information are transferred from previous POST using sessions
-     *
      */
-    public function confirmAction(Request $request) {
-        $session = $request->getSession();
+    public function confirmAction(Request $request, $id) {
+        $mail = $this->getLicenseeMailRepository()->find($id);
 
-        if (!$session->has('mail/licensees')) {
-            $session->getFlashBag()->add(
-              'error',
-              sprintf("Problème pour la récupération des données.")
-            );
-
-            return $this->redirect($this->generateUrl('SLNRegisterBundle_mail_licensee'));
+        if (!$mail) {
+            throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
         }
 
-        $licensee_list = $session->get('mail/licensees');
-        $title = $session->get('mail/title');
-        $body = $session->get('mail/body');
-        $text_body = $session->get('mail/text_body');
-        $text_title = $session->get('mail/text_title');
-        $from = $session->get('mail/from');
-
-        $repository = $this->getLicenseeRepository();
-        $licensees = $repository->findById($licensee_list);
-
-        return $this->render('SLNRegisterBundle:Mail:confirm.html.twig', array('licensees' => $licensees, 'title' => $title, 'body' => $body, 'from' => $from));
+        return $this->render('SLNRegisterBundle:Mail:confirm.html.twig', array('id' => $mail->getId(),
+                                                                               'licensees' => $mail->getLicensees(), 
+                                                                               'title' => $mail->getTitle(), 
+                                                                               'body' => $mail->getBody()));
     }
 
 
@@ -145,6 +114,17 @@ class MailController extends Controller {
         $em = $this->getDoctrine()
                    ->getManager();
         return $em->getRepository('SLNRegisterBundle:Groupe');
+    }
+
+    /**
+     * Get repository for the mails
+     *
+     * @return LicenseeMailRepository Repository for LicenseeMail instances.
+     */
+    protected function getLicenseeMailRepository() {
+        $em = $this->getDoctrine()
+                   ->getManager();
+        return $em->getRepository('SLNRegisterBundle:LicenseeMail');
     }
 }
 

@@ -43,7 +43,7 @@
           <div id="progressbar">
           </div>
         </div>
-        <button type="button" class="btn btn-primary" id="send_mail" data-function="{{ path('api_get_email') }}" data-num={{ licensees|length }}>Envoyer le mail...</button>
+        <button type="button" class="btn btn-primary" id="send_mail" data-function="{{ path('api_get_email', {'id': id}) }}" data-num={{ licensees|length }}>Envoyer le mail...</button>
         <div id="mail_status">
         </div>
       </div>
@@ -64,7 +64,7 @@
 
 <div class="form-group">
   <div class="col-sm-offset-3 col-sm-7">
-    <a href="{{ path('SLNRegisterBundle_mail_licensee') }}?restore=1" type="button" class="btn btn-primary">« Modifier le mail</a>
+    <a href="{{ path('SLNRegisterBundle_mail_licensee', {'id': id}) }}" type="button" class="btn btn-primary">« Modifier le mail</a>
   </div>
 </div>
 

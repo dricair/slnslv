@@ -1,8 +1,8 @@
 // Setup mail form for licensee selection
 function setup_mail() {
   var input_licensee_list = $("#licensee_list");
-  var output_licensee_list = $("#sln_registerbundle_licenseeselecttype_licensees");
-  var group_selection = $("#sln_registerbundle_licenseeselecttype_groupe");
+  var output_licensee_list = $("#sln_registerbundle_licenseemail_licensees");
+  var group_selection = $("#sln_registerbundle_licenseemail_groupe");
 
   var add_all_button = $("#add_all");
   var add_button = $("#add");
@@ -33,6 +33,7 @@ function setup_mail() {
 
   // Update the list of licensees from a group when the group selection changes
   group_selection.on('change', function(e) {
+    console.log("group change");
     var licensee_group_api = $(this).parent().data('function');
     console.log("group change, value=" + $(this).val() + ", function=" + licensee_group_api.replace("__id__", $(this).val()));
     input_licensee_list.empty().append("<option>Chargement en cours...</option>");
@@ -87,10 +88,77 @@ function setup_mail() {
 
   $("#my_form").on("submit", function() {
     output_licensee_list.find('option').prop("selected", true);
-    $("#sln_registerbundle_licenseeselecttype_title").val(tinyMCE.get('title').getContent());
-    $("#sln_registerbundle_licenseeselecttype_body").val(tinyMCE.get('body').getContent());
+    $("#sln_registerbundle_licenseemail_title").val(tinyMCE.get('title').getContent());
+    $("#sln_registerbundle_licenseemail_body").val(tinyMCE.get('body').getContent());
   });
 
+  // List of files
+  var collectionHolder;
+
+  var addTagLink = $('<a href="#" class="add_tag_link">Add a tag</a>');
+  var newLinkLi = $('<li></li>').append(addTagLink);
+
+  collectionHolder = $('ul.files');
+  collectionHolder.append(newLinkLi);
+
+  collectionHolder.data('index', collectionHolder.find(':input').length);
+
+  addTagLink.on('click', function(e) {
+    e.preventDefault();
+    var prototype = collectionHolder.data('prototype');
+    var index = collectionHolder.data('index');
+    var newForm = prototype.replace(/__name__/g, index);
+    collectionHolder.data('index', index + 1);
+
+    var newFormLi = $('<li></li>').append(newForm);
+    newLinkLi.before(newFormLi);
+  });
+
+  // File uploader
+  var uploader = new plupload.Uploader({
+    runtimes: "html5,flash,silverlight,html4",
+    url: $(pickfiles).data("function"),
+    
+    // Maximum file size
+    max_file_size : '3mb',
+    chunk_size: '1mb',
+    browse_button: 'pickfiles',
+
+    // Specify what files to browse for
+    filters : [
+        {title : "Fichiers d'image", extensions : "jpg,gif,png"},
+        {title : "Documents PDF", extensions : "pdf"},
+    ],
+
+    // Flash settings
+    flash_swf_url : "{{ asset('plupload/js/Moxie.swf') }}",
+  
+    // Silverlight settings
+    silverlight_xap_url : "{{ asset('plupload/js/Moxie.xap') }}",
+
+    init: {
+      PostInit: function() {
+          document.getElementById('filelist').innerHTML = '';
+      },
+ 
+      FilesAdded: function(up, files) {
+          plupload.each(files, function(file) {
+              document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+              uploader.start();
+          });
+      },
+ 
+      UploadProgress: function(up, file) {
+          document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+      },
+ 
+      Error: function(up, err) {
+          document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+      }
+    }
+  });
+
+  uploader.init();
 }
 
 

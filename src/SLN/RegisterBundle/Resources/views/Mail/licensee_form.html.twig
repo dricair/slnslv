@@ -1,3 +1,4 @@
+
 <form action="{{ path('SLNRegisterBundle_mail_licensee') }}"  method="post" {{ form_enctype(form) }} class="form-horizontal" role="form" id="my_form">
   {{ form_errors(form) }}
 
@@ -45,13 +46,27 @@
     </div>
   </div>
 
-  {#<div class="panel panel-default">
+  <div class="panel panel-default">
     <div class="panel-heading">Fichiers attachés</div>
     <div class="panel-body">
       <p>Si besoin, vous pouvez ajouter des fichiers à attacher au message.</p>
-      <div id="fileupload"></div>
+      <div id="filelist">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
+      <br />
+       
+      <ul class='files' data-prototype='{{ form_widget(form.files.vars.prototype)|e }}'>
+      {% for file in form.files %}
+        <li>{{ form_row(file) }}</li>
+      {% endfor %}
+      </ul>
+
+      <div id="container">
+          <a id="pickfiles" href="javascript:;" data-function="{{ oneup_uploader_endpoint('gallery') }}">[Sélectionner les fichiers]</a>
+      </div>
+
+      <br />
+      <pre id="console"></pre>
     </div>
-  </div>#}
+  </div>
 
   <div class="form-group">
     <div class="col-sm-offset-3 col-sm-7">

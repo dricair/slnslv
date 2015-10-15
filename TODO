@@ -2,24 +2,17 @@ Bugs:
 - Inscription si pas de groupe
 
 Inscriptions:
-- Montrer ce qui manque
 - Ajouter des photos
 - Remplir la feuille de licence
 - Page d'inscription pour gérer photo/Licence/Inscription + paiements
-
-Mail:
-- Sélection de groupes entiers
-- Jour différents pour Adultes/Ados
-- Sendgrid
 
 Licencié
 - Informations de compétitions
 
 Divers:
-- Renouvellement des licences
-- Impression des cartes
 - assetic
 - Page avec les prix
+- Groupe: checkbox pour "besoin d' officiel"
 
 https://github.com/comur/ComurImageBundle
 https://jqueryui.com

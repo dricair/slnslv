@@ -3,21 +3,23 @@
  * Create a form to select a list of licensees
  */
 
-namespace SLN\RegisterBundle\Form;
+namespace SLN\RegisterBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Entity\Horaire;
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Entity\Repository\LicenseeRepository;
 use SLN\RegisterBundle\Entity\Repository\GroupeRepository;
+use SLN\RegisterBundle\Form\Type\UploadFileFormType;
 
 /**
  * Form to select a list of licensees
  */
-class LicenseeSelectType extends AbstractType
+class LicenseeMailFormType extends AbstractType
 {
    /**
     * Build the form
@@ -71,7 +73,10 @@ class LicenseeSelectType extends AbstractType
                   'expanded' => false,
                   'attr' => array("size" => 10)))
             ->add('title', 'text')
-            ->add('body', 'textarea');
+            ->add('body', 'textarea')
+            ->add('files', 'collection', array('type' => new UploadFileFormType(),
+                                               'allow_add' => true,
+                                               'allow_delete' => true));
         
     }
 
@@ -81,14 +86,17 @@ class LicenseeSelectType extends AbstractType
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
-        $resolver->setDefaults(array("defaultGroup" => null, "em" => null));
+        $resolver->setDefaults(array("data_class" => 'SLN\RegisterBundle\Entity\LicenseeMail',
+                                     "defaultGroup" => null, 
+                                     "em" => null));
     }
 
     /** @ignore */
     public function getName()
     {
-        return 'sln_registerbundle_licenseeselecttype';
+        return 'sln_registerbundle_licenseemail';
     }
 }
+
 
 

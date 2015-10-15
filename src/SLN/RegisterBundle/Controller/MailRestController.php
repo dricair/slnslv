@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Entity\User;
+use SLN\RegisterBundle\Entity\LicenseeMail;
 
 /**
  * Controller for the Mail class to answer REST api.
@@ -32,9 +33,15 @@ class MailRestController extends Controller {
      *
      * @return array Status and fails.
      */
-    public function getEmailAction(Request $request) {
+    public function getEmailAction(Request $request, $id) {
         if (!$this->getUser()->hasRole('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
+        }
+
+        $mail = $this->getLicenseeMailRepository()->find($id);
+
+        if (!$mail) {
+            throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
         }
 
         // Development version: force a destination address
@@ -46,8 +53,14 @@ class MailRestController extends Controller {
         // Get session information
         $session = $request->getSession();
 
-        if (!$session->has('mail/licensees')) {
-            return array("result" => "fatal", "sent" => 0, "error" => "Problème pour la récupération des données.");
+        if (!$session->has('mail/id') or $session->get('mail/id') != $mail->getId()) {
+            // Initial call - Fill licensee list and field to the session
+            $session->set('mail/id', $mail->getId());
+            $session->set('mail/licensees', $mail->getLicensees()->toArray());
+            $session->set('mail/title', $mail->getTitle());
+            $session->set('mail/body', $mail->getBody());
+            $session->set('mail/text_body', $mail->getBodyAsText());
+            $session->set('mail/text_title', $mail->getTitleAsText());
         }
 
         $licensee_list = $session->get('mail/licensees');
@@ -55,13 +68,9 @@ class MailRestController extends Controller {
         $body = $session->get('mail/body');
         $text_body = $session->get('mail/text_body');
         $text_title = $session->get('mail/text_title');
-        $from = $session->get('mail/from');
 
         // Pop licensees from the list and send a mail
         $failures = array();
-
-        // Assets for attached files
-        $assets = $this->container->get('templating.helper.assets');
 
         $sent = 0;
         for ($i = 0; $i < self::MAX_SENT and count($licensee_list) > 0; $i++) {
@@ -128,6 +137,18 @@ class MailRestController extends Controller {
         $em = $this->getDoctrine()
                    ->getManager();
         return $em->getRepository('SLNRegisterBundle:Licensee');
+    }
+
+
+    /**
+     * Get repository for the mails
+     *
+     * @return LicenseeMailRepository Repository for LicenseeMail instances.
+     */
+    protected function getLicenseeMailRepository() {
+        $em = $this->getDoctrine()
+                   ->getManager();
+        return $em->getRepository('SLNRegisterBundle:LicenseeMail');
     }
 }
 
