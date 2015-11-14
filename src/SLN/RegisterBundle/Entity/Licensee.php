@@ -36,7 +36,7 @@ use SLN\RegisterBundle\Entity\User;
      *
      * @Assert\NotBlank(message="Merci d'entrer un nom.", groups={"Registration", "Profile"})
      * @Assert\Length(
-     *     min=3,
+     *     min=2,
      *     max="100",
      *     minMessage="Le nom est trop court.",
      *     maxMessage="Le nom est trop long.",
@@ -51,7 +51,7 @@ use SLN\RegisterBundle\Entity\User;
      *
      * @Assert\NotBlank(message="Merci d'entrer un prénom.", groups={"Registration", "Profile"})
      * @Assert\Length(
-     *     min=3,
+     *     min=2,
      *     max="100",
      *     minMessage="Le prénom est trop court.",
      *     maxMessage="Le prénom est trop long.",
@@ -206,6 +206,16 @@ use SLN\RegisterBundle\Entity\User;
      */
     public function isMineur() {
         return $this->getAge() < 18;
+    }
+
+    /**
+     * Return the telephone number of the assigned user, preference for the mobile.
+     *
+     * @return string Telephone number
+     */
+    public function getTelephone() {
+        $number = $this->user->getTelPortable();
+        return $number ? $number : $this->user->getTelDomicile();
     }
 
 
