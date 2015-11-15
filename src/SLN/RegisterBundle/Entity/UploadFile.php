@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Form\Exception\PropertyAccessDeniedException;
+use Symfony\Component\HttpFoundation\File\File;
 
 use SLN\RegisterBundle\Entity\User;
 
@@ -23,11 +25,12 @@ use SLN\RegisterBundle\Entity\User;
  */
 class UploadFile {
 
+    const UPLOADBASE = "/docs/Cedric/Programmation/PHP/slnslv/web/uploads/";
+
     /**
      * @var int $id Id of the Licensee
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="string", unique=true)
      */
     protected $id;
 
@@ -42,6 +45,7 @@ class UploadFile {
      * @ORM\Column(type="string", length=PHP_MAXPATHLEN)
      */
     protected $filepath;
+
     
     /**
      * @var bool $inline True if the file should be inlined (vs a link)
@@ -72,8 +76,29 @@ class UploadFile {
     protected $updated;
 
 
+    /**
+     * Return a File instance of the attached file
+     *
+     * @return File Instance for the physical file
+     */
+    public function getFile() {
+        if  ($this->filepath === null) return null;
+        return new File(realpath(sprintf("%s/%s", self::UPLOADBASE, $this->filepath)));
+    }
+
+
+    /**
+     * @var bool $no_id True if object was constructed with no ID 
+     */
+    protected $no_id;
+
+
     /** @ignore */
-    public function __construct() {
+    public function __construct($id = Null) {
+        $this->id = $id;
+        $this->inline = False;
+        $this->no_id = $id == Null;
+        $this->filepath = null;
         $this->setCreated(new \DateTime());
         $this->setUpdated(new \DateTime());
     }
@@ -88,6 +113,15 @@ class UploadFile {
        $this->setUpdated(new \DateTime());
     }
 
+    /**
+     * Function called when the entity is deleted.
+     *
+     * @ORM\PreRemove
+     */
+    public function onDelete() {
+        if (file_exists($this->path))
+            unlink($this->filepath);
+    }
 
     /**
      * Get id
@@ -97,6 +131,17 @@ class UploadFile {
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set ID - Only used from form. Raises an exception if no_id is False
+     *
+     * @param string $id Id to set.
+     */
+    public function setId($id) {
+        if (!$this->no_id) 
+            throw new PropertyAccessDeniedException("Cannot set ID");
+        $this->id = $id;
     }
 
     /**
@@ -220,7 +265,7 @@ class UploadFile {
      * @param User $user
      * @return UploadFile
      */
-    public function setUser(\SLN\RegisterBundle\Entity\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 
@@ -230,10 +275,20 @@ class UploadFile {
     /**
      * Get user
      *
-     * @return \SLN\RegisterBundle\Entity\User 
+     * @return User 
      */
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Get no_id
+     *
+     * @return bool 
+     */
+    public function getNoId()
+    {
+        return $this->no_id;
     }
 }

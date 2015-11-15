@@ -12,15 +12,23 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use SLN\RegisterBundle\Entity\UploadFile;
 
 
+
 /**
  * Form to upload a file
  */
 class UploadFileFormType extends AbstractType
 {
+    /**
+     * Build the form
+     *
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('filename')
-                ->add('inline');
+        $builder->add('id', 'hidden')
+                ->add('filename')
+                ->add('inline', null, array('required' => false));
     }
 
     /**

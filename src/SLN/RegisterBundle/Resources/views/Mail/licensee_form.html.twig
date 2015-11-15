@@ -50,21 +50,39 @@
     <div class="panel-heading">Fichiers attachés</div>
     <div class="panel-body">
       <p>Si besoin, vous pouvez ajouter des fichiers à attacher au message.</p>
-      <div id="filelist">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
-      <br />
+      <div id="no_upload_support">Votre navigateur ne supporte pas Flash, Silverlight ni HTML5.</div>
        
-      <ul class='files' data-prototype='{{ form_widget(form.files.vars.prototype)|e }}'>
+      <table id="filelist" class="table table-striped"
+             data-fileid='{{ form_widget(form.files.vars.prototype.id)|e }}' 
+             data-filename='{{ form_widget(form.files.vars.prototype.filename, {"attr": {"style": "display: none;"}})|e }}' 
+             data-inline='{{ form_widget(form.files.vars.prototype.inline)|e }}'
+             data-remove='<a href="#" title="Supprimer ce fichier"><span class="glyphicon glyphicon-trash"></span></a>'>
+      <thead>
+      <tr>
+        <th>Fichier</th>
+        <th>&nbsp;</th>
+        <th>Lien seulement</th>
+        <th>&nbsp;</th>
+      </tr>
+      </thead>
+      <tbody>
       {% for file in form.files %}
-        <li>{{ form_row(file) }}</li>
+      <tr>
+        <td>{{ form_widget(file.filename, {"attr": {"style": "display: none;"}}) }}
+            {{ form_widget(file.id) }}
+            {{ file.vars.value.filename }}</td>
+        <td class="size">{{ file.vars.value.getFile.getSize }}</td>
+        <td>{{ form_widget(file.inline) }}
+        <td class='remove'></td>
+      </tr>
       {% endfor %}
-      </ul>
+      </tbody>
+      </table>
 
       <div id="container">
           <a id="pickfiles" href="javascript:;" data-function="{{ oneup_uploader_endpoint('gallery') }}">[Sélectionner les fichiers]</a>
       </div>
 
-      <br />
-      <pre id="console"></pre>
     </div>
   </div>
 
@@ -77,5 +95,6 @@
   {{ form_widget(form.title, {'attr': {'class': 'hidden'}}) }}
   {{ form_widget(form.body, {'attr': {'class': 'hidden'}}) }}
   {% do form.licensees.setRendered %}
+  {% do form.files.setRendered %}
   {{ form_rest(form) }}
 </form>

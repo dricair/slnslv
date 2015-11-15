@@ -351,4 +351,20 @@ class LicenseeMail {
     {
         return $this->files;
     }
+
+
+    /**
+     * Set files
+     *
+     * @param UploadFile[] $files 
+     * @return LicenseeMail
+     */
+    public function setFiles($files)
+    {
+        $this->files = new ArrayCollection();
+        foreach ($files as $file)
+          $this->files[] = $file;
+
+        return $this;
+    }
 }

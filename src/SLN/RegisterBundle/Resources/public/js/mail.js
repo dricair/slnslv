@@ -93,26 +93,20 @@ function setup_mail() {
   });
 
   // List of files
-  var collectionHolder;
+  var filelist = $('#filelist');
+  var num_files = 0;
+  filelist.find('tbody').find('tr').each(function(index) {
+    num_files += 1;
+    var size = $(this).find('td.size');
+    size.html(plupload.formatSize(size.html()));
 
-  var addTagLink = $('<a href="#" class="add_tag_link">Add a tag</a>');
-  var newLinkLi = $('<li></li>').append(addTagLink);
-
-  collectionHolder = $('ul.files');
-  collectionHolder.append(newLinkLi);
-
-  collectionHolder.data('index', collectionHolder.find(':input').length);
-
-  addTagLink.on('click', function(e) {
-    e.preventDefault();
-    var prototype = collectionHolder.data('prototype');
-    var index = collectionHolder.data('index');
-    var newForm = prototype.replace(/__name__/g, index);
-    collectionHolder.data('index', index + 1);
-
-    var newFormLi = $('<li></li>').append(newForm);
-    newLinkLi.before(newFormLi);
+    var remove_link = $(filelist.data('remove'));
+    remove_link.on('click', function (e) {
+      $(this).closest('tr').remove();
+      return false;
+    });
   });
+
 
   // File uploader
   var uploader = new plupload.Uploader({
@@ -138,22 +132,44 @@ function setup_mail() {
 
     init: {
       PostInit: function() {
-          document.getElementById('filelist').innerHTML = '';
+          $('#no_upload_support').html('');
       },
  
       FilesAdded: function(up, files) {
           plupload.each(files, function(file) {
-              document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+              var filename_input = $(filelist.data('filename').replace(/__name__/g, num_files));
+              var fileid_input = $(filelist.data('fileid').replace(/__name__/g, num_files));
+              filename_input.val(file.name);
+              fileid_input.val(file.id);
+
+              var remove_link = $(filelist.data('remove'));
+              remove_link.on('click', function (e) {
+                $(this).closest('tr').remove();
+                return false;
+              });
+
+              filelist.find('tbody').append($('<tr id=' + file.id + '></tr>')
+                                              .append($('<td></td>').append(filename_input)
+                                                                    .append(fileid_input)
+                                                                    .append(file.name + '<br/>' + file.id))
+                                              .append($('<td></td>').append(plupload.formatSize(file.size)))
+                                              .append($('<td></td>').append(filelist.data('inline').replace(/__name__/g, num_files)))
+                                              .append($('<td></td>').append(remove_link)));
+              num_files = num_files + 1;
               uploader.start();
           });
       },
+
+      BeforeUpload: function(up, file) {
+        up.settings.multipart_params = {file_id: file.id }
+      },
  
       UploadProgress: function(up, file) {
-          document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+          //document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
       },
  
       Error: function(up, err) {
-          document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+          //document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
       }
     }
   });
@@ -185,6 +201,11 @@ function setup_mail_send() {
   var failed = false;
   var iid = 0;
   $("#send_mail").prop("disabled", false);
+
+  // Format file list size
+  $('#filelist').find('tbody').find('td.size').each(function(index) {
+    $(this).html(plupload.formatSize($(this).html()));
+  });
 
   $("#send_mail").on("click", function(e) {
 

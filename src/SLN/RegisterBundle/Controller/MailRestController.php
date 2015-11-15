@@ -91,6 +91,11 @@ class MailRestController extends Controller {
                       ->setText($this->renderView('SLNRegisterBundle:Mail:mail_content.txt.twig', 
                                                   array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $text_body)));
 
+                foreach ($mail->getFiles() as $uploadFile) {
+                    if (!$uploadFile->getInline())
+                        $email->addAttachment($uploadFile->getFile()->getRealPath());
+                }
+
                 if (false) 
                     $email->addAttachment("/docs/Cedric/Programmation/PHP/slnslv/web/uploads/Suivi individuel - {$licensee->getNom()} {$licensee->getPrenom()}.pdf");
 

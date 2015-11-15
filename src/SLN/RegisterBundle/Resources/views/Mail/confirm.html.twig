@@ -5,6 +5,7 @@
 {% block javascripts %} 
   {{ parent() }}
 
+  <script type="text/javascript" src="{{ asset('plupload/js/plupload.full.min.js') }}"></script>
   <script src="{{ asset('bundles/slnregister/js/mail.js') }}"></script>
   <script type="text/javascript">
   $(function() {
@@ -62,9 +63,38 @@
   </div>
 </div>
 
+{% if files|length %}
+<div class="panel panel-default">
+  <div class="panel-heading">Fichiers attachés</div>
+  <div class="panel-body">
+      <table id="filelist" class="table table-striped">
+      <thead>
+      <tr>
+        <th>Fichier</th>
+        <th>Taille</th>
+        <th>Lien seulement</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for file in files %}
+      <tr>
+        <td>{{ file.getFilename }}</td>
+        <td class='size'>{{ file.getFile.getSize }}</td>
+        <td>{% if file.inline %}Oui{% else %}Non{% endif %}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+      </table>
+
+
+  </div>
+</div>
+{% endif %}
+
+
 <div class="form-group">
   <div class="col-sm-offset-3 col-sm-7">
-    <a href="{{ path('SLNRegisterBundle_mail_licensee', {'id': id}) }}" type="button" class="btn btn-primary">« Modifier le mail</a>
+    <a href="{{ path('SLNRegisterBundle_mail_edit', {'id': id}) }}" type="button" class="btn btn-primary">« Modifier le mail</a>
   </div>
 </div>
 

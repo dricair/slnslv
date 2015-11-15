@@ -62,6 +62,30 @@ class MailController extends Controller {
 
             $mail->setSender($this->getUser());
 
+            $files = $mail->getFiles();
+            $filesRepository = $this->getUploadFileRepository();
+
+            for ($i = 0; $i < count($files); $i++) {
+                $file = $files[$i];
+                if ($file->getNoId()) {
+                    $new_file = $filesRepository->find($file->getId());
+                    
+                    if (!is_object($new_file)) {
+                        $this->get('session')->getFlashBag()->add(
+                            'error',
+                            sprintf("Le fichier %s n'a pas été trouvé. L'avez vous effacé ?", $file->getFilename())
+                        );
+                        unset($files[$i]);
+                        $i--;
+                    }
+
+                    else
+                        $files[$i] = $new_file;
+                }
+            }
+
+            $mail->setFiles($files);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($mail);
             $em->flush();
@@ -84,13 +108,14 @@ class MailController extends Controller {
         $mail = $this->getLicenseeMailRepository()->find($id);
 
         if (!$mail) {
-            throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
+            throw $this->createNotFoundException('Ce mail n\'existe pas dans la base de données.');
         }
 
         return $this->render('SLNRegisterBundle:Mail:confirm.html.twig', array('id' => $mail->getId(),
                                                                                'licensees' => $mail->getLicensees(), 
                                                                                'title' => $mail->getTitle(), 
-                                                                               'body' => $mail->getBody()));
+                                                                               'body' => $mail->getBody(),
+                                                                               'files' => $mail->getFiles()));
     }
 
 
@@ -125,6 +150,17 @@ class MailController extends Controller {
         $em = $this->getDoctrine()
                    ->getManager();
         return $em->getRepository('SLNRegisterBundle:LicenseeMail');
+    }
+
+    /**
+     * Get repository for the uploaded files
+     *
+     * @return UploadFileRepository Repository for UploadFile instances.
+     */
+    protected function getUploadFileRepository() {
+        $em = $this->getDoctrine()
+                   ->getManager();
+        return $em->getRepository('SLNRegisterBundle:UploadFile');
     }
 }
 
