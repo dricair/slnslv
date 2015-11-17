@@ -30,11 +30,12 @@ class UploadListener
         $fileName = $request->get('name');
         $file = $event->getFile();
 
+        $uploadFile = new UploadFile($fileId);
+
         $fileDir = date("Y-m-d");
-        $outputDir = sprintf("%s/%s", UploadFile::UPLOADBASE, $fileDir);
+        $outputDir = sprintf("%s/%s", $uploadFile->UPLOADBASE, $fileDir);
         $file = $event->getFile()->move($outputDir);
 
-        $uploadFile = new UploadFile($fileId);
         $uploadFile->setFilename($fileName);
         $uploadFile->setFilepath(sprintf("%s/%s", $fileDir, $file->getFilename()));
         $uploadFile->setUser($this->securityContext->getToken()->getUser());

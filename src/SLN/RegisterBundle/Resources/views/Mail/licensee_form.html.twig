@@ -1,5 +1,5 @@
 
-<form action="{{ path('SLNRegisterBundle_mail_licensee') }}"  method="post" {{ form_enctype(form) }} class="form-horizontal" role="form" id="my_form">
+<form action="{{ path('SLNRegisterBundle_mail_edit', {'id': id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal" role="form" id="my_form">
   {{ form_errors(form) }}
 
   <div class="panel panel-default">

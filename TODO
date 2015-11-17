@@ -1,15 +1,19 @@
 Bugs:
 - Inscription si pas de groupe
+- Modification de mail: un nouveau mail est créé
+- Modification de mail: liste de licenciés vide
 
 Inscriptions:
 - Ajouter des photos
 - Remplir la feuille de licence
 - Page d'inscription pour gérer photo/Licence/Inscription + paiements
+- Attestation
 
 Licencié
 - Informations de compétitions
 
 Divers:
+- Relevé de notes pour 2 semaines
 - assetic
 - Page avec les prix
 - Groupe: checkbox pour "besoin d' officiel"

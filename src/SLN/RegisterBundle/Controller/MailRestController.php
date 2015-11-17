@@ -26,7 +26,7 @@ class MailRestController extends Controller {
      * Number of licensees to send before giving an answer
      */
     const USE_SENDGRID = true;
-    const MAX_SENT = self::USE_SENDGRID ? 5 : 1;
+    const MAX_SENT = 5; //self::USE_SENDGRID ? 5 : 1;
 
     /**
      * Send the emails that are in the current session

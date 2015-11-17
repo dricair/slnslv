@@ -25,7 +25,7 @@ use SLN\RegisterBundle\Entity\User;
  */
 class UploadFile {
 
-    const UPLOADBASE = "/docs/Cedric/Programmation/PHP/slnslv/web/uploads/";
+    public $UPLOADBASE;
 
     /**
      * @var int $id Id of the Licensee
@@ -95,6 +95,7 @@ class UploadFile {
 
     /** @ignore */
     public function __construct($id = Null) {
+        $this->UPLOADBASE = realpath(__DIR__ . "/../../../../web/uploads");
         $this->id = $id;
         $this->inline = False;
         $this->no_id = $id == Null;

@@ -35,6 +35,8 @@ tinymce.init({
     hidden_input: false
 });
 tinymce.init({
+    language: "fr_FR",
+    language_url: "{{ asset('bundles/slnregister/langs/fr_FR.js') }}",
     selector: "div.editable",
     inline: true,
     plugins: [
@@ -44,7 +46,10 @@ tinymce.init({
     ],
     menubar: false,
     toolbar: "insertfile undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-    hidden_input: false
+    hidden_input: false,
+    relative_urls: false,
+    remove_script_host : false,
+    document_base_url : "http://stadelaurentinnatation.fr"
 });
 
 $( document ).ready(function() {

@@ -93,7 +93,8 @@ class MailController extends Controller {
             return $this->redirect($this->generateUrl('SLNRegisterBundle_mail_confirm', array('id' => $mail->getId())));
         }
 
-        return $this->render('SLNRegisterBundle:Mail:edit.html.twig', array('form' => $form->createView(), 
+        return $this->render('SLNRegisterBundle:Mail:edit.html.twig', array('id' => $id,
+                                                                            'form' => $form->createView(), 
                                                                             'title' => $title, 
                                                                             'defaultLicensees' => $defaultLicensees ));
     }
