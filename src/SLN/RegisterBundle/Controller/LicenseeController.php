@@ -255,19 +255,17 @@ class LicenseeController extends Controller
      * @todo: split categories in sheets
      */
     public function exportAction() {
-        $licensees = $this->getLicenseeRepository()->findAll();
+        $licensees = array_merge($this->getLicenseeRepository()->getAllByGroups(),
+                                 $this->getLicenseeRepository()->getAllNoGroups());
         $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
 
         $phpExcelObject->getProperties()->setCreator("Cédric Airaud")
            ->setTitle("Liste des licenciés")
            ->setSubject("Liste des licenciés du club");
 
-        $phpExcelObject->setActiveSheetIndex(0);
-        $activeSheet = $phpExcelObject->getActiveSheet();
-        $activeSheet->setTitle('Liste globale');
-        
-        $data = array(array("Nom", "Prénom", "Sexe", "Catégorie", "Date naissance", "IUF", "Titre", "Responsable légal", "Tél. fixe", "Tél portable", "Email",  
-                            "Adresse", "Code postal", "Ville"));
+        $data = array(array("Nom", "Prénom", "Sexe", "Catégorie", "Date naissance", "IUF", "Responsable légal", "Tél. fixe", "Tél portable", "Email"));
+        $group_data = array();
+        $sheet = 0;
 
         foreach($licensees as $licensee) {
           $user = $licensee->getUser();
@@ -277,22 +275,33 @@ class LicenseeController extends Controller
             $groupe->setNom('<Pas de groupe>');
           }
 
+          if (!array_key_exists($groupe->getNom(), $group_data)) {
+              $group_data[$groupe->getNom()] = array($data[0]);
+          }
+
           $data[] = array($licensee->getNom(), 
                           $licensee->getPrenom(),
                           $licensee->getSexeName(),
                           $groupe->getNom(),
                           $licensee->getNaissance()->format("d/m/Y"),
                           $licensee->getIUF(),
-                          $user->getTitreName(),
-                          sprintf("%s %s", $user->getNom(), $user->getPrenom()),
+                          sprintf("%s %s %s", $user->getTitreName(), $user->getNom(), $user->getPrenom()),
                           $user->getTelDomicile(),
                           $user->getTelPortable(),
-                          $user->getEmail(),
-                          $user->getAdresse(),
-                          $user->getCodePostal(),
-                          $user->getVille());
+                          $user->getEmail());
+          $group_data[$groupe->getNom()][] = $data[count($data)-1];
         }
 
+        foreach($group_data as $gnom => $gdata) {
+            $group_sheet = new \PHPExcel_Worksheet($phpExcelObject, $gnom);
+            $phpExcelObject->addSheet($group_sheet, $sheet+1);
+            $group_sheet->fromArray($gdata, NULL, 'A1');
+            $sheet += 1;
+        }
+
+        $phpExcelObject->setActiveSheetIndex(0);
+        $activeSheet = $phpExcelObject->getActiveSheet();
+        $activeSheet->setTitle('Liste globale');
         $activeSheet->fromArray($data, NULL, 'A1');
 
         // Create the response
