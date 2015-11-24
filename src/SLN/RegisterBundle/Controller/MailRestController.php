@@ -126,7 +126,7 @@ class MailRestController extends Controller {
         }
 
         if (count($licensee_list) == 0) {
-            $session->remove('mail/licensees');
+            $session->remove('mail/id');
         }
     
         return array("result" => count($licensee_list) > 0 ? "ok" : "done", "sent" => $sent, "failures" => $failures);
