@@ -32,6 +32,7 @@ class LoadGroupeData extends AbstractFixture implements OrderedFixtureInterface
         $groupe->setNom("Otaries");
         $groupe->setDescription("Cours Otaries");
         $groupe->setCategorie(Groupe::ECOLE);
+        $groupe->setOrder(3);
         $groupe->addHoraire(new Horaire(0, 9, 11.5, "Cours 1"));
         $groupe->addHoraire(new Horaire(1, 12, 13,  "Cours 2"));
         
@@ -43,6 +44,7 @@ class LoadGroupeData extends AbstractFixture implements OrderedFixtureInterface
         $groupe->setNom("Compétition");
         $groupe->setDescription("Cours Compétition");
         $groupe->setCategorie(Groupe::COMPETITION);
+        $groupe->setOrder(2);
         $groupe->addHoraire(new Horaire(2, 17, 18, "Cours 1"));
         $groupe->addHoraire(new Horaire(3, 11.5, 12,  "Cours 2"));
         
@@ -54,6 +56,7 @@ class LoadGroupeData extends AbstractFixture implements OrderedFixtureInterface
         $groupe->setNom("Loisirs");
         $groupe->setDescription("Cours Loisirs");
         $groupe->setCategorie(Groupe::LOISIR);
+        $groupe->setOrder(1);
         $groupe->addHoraire(new Horaire(4, 9, 10, "Cours 1"));
         $groupe->addHoraire(new Horaire(5, 20, 21.25,  "Cours 2"));
         

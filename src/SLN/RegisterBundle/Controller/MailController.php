@@ -39,6 +39,10 @@ class MailController extends Controller {
             if (!$mail) {
                 throw $this->createNotFoundException('Ce mail n\'existe pas dans la base de données.');
             }
+
+            $defaultLicensees = $mail->getLicensees();
+            $defaultLicensee = null;
+            $defaultGroupe = null;
         }
 
         if ($defaultGroup) {
