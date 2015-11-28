@@ -8,6 +8,14 @@ Inscriptions:
 - Remplir la feuille de licence
 - Page d'inscription pour gérer photo/Licence/Inscription + paiements
 - Attestation
+- Adresse mail secondaire, tél secondaire
+- Liste d'attente
+
+Mail:
+- Lien seulement
+- Historique des mails et fichiers attachés
+- Archive des mails par utilisateur
+- Récupérer mails bloqués et mail automatique.
 
 Licencié
 - Informations de compétitions
@@ -16,7 +24,6 @@ Divers:
 - Relevé de notes pour 2 semaines
 - assetic
 - Page avec les prix
-- Groupe: checkbox pour "besoin d' officiel"
 
 https://github.com/comur/ComurImageBundle
 https://jqueryui.com

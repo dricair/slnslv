@@ -33,7 +33,7 @@ class UploadListener
         $uploadFile = new UploadFile($fileId);
 
         $fileDir = date("Y-m-d");
-        $outputDir = sprintf("%s/%s", $uploadFile->UPLOADBASE, $fileDir);
+        $outputDir = sprintf("%s/%s", $uploadFile->getUploadBase(), $fileDir);
         $file = $event->getFile()->move($outputDir);
 
         $uploadFile->setFilename($fileName);

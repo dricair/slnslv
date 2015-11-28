@@ -25,8 +25,6 @@ use SLN\RegisterBundle\Entity\User;
  */
 class UploadFile {
 
-    public $UPLOADBASE;
-
     /**
      * @var int $id Id of the Licensee
      * @ORM\Id
@@ -83,9 +81,18 @@ class UploadFile {
      */
     public function getFile() {
         if  ($this->filepath === null) return null;
-        return new File(realpath(sprintf("%s/%s", self::UPLOADBASE, $this->filepath)));
+        return new File(sprintf("%s/%s", $this->getUploadBase(), $this->filepath));
     }
 
+
+    /**
+     * Return the upload base, relative to this script
+     *
+     * @return string Real path of the upload base.
+     */
+    public function getUploadBase() {
+        return realpath(__DIR__ . "/../../../../web/uploads");
+    }
 
     /**
      * @var bool $no_id True if object was constructed with no ID 
@@ -95,7 +102,6 @@ class UploadFile {
 
     /** @ignore */
     public function __construct($id = Null) {
-        $this->UPLOADBASE = realpath(__DIR__ . "/../../../../web/uploads");
         $this->id = $id;
         $this->inline = False;
         $this->no_id = $id == Null;

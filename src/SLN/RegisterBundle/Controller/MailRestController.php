@@ -93,7 +93,7 @@ class MailRestController extends Controller {
 
                 foreach ($mail->getFiles() as $uploadFile) {
                     if (!$uploadFile->getInline())
-                        $email->addAttachment($uploadFile->getFile()->getRealPath());
+                        $email->addAttachment($uploadFile->getFile()->getRealPath(), $uploadFile->getFilename());
                 }
 
                 if (false) 
