@@ -62,6 +62,10 @@ $( document ).ready(function() {
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
+<div class="btn-group btn-group-justified">
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_mail_list', { page: 1 }) }}">Liste des mails envoyés</a>
+</div>
+
 <h1>{{ title }}</h1>
 
   {% include 'SLNRegisterBundle:Mail:licensee_form.html.twig' with { 'form': form, 'title': title } %}

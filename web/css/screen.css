@@ -32,3 +32,7 @@ form.form-horizontal p.help {
     margin-right: 10px;
     margin-left: 10px;
 }
+
+.no-details details > summary:before { content: '► '; }
+.no-details details.open > summary:before { content: '▼ '; }
+.no-details details.open > summary { color: #6495b3; font-weight: bold; margin-bottom: 10px; }

@@ -125,6 +125,25 @@ class MailController extends Controller {
 
 
     /**
+     * Get list of mails, all or for a specific user
+     */
+    public function listAction(Request $request, $id=0, $page=1, $admin=FALSE) {
+        $max_per_page = 10;
+
+        if ($admin) {
+            $mails = $this->getLicenseeMailRepository()->paginateMails($id, $page, $max_per_page);
+        }
+
+        $num_pages = intval((count($mails) + $max_per_page - 1) / $max_per_page);
+        return $this->render('SLNRegisterBundle:Mail:list.html.twig', array('mails' => $mails,
+                                                                            'id' => $id,
+                                                                            'page' => $page,
+                                                                            'num_pages' => $num_pages,
+                                                                            'admin' => $admin));
+    }
+
+
+    /**
      * Get repository for the licensees
      *
      * @return LicenseeRepository Repository for Licensee instances.
