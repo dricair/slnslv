@@ -31,7 +31,8 @@ class ProfileFormType extends AbstractType
                 ->add('code_postal', null, array('attr' => array('placeholder' => '06xxx')))
                 ->add('ville', null, array('attr' => array('placeholder' => 'Ville')))
                 ->add('tel_domicile', null, array('attr' => array('placeholder' => '04xxxxxxxx')))
-                ->add('tel_portable', null, array('attr' => array('placeholder' => '06xxxxxxxx')));
+                ->add('tel_portable', null, array('attr' => array('placeholder' => '06xxxxxxxx')))
+                ->add('secondary_email', null, array('label' => 'Email secondaire (Pour les communications)'));
     }
 
     /** @ignore */

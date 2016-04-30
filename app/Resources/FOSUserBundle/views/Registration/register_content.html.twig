@@ -20,6 +20,16 @@
   </div>
 
   <div class="panel panel-default">
+    <div class="panel-heading">Compte utilisateur</div>
+    <div class="panel-body">
+      {{ form_row(form.email) }}
+      {{ form_row(form.username) }}
+      {{ form_row(form.plainPassword.first) }}
+      {{ form_row(form.plainPassword.second) }}
+    </div>
+  </div>
+
+  <div class="panel panel-default">
     <div class="panel-heading">Informations de contact</div>
     <div class="panel-body">
       {{ form_row(form.adresse) }}
@@ -27,16 +37,7 @@
       {{ form_row(form.ville) }}
       {{ form_row(form.tel_domicile) }}
       {{ form_row(form.tel_portable) }}
-    </div>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="panel-heading">Compte utilisateur</div>
-    <div class="panel-body">
-      {{ form_row(form.email) }}
-      {{ form_row(form.username) }}
-      {{ form_row(form.plainPassword.first) }}
-      {{ form_row(form.plainPassword.second) }}
+      {{ form_row(form.tel_portable) }}
     </div>
   </div>
 

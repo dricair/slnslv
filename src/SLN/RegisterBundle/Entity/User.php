@@ -138,6 +138,13 @@ class User extends BaseUser
     }
 
     /**
+     * @var string $secondary_email Secondary email
+     * @ORM\Column(type="string", length=20, nullable=True)
+     * @Assert\Email()
+     */
+    protected $secondary_email;
+
+    /**
      * @var \Datetime $created Creation date
      * @ORM\Column(type="datetime")
      */
@@ -467,5 +474,29 @@ class User extends BaseUser
     public function getLicensees()
     {
         return $this->licensees;
+    }
+
+
+    /**
+     * Set secondary_email
+     *
+     * @param string $secondaryEmail
+     * @return User
+     */
+    public function setSecondaryEmail($secondaryEmail)
+    {
+        $this->secondary_email = $secondaryEmail;
+
+        return $this;
+    }
+
+    /**
+     * Get secondary_email
+     *
+     * @return string 
+     */
+    public function getSecondaryEmail()
+    {
+        return $this->secondary_email;
     }
 }

@@ -100,6 +100,14 @@ class MailRestController extends Controller {
                     $email->addAttachment("/docs/Cedric/Programmation/PHP/slnslv/web/uploads/Suivi individuel - {$licensee->getNom()} {$licensee->getPrenom()}.pdf");
 
                 $sendgrid->send($email);
+
+                if ($licensee->getUser()->getSecondaryEmail()) {
+                    $email->setTos(array($delivery_address ? $delivery_address : $licensee->getUser()->getSecondaryEmail()));
+                    if ($delivery_address)
+                        $email->subject .= " (Dest: " . $licensee->getUser()->getSecondaryEmail() . ")";
+                    $sendgrid->send($email);
+                }
+
               } else {
                 $message = \Swift_Message::newInstance()
                  ->setSubject($text_title)

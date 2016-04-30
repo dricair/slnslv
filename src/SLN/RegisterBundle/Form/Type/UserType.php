@@ -30,12 +30,14 @@ class UserType extends AbstractType
           ->add('titre', 'choice', array(
                 'choices' => User::getTitres(),))
           ->add('nom', null, array('attr' => array('placeholder' => 'Nom')))
-          ->add('prenom', null, array('attr' => array('placeholder' => 'Prénom')))
+          ->add('prenom', null, array('label' => 'Prénom', 'attr' => array('placeholder' => 'Prénom')))
           ->add('adresse', null, array('attr' => array('placeholder' => 'Adresse postale')))
           ->add('code_postal', null, array('attr' => array('placeholder' => '06xxx')))
           ->add('ville', null, array('attr' => array('placeholder' => 'Ville')))
           ->add('tel_domicile', null, array('attr' => array('placeholder' => '04xxxxxxxx')))
           ->add('tel_portable', null, array('attr' => array('placeholder' => '06xxxxxxxx')))
+          ->add('secondary_email', null, array('label' => 'Email secondaire (Pour les communications)',
+                                               'attr' => array('placeholder' => 'email@provider.fr')))
           ->add('roles', 'choice', array('label' => null,
                                          'choices' => array('ROLE_ADMIN' => 'Administrateur'),
                                          'multiple' => true,
