@@ -71,7 +71,7 @@ class Builder extends ContainerAware {
                                                                          'routeParameters' => array('page' => 1, 'admin' => TRUE),))
                 ->setAttribute('icon', 'th-list');
 
-            $menu['Admin']->addChild('Mails envoyés', array('route' => 'SLNRegisterBundle_mail_licensee'))
+            $menu['Admin']->addChild('Envoyer un email', array('route' => 'SLNRegisterBundle_mail_licensee'))
                 ->setAttribute('icon', 'envelope');
 
         }
