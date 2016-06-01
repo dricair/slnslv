@@ -1,20 +1,20 @@
 SLNRegisterBundle_homepage:
-  pattern: /
+  path: /
   defaults: { _controller: SLNRegisterBundle:Home:index }
   requirements:
-    _method:  GET
+    methods:  GET
 
 SLNRegisterBundle_about:
-  pattern:  /about
+  path:  /about
   defaults: { _controller: SLNRegisterBundle:Misc:about }
   requirements:
-    _method:  GET
+    methods:  GET
 
 SLNRegisterBundle_contact:
-  pattern:  /contact
+  path:  /contact
   defaults: { _controller: SLNRegisterBundle:Misc:contact }
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
 
 
 #
@@ -24,45 +24,45 @@ SLNRegisterBundle_contact:
 # Create and edit licensees
 # -------------------------
 SLNRegisterBundle_licensee_create:
-  pattern: /licensee/create/{user_id}
+  path: /licensee/create/{user_id}
   defaults: { _controller: SLNRegisterBundle:Licensee:edit, id:0 }
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
     user_id: \d+
 
 SLNRegisterBundle_licensee_edit:
-  pattern: /licensee/edit/{id}
+  path: /licensee/edit/{id}
   defaults: { _controller: SLNRegisterBundle:Licensee:edit }
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
     id: \d+
 
 SLNRegisterBundle_licensee_show:
-  pattern: /licensee/{id}
+  path: /licensee/{id}
   defaults: { _controller: SLNRegisterBundle:Licensee:show }
   requirements:
-    _method:  GET
+    methods:  GET
     id: \d+
 
 SLNRegisterBundle_licensee_delete:
-  pattern: /licensee/delete/{id}
+  path: /licensee/delete/{id}
   defaults: { _controller: SLNRegisterBundle:Licensee:delete }
   requirements:
-    _method:  GET
+    methods:  GET
     id: \d+
 
 SLNRegisterBundle_member_inscriptions:
-  pattern: /member/inscriptions/{user_id}
+  path: /member/inscriptions/{user_id}
   defaults: { _controller: SLNRegisterBundle:Member:inscriptions }
   requirements:
-    _method:  GET
+    methods:  GET
     user_id: \d+
 
 SLNRegisterBundle_member_inscriptions_pdf:
-  pattern: /member/inscriptions/{user_id}/inscriptions.pdf
+  path: /member/inscriptions/{user_id}/inscriptions.pdf
   defaults: { _controller: SLNRegisterBundle:Member:inscriptions_pdf }
   requirements:
-    _method:  GET
+    methods:  GET
     user_id: \d+
 
 #
@@ -72,146 +72,146 @@ SLNRegisterBundle_member_inscriptions_pdf:
 # Create and edit groupes
 # -----------------------
 SLNRegisterBundle_groupe_create:
-  pattern: /admin/groupe/create/
+  path: /admin/groupe/create/
   defaults: { _controller: SLNRegisterBundle:Groupe:edit }
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
 
 SLNRegisterBundle_groupe_edit:
-  pattern: /admin/groupe/edit/{id}
+  path: /admin/groupe/edit/{id}
   defaults: { _controller: SLNRegisterBundle:Groupe:edit }
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
     id: \d+
 
 SLNRegisterBundle_groupe_delete:
-  pattern: /admin/groupe/delete/{id}
+  path: /admin/groupe/delete/{id}
   defaults: { _controller: SLNRegisterBundle:Groupe:delete }
   requirements:
-    _method:  GET
+    methods:  GET
     id: \d+
 
 SLNRegisterBundle_groupe_show:
-  pattern: /admin/groupe/show/{id}
+  path: /admin/groupe/show/{id}
   defaults: { _controller: SLNRegisterBundle:Groupe:show, admin: true }
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
     id: \d+
 
 SLNRegisterBundle_groupe_list:
-  pattern: /admin/groupe/list
+  path: /admin/groupe/list
   defaults: { _controller: SLNRegisterBundle:Groupe:list }
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
 
 #
 # Create and edit members
 # -----------------------
 SLNRegisterBundle_member_create:
-  pattern: /admin/member/create
+  path: /admin/member/create
   defaults: { _controller: SLNRegisterBundle:Member:edit, id:0, admin: true}
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
 
 SLNRegisterBundle_member_edit:
-  pattern: /admin/member/edit/{id}
+  path: /admin/member/edit/{id}
   defaults: { _controller: SLNRegisterBundle:Member:edit, admin: true }
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
     id: \d+
 
 SLNRegisterBundle_member_delete:
-  pattern: /admin/member/delete/{id}
+  path: /admin/member/delete/{id}
   defaults: { _controller: SLNRegisterBundle:Member:delete }
   requirements:
-    _method:  GET
+    methods:  GET
     id: \d+
 
 SLNRegisterBundle_member_list:
-  pattern: /admin/member/list
+  path: /admin/member/list
   defaults: { _controller: SLNRegisterBundle:Member:list, admin: true }
   requirements:
-    _method:  GET
+    methods:  GET
 
 
 #
 # Create and edit licensees
 # -------------------------
 SLNRegisterBundle_admin_licensee_create:
-  pattern: /admin/licensee/create
+  path: /admin/licensee/create
   defaults: { _controller: SLNRegisterBundle:Licensee:edit, id:0, admin: true }
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
 
 SLNRegisterBundle_admin_licensee_create_for_user:
-  pattern: /admin/licensee/create/{user_id}
+  path: /admin/licensee/create/{user_id}
   defaults: { _controller: SLNRegisterBundle:Licensee:edit, id:0, admin: true }
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
     user_id: \d+
 
 SLNRegisterBundle_admin_licensee_edit:
-  pattern: /admin/licensee/edit/{id}
+  path: /admin/licensee/edit/{id}
   defaults: { _controller: SLNRegisterBundle:Licensee:edit, admin: true }
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
     id: \d+
 
 SLNRegisterBundle_admin_licensee_list:
-  pattern: /admin/licensee/list
+  path: /admin/licensee/list
   defaults: { _controller: SLNRegisterBundle:Licensee:list, admin: true }
   requirements:
-    _method:  GET
+    methods:  GET
 
 SLNRegisterBundle_admin_licensee_inscription:
-  pattern: /admin/licensee/inscription/{id}
+  path: /admin/licensee/inscription/{id}
   defaults: { _controller: SLNRegisterBundle:Licensee:inscription, admin: true}
   requirements:
-    _method:  GET|POST
+    methods:  GET|POST
     id: \d+
 
 SLNRegisterBundle_admin_licensee_export:
-  pattern: /admin/licensee/export.xlsx
+  path: /admin/licensee/export.xlsx
   defaults: { _controller: SLNRegisterBundle:Licensee:export}
   requirements:
-    _method:  GET
+    methods:  GET
 
 
 #
 # Mail sending
 # ------------
 SLNRegisterBundle_mail_licensee:
-  pattern: /admin/mail/licensee
+  path: /admin/mail/licensee
   defaults: { _controller: SLNRegisterBundle:Mail:mail, id:0, defaultGroup:0, defaultLicensee: 0 }
   requirements:
-    _method: GET|POST
+    methods: GET|POST
 
 SLNRegisterBundle_mail_edit:
-  pattern: /admin/mail/edit/{id}
+  path: /admin/mail/edit/{id}
   defaults: { _controller: SLNRegisterBundle:Mail:mail, defaultGroup:0, defaultLicensee: 0 }
   requirements:
-    _method: GET|POST
+    methods: GET|POST
     id: \d+
 
 SLNRegisterBundle_mail_licensee_select:
-  pattern: /admin/mail/licensee/{defaultLicensee}
+  path: /admin/mail/licensee/{defaultLicensee}
   defaults: { _controller: SLNRegisterBundle:Mail:mail, id:0, defaultGroup:0}
   requirements:
-    _method: GET|POST
+    methods: GET|POST
     defaultLicensee: \d+
 
 SLNRegisterBundle_mail_confirm:
-  pattern: /admin/mail/confirm/{id}
+  path: /admin/mail/confirm/{id}
   defaults: { _controller: SLNRegisterBundle:Mail:confirm }
   requirements:
-    _method: GET
+    methods: GET
     id: \d+
 
 SLNRegisterBundle_mail_list:
-  pattern: /admin/mail/list/{page}
+  path: /admin/mail/list/{page}
   defaults: { _controller: SLNRegisterBundle:Mail:list, id: 0, admin: true }
   requirements:
-    _method: GET
+    methods: GET
     page: \d+
 
 
@@ -219,25 +219,25 @@ SLNRegisterBundle_mail_list:
 # Payments
 # --------
 SLNRegisterBundle_payment_user:
-  pattern: /admin/payment/edit/{user_id}
+  path: /admin/payment/edit/{user_id}
   defaults: { _controller: SLNRegisterBundle:Payment:edit }
   requirements:
-    _method: GET|POST
+    methods: GET|POST
     user_id: \d+
 
 SLNRegisterBundle_payment_edit:
-  pattern: /admin/payment/edit/{user_id}/{id}
+  path: /admin/payment/edit/{user_id}/{id}
   defaults: { _controller: SLNRegisterBundle:Payment:edit }
   requirements:
-    _method: GET|POST
+    methods: GET|POST
     user_id: \d+
     id: \d+
 
 SLNRegisterBundle_payment_delete:
-  pattern: /admin/payment/delete/{id}
+  path: /admin/payment/delete/{id}
   defaults: { _controller: SLNRegisterBundle:Payment:delete }
   requirements:
-    _method: GET
+    methods: GET
     id: \d+
 
 
@@ -245,10 +245,10 @@ SLNRegisterBundle_payment_delete:
 # Others
 # ------
 SLNRegisterBundle_admin_misc_test:
-  pattern: /admin/test/{id}
+  path: /admin/test/{id}
   defaults: { _controller: SLNRegisterBundle:Misc:test }
   requirements:
-    _method:  GET
+    methods:  GET
     id: \d+
 
 
