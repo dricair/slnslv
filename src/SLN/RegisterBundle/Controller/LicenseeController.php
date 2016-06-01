@@ -12,6 +12,7 @@ namespace SLN\RegisterBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Bundle\TwigBundle\Extension;
 
 use SLN\RegisterBundle\Entity\User;
 use SLN\RegisterBundle\Entity\Groupe;

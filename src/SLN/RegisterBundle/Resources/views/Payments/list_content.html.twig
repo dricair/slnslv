@@ -1,0 +1,35 @@
+{% if payments|length > 0 %}
+<table class="table table-striped">
+<tr>
+  <th>Type de paiement</th>
+  <th>Description ou référence</th>
+  <th>Valeur</th>
+  {% if admin %}
+  <th>Action</th>
+  {% endif %}
+</tr>
+{% for payment in payments %}
+
+<tr>
+  <td>{{ payment.getPtypeStr }}</td>
+  <td>{{ payment.description }}</td>
+  <td>{{ payment.getValueStr }}</td>
+  {% if admin %}
+  <td>
+    <a href="{{ path('SLNRegisterBundle_payment_edit', { user_id: payment.user.id, id: payment.id }) }}" title='Modifier ce paiement'>
+      <span class="glyphicon glyphicon-pencil"></span></a>
+    <a href="{{ path('SLNRegisterBundle_payment_delete', { id: payment.id }) }}" title='Supprimer ce paiement'
+         onclick="return confirm('Etes-vous sûr de vouloir effacer le paiement ?');">
+      <span class="glyphicon glyphicon-trash"></span></a>
+  </td>
+  {% endif %}
+</tr>
+{% endfor %}
+</table>
+
+{% else %}
+
+<p>Pas de paiements enregistrés</p>
+
+{% endif %}
+

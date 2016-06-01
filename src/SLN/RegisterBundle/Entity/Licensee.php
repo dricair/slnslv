@@ -262,12 +262,12 @@ use SLN\RegisterBundle\Entity\User;
         $femme = $this->sexe == $this::FEMME;
 
         $pdf->AddPage();
-        $pdf->Image($assets->getUrl('bundles/slnregister/images/logo_club_t.png'), 10, 0, 30);
-        $pdf->Image($assets->getUrl('bundles/slnregister/images/titre_club_t.png'), 60, 5, 90);
+        $pdf->Image(__DIR__ . '../../Resources/public/images/logo_club_t.png', 10, 0, 30);
+        $pdf->Image(__DIR__ . '../../Resources/public/images/titre_club_t.png', 60, 5, 90);
         if ($this->groupe->getCategorie() == Groupe::COMPETITION)
-          $pdf->Image($assets->getUrl('bundles/slnregister/images/logo_ffn.png'), 160, 5, 40);
+          $pdf->Image(__DIR__ . '../../Resources/public/images/logo_ffn.png', 160, 5, 40);
         else if ($this->groupe->getCategorie() == Groupe::ECOLE)
-          $pdf->Image($assets->getUrl('bundles/slnregister/images/ecole_natation.gif'), 160, 5, 40);
+          $pdf->Image(__DIR__ . '../../Resources/public/images/ecole_natation.gif', 160, 5, 40);
           
         $html = sprintf('
 <p style="color:#888888;margin:2">Affilié à la F.F.N et agréé E.N.F<br/>
@@ -513,6 +513,8 @@ Site: http://stadelaurentinnatation.fr</p>');
         $this->groupe_jours = array();
         $this->fonction = array();
         $this->inscription = array();
+
+        $this->payments  = new ArrayCollection();
     }
 
     /**
@@ -894,4 +896,5 @@ Site: http://stadelaurentinnatation.fr</p>');
     {
         return $this->inscription;
     }
+
 }

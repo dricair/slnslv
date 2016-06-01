@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 use SLN\RegisterBundle\Entity\Licensee;
+use SLN\RegisterBundle\Entity\UserPayment;
 
 
 /**
@@ -161,6 +162,13 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Licensee", mappedBy="user")
      */
     protected $licensees;
+
+    /**
+     * @var Payments[] List of related payments
+     * @ORM\OneToMany(targetEntity="UserPayment", mappedBy="user")
+     */
+    protected $payments;
+
 
     /** @ignore */
     public function __construct()
@@ -498,5 +506,38 @@ class User extends BaseUser
     public function getSecondaryEmail()
     {
         return $this->secondary_email;
+    }
+
+    /**
+     * Add payments
+     *
+     * @param UserPayment $payments
+     * @return User
+     */
+    public function addPayment(UserPayment $payments)
+    {
+        $this->payments[] = $payments;
+
+        return $this;
+    }
+
+    /**
+     * Remove payments
+     *
+     * @param UserPayment $payments
+     */
+    public function removePayment(UserPayment $payments)
+    {
+        $this->payments->removeElement($payments);
+    }
+
+    /**
+     * Get payments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPayments()
+    {
+        return $this->payments;
     }
 }
