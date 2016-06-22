@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Form\Type\HoraireType;
+use SLN\RegisterBundle\Form\Type\TarifType;
 
 
 /**
@@ -37,8 +38,17 @@ class GroupeType extends AbstractType
                   'by_reference' => false,
                   'options' => array()
                 ))
+            ->add('tarifs', 'collection', array(
+                  'type' => new TarifType(),
+                  'prototype' => true,
+                  'allow_add' => true,
+                  'allow_delete' => true,
+                  'by_reference' => false,
+                  'options' => array()
+                ))
             ->add('multiple', null, array(
-                  'label' => 'Horaires indépendents'));
+                  'label' => 'Horaires indépendents',
+                  'required' => false));
     }
 
     /** @ignore */

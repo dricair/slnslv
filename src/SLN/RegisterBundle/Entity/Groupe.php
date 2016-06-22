@@ -15,6 +15,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy,
     JMS\Serializer\Annotation\VirtualProperty;
 
 use SLN\RegisterBundle\Entity\Horaire;
+use SLN\RegisterBundle\Entity\Tarif;
 
 
 
@@ -113,7 +114,12 @@ use SLN\RegisterBundle\Entity\Horaire;
       */
     protected $horaires;
 
-    // TODO: Tarifs
+     /**
+      * @var Tarif[] $tarifs List of Tarif
+      * @ORM\Column(type="json_array")
+      */
+    protected $tarifs;
+
 
     /** @ignore */
     public function __toString() {
@@ -140,6 +146,7 @@ use SLN\RegisterBundle\Entity\Horaire;
 
         $this->licensees = new ArrayCollection();
         $this->horaires = Array((array)new Horaire());
+        $this->tarifs = Array((array)new Tarif());
         $this->multiple = false;
 
         // Default groupe used in Licensee
@@ -179,6 +186,30 @@ use SLN\RegisterBundle\Entity\Horaire;
 
         if ($index != -1)
             unset($this->horaires[$index]);
+    }
+ 
+    /**
+     * Add a new Tarif
+     * @param Tarif $tarif
+     */
+    public function addTarif($tarif) {
+        $this->tarifs[] = $tarif;
+    }
+
+    /** 
+      * Remove an tarif
+      * @param Tarif $tarif
+      */
+    public function removeTarif($tarif) {
+        $index = -1;
+        foreach ($this->tarifs as $i => $t) {
+            if ($t['type'] == $tarif['type'] and
+                $t['value'] == $tarif['value']) 
+                $index = $i;
+        };
+
+        if ($index != -1)
+            unset($this->tarifs[$index]);
     }
  
     /**
@@ -299,6 +330,15 @@ use SLN\RegisterBundle\Entity\Horaire;
      */
     public function getHoraires() {
         return $this->horaires;
+    }
+
+    /**
+     * Get tarifs
+     *
+     * @return Tarif[] List of tarifs
+     */
+    public function getTarifs() {
+        return $this->tarifs;
     }
 
     /**
@@ -432,6 +472,19 @@ use SLN\RegisterBundle\Entity\Horaire;
     public function setHoraires($horaires)
     {
         $this->horaires = $horaires;
+
+        return $this;
+    }
+
+    /**
+     * Set tarifs
+     *
+     * @param array $tarifs
+     * @return Groupe
+     */
+    public function setTarifs($tarifs)
+    {
+        $this->tarifs = $tarifs;
 
         return $this;
     }

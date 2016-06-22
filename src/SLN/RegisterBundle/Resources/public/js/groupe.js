@@ -2,28 +2,31 @@ function setup_groupe() {
 
   var addLink = '<p><a href="#" class="add_row_link"><span class="glyphicon glyphicon-plus"></span> Ajouter une ligne</a></p>';
   var delLink = '<a href="#" class="del_row_link"><span class="glyphicon glyphicon-trash"></span></a>';
-  var div = $('div.add-row');
-  var link = $(addLink);
-  div.append(link);
 
-  var $tbody = div.find('table tbody');
-  $tbody.data("index", $tbody.find('tr').length);
+  $('div.add-row').each(function(index) {
+    var link = $(addLink);
+    $(this).append(link);
+    var tbody = $(this).find('table tbody');
+    tbody.data("index", tbody.find('tr').length);
 
-  $tbody.find('tr').each(function(index) {
-    delRow($(this), delLink);
+    tbody.find('tr').each(function(index) {
+      delRow($(this), delLink);
+    });
+
+    link.on('click', {tbody: tbody}, function(e) {
+      // Prevent the link from creating a '#' in the URL
+      e.preventDefault();
+
+      // Add a new row to the table
+      console.log("Click on addRow");
+      newLine = addRow(e.data.tbody); 
+    
+      // Add a remove link to the line
+      delRow(newLine, delLink);
+    });
   });
 
-  link.on('click', function(e) {
-    // Prevent the link from creating a '#' in the URL
-    e.preventDefault();
 
-    // Add a new row to the table
-    console.log("Click on addRow");
-    newLine = addRow($tbody); 
-  
-    // Add a remove link to the line
-    delRow(newLine, delLink);
-  });
 };
    
 

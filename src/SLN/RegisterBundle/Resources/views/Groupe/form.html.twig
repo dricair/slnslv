@@ -1,3 +1,7 @@
+{% set tr_open='<tr><td>' %}
+{% set tr_close='</tr></td>' %}
+{% set td='</td><td>' %}
+
 <form action="{{ path('SLNRegisterBundle_groupe_edit', {'id': id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal" role="form">
   {{ form_errors(form) }}
 
@@ -17,10 +21,6 @@
                       indépendente (Avec un impact sur le tarif)</p>
       {{ form_row(form.multiple) }}
 
-{% set tr_open='<tr><td>' %}
-{% set tr_close='</tr></td>' %}
-{% set td='</td><td>' %}
-
       <table class='table table-striped'>
         <thead>
         <tr>
@@ -39,6 +39,32 @@
           <td>{{ form_widget(horaire.debut) }} {{ form_errors(horaire.debut) }}</td>
           <td>{{ form_widget(horaire.fin) }} {{ form_errors(horaire.fin) }}</td>
           <td>{{ form_widget(horaire.description) }} {{ form_errors(horaire.description) }}</td>
+          <td></td>
+        </tr>
+    {% endfor %}
+       </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">Tarifs</div>
+    <div class="add-row panel-body">
+
+      <table class='table table-striped'>
+        <thead>
+        <tr>
+          <th>Type de tarif</th><th>Valeur</th><th>Action</th>
+        </tr>
+        </thead>
+        <tbody data-prototype='
+{{ tr_open|e }}{{ form_widget(form.tarifs.vars.prototype.type)|e }} {{ form_widget(form.tarifs.vars.prototype.type)|e }}
+     {{ td|e }}{{ form_widget(form.tarifs.vars.prototype.value)|e }} {{ form_widget(form.tarifs.vars.prototype.value)|e }}
+     {{ td|e }}{{ tr_close|e }}'>
+        {% for tarif in form.tarifs %}
+        <tr>
+          <td>{{ form_widget(tarif.type) }} {{ form_errors(tarif.type) }}</td>
+          <td>{{ form_widget(tarif.value) }} {{ form_errors(tarif.value) }}</td>
           <td></td>
         </tr>
     {% endfor %}
