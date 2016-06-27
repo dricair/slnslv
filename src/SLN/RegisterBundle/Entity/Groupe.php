@@ -18,6 +18,13 @@ use SLN\RegisterBundle\Entity\Horaire;
 use SLN\RegisterBundle\Entity\Tarif;
 
 
+// Compare horaire types, by day then by time
+function cmpHoraire($a, $b) {
+    if ($a['jour'] != $b['jour']) 
+        return $a['jour'] - $b['jour'];
+    return $a['debut'] - $b['debut'];
+};
+
 
 /**
  * Groupe class
@@ -342,12 +349,14 @@ use SLN\RegisterBundle\Entity\Tarif;
     }
 
     /**
-     * Get horaires as string array
+     * Get horaires as Horaire list
      *
-     * @return string[]
+     * @return Horaire[]
      */
     public function getFormatedHoraires() {
         $ret = array();
+
+        usort($this->horaires, "SLN\RegisterBundle\Entity\cmpHoraire");
         foreach ($this->horaires as $horaire) {
             $ret[] = new Horaire($horaire['jour'], $horaire['debut'], $horaire['fin'], $horaire['description']);
         }
@@ -365,10 +374,24 @@ use SLN\RegisterBundle\Entity\Tarif;
     public function horaireList() {
         $ret = array();
         foreach($this->getFormatedHoraires() as $horaire) {
-            $ret[] = array("jour" => $horaire->getJour(),
+            $ret[] = array("jour" => ucfirst($horaire->getJour()),
                            "debut" => $horaire->getDebut(),
                            "fin" => $horaire->getFin(),
                            "description" => $horaire->description);
+        }
+        return $ret;
+    }
+
+    /**
+     * Get tarif as Tarif list
+     *
+     * @return Tarif[]
+     */
+    public function getTarifList() {
+        $ret = array();
+
+        foreach ($this->tarifs as $tarif) {
+            $ret[] = new Tarif($tarif['type'], $tarif['value'], $tarif['description']);
         }
         return $ret;
     }

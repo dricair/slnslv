@@ -54,17 +54,19 @@
       <table class='table table-striped'>
         <thead>
         <tr>
-          <th>Type de tarif</th><th>Valeur</th><th>Action</th>
+          <th>Type de tarif</th><th>Valeur</th><th>Description</th><th>Action</th>
         </tr>
         </thead>
         <tbody data-prototype='
 {{ tr_open|e }}{{ form_widget(form.tarifs.vars.prototype.type)|e }} {{ form_widget(form.tarifs.vars.prototype.type)|e }}
      {{ td|e }}{{ form_widget(form.tarifs.vars.prototype.value)|e }} {{ form_widget(form.tarifs.vars.prototype.value)|e }}
+     {{ td|e }}{{ form_widget(form.tarifs.vars.prototype.description)|e }} {{ form_widget(form.tarifs.vars.prototype.description)|e }}
      {{ td|e }}{{ tr_close|e }}'>
         {% for tarif in form.tarifs %}
         <tr>
           <td>{{ form_widget(tarif.type) }} {{ form_errors(tarif.type) }}</td>
           <td>{{ form_widget(tarif.value) }} {{ form_errors(tarif.value) }}</td>
+          <td>{{ form_widget(tarif.description) }} {{ form_errors(tarif.description) }}</td>
           <td></td>
         </tr>
     {% endfor %}

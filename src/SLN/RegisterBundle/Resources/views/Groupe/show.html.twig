@@ -10,7 +10,7 @@
 
 <h1>Groupe de natation: {{ groupe.nom }}</h1>
 
-<h2>Horaires</h2>
+<h2>Horaires et tarifs</h2>
 
 <p>Pour le groupe <span class="mark">{{ groupe.nom }}</span>, les horaires sont les suivants:</p>
 
@@ -22,10 +22,26 @@
 </thead>
 {% for horaire in groupe.getFormatedHoraires %}
 <tr>
-  <td>{{ horaire.getJour }}</td><td>{{ horaire.getDebut }}</td><td>{{ horaire.getFin }}</td><td>{{ horaire.description }}</td>
+  <td>{{ horaire.getJour|capitalize }}</td><td>{{ horaire.getDebut }}</td><td>{{ horaire.getFin }}</td><td>{{ horaire.description }}</td>
 </tr>
 {% endfor %}
 </table>
+
+<p>Les tarifs sont les suivants:</p>
+
+<table class='table table-striped'>
+<thead>
+<tr>
+  <th>Type</th><th>Prix</th><th>Description</th>
+<tr>
+</thead>
+{% for tarif in groupe.getTarifList %}
+<tr>
+  <td>{{ tarif.getTypeStr }}</td><td>{{ tarif.getPrice }}</td><td>{{ tarif.description }}</td>
+</tr>
+{% endfor %}
+</table>
+
 
 <h2>Liste des licenciés</h2>
 

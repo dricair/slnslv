@@ -29,7 +29,8 @@ class TarifType extends AbstractType {
     {
         $builder
             ->add('type', 'choice', array('choices' => Tarif::getTypes(),))
-            ->add('value', 'text', array('label' => 'Valeur'));
+            ->add('value', 'text', array('label' => 'Valeur'))
+            ->add('description', 'text', array('label' => 'Description'));
 
         $builder->get('value')->addModelTransformer(new PriceTransformer());
     }

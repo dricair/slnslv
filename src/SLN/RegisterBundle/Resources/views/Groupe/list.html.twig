@@ -24,7 +24,7 @@
   <td>{{ groupe.description | nl2br }}</td>
   <td>
     {% for horaire in groupe.getFormatedHoraires %}
-      {{ horaire.getJour }},&nbsp;de&nbsp;{{ horaire.getDebut }}&nbsp;à&nbsp;{{ horaire.getFin }}&nbsp;({{ horaire.description }})
+      {{ horaire.getJour|capitalize }},&nbsp;de&nbsp;{{ horaire.getDebut }}&nbsp;à&nbsp;{{ horaire.getFin }}&nbsp;({{ horaire.description }})
       {% if not loop.last %}<br/>{% endif %}
     {% endfor %}
   </td>
