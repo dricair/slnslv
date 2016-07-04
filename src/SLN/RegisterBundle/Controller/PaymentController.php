@@ -84,6 +84,15 @@ class PaymentController extends Controller {
 
 
     /**
+     * Search all payments/registerings that are incomplete
+     * Return a full list by default
+     */
+    public function searchAction() {
+       return $this->render('SLNRegisterBundle:Payments:search.html.twig');
+    }
+
+
+    /**
      * Delete a payment for a specific user.
      *
      * @param int $id Id of the payment

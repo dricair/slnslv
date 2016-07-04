@@ -218,6 +218,12 @@ SLNRegisterBundle_mail_list:
 #
 # Payments
 # --------
+SLNRegisterBundle_payment_search:
+  path: /admin/payment/search
+  defaults: { _controller: SLNRegisterBundle:Payment:search }
+  requirements:
+    methods: GET
+
 SLNRegisterBundle_payment_user:
   path: /admin/payment/edit/{user_id}
   defaults: { _controller: SLNRegisterBundle:Payment:edit }
