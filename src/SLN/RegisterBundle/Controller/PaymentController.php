@@ -22,6 +22,14 @@ use SLN\RegisterBundle\Form\Type\UserPaymentType;
 use SLN\RegisterBundle\Entity\Repository\UserPaymentRepository;
 
 /**
+ * Small class for user/licensee search 
+ */
+class PaymentSearch {
+    public $search;
+}
+
+
+/**
  * Payment controller.
  */
 class PaymentController extends Controller {
@@ -88,7 +96,29 @@ class PaymentController extends Controller {
      * Return a full list by default
      */
     public function searchAction() {
-       return $this->render('SLNRegisterBundle:Payments:search.html.twig');
+        $search = new PaymentSearch();
+        $form = $this->createFormBuilder($search) 
+                     ->add('search', null, array("label" => "Recherche", "attr" => array("placeholder" => "Utilisateur, licencié ou numéro")))
+                     ->getForm();
+
+        $licensees = $this->getLicenseeRepository()->getAllIncomplete();
+        $users = array();
+        foreach($licensees as &$licensee) {
+            $user_id = $licensee->getUser()->getId();
+            if (!array_key_exists($user_id, $users))
+                $users[$user_id] = $licensee->getUser();
+        }
+
+        foreach($users as $user_id => &$user) {
+            $user->addExtraTarif();
+        }
+
+        $inscription_names = Licensee::getInscriptionNames();
+
+        return $this->render('SLNRegisterBundle:Payments:search.html.twig',
+                             array('searchform' => $form->createView(),
+                                   'users' => array_values($users),
+                                   'inscription_names' => $inscription_names));
     }
 
 
@@ -156,7 +186,16 @@ class PaymentController extends Controller {
         return $em->getRepository('SLNRegisterBundle:UserPayment');
     }
 
-
+    /**
+     * Get repository for the licensees
+     *
+     * @return LicenseeRepository Repository for Licensee instances.
+     */
+    protected function getLicenseeRepository() {
+        $em = $this->getDoctrine()
+                   ->getManager();
+        return $em->getRepository('SLNRegisterBundle:Licensee');
+    }
 }
 
 

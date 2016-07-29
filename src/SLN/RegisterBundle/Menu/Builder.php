@@ -54,7 +54,9 @@ class Builder extends ContainerAware {
             $menu['Admin']->addChild('Liste des membres', array('route' => 'SLNRegisterBundle_member_list'))
                 ->setAttribute('icon', 'th-list');
             $menu['Admin']->addChild('Ajouter un membre', array('route' => 'SLNRegisterBundle_member_create'))
-                ->setAttribute('icon', 'user')
+                ->setAttribute('icon', 'user');
+            $menu['Admin']->addChild('Suivi des inscriptions', array('route' => 'SLNRegisterBundle_payment_search'))
+                ->setAttribute('icon', 'euro')
     			->setAttribute('divider_append', true);
 
             $menu['Admin']->addChild('Liste des licenciés', array('route' => 'SLNRegisterBundle_admin_licensee_list'))

@@ -264,7 +264,7 @@ class LicenseeController extends Controller
            ->setTitle("Liste des licenciés")
            ->setSubject("Liste des licenciés du club");
 
-        $data = array(array("Nom", "Prénom", "Sexe", "Catégorie", "Date naissance", "IUF", "Responsable légal", "Tél. fixe", "Tél portable", "Email"));
+        $data = array(array("Nom", "Prénom", "Sexe", "Catégorie", "Date naissance", "IUF", "Responsable légal", "Ville", "Tél. fixe", "Tél portable", "Email"));
         $group_data = array();
         $sheet = 0;
 
@@ -287,6 +287,7 @@ class LicenseeController extends Controller
                           $licensee->getNaissance()->format("d/m/Y"),
                           $licensee->getIUF(),
                           sprintf("%s %s %s", $user->getTitreName(), $user->getNom(), $user->getPrenom()),
+                          $user->getVille(),
                           $user->getTelDomicile(),
                           $user->getTelPortable(),
                           $user->getEmail());

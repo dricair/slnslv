@@ -170,4 +170,25 @@ class LicenseeRepository extends EntityRepository {
 
         return $qb->getQuery()->getSingleScalarResult() > 0;
     }
+
+
+    /**
+     * Return a list of all licensees which have incomplete inscription
+     */
+    public function getAllIncomplete() {
+        $inscriptions = Licensee::getInscriptionNames();
+
+        $full_str = sprintf("a:%d:", count($inscriptions));
+
+        $qb = $this->createQueryBuilder('l');
+        $qb->select('l')
+           ->where('l.groupe IS NOT NULL')
+           ->andWhere($qb->expr()->notLike('l.inscription', ':full_str'))
+           ->addOrderBy('l.nom',  'ASC')
+           ->addOrderBy('l.prenom', 'ASC')
+           ->setParameter('full_str', $full_str . "%");
+
+        return $qb->getQuery()
+                  ->getResult();
+    }
 }

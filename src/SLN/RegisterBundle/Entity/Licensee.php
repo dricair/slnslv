@@ -134,7 +134,6 @@ use SLN\RegisterBundle\Entity\User;
     protected $inscription;
 
     const FEUILLE=0;
-    const PHOTO=1;
     const CERTIFICAT=2;
     const PAIEMENT=3;
     const LICENCE=4;
@@ -145,9 +144,9 @@ use SLN\RegisterBundle\Entity\User;
      * @return string[] List of strings for inscription
      */
     public static function getInscriptionNames() {
-        return array(self::FEUILLE => "Feuille d'inscription", self::PHOTO => "Photos", 
+        return array(self::FEUILLE => "Inscription",  
                      self::CERTIFICAT => "Certificat médical", self::PAIEMENT => "Paiement total",
-                     self::LICENCE => "Feuille de licence");
+                     self::LICENCE => "Licence");
     }
 
 
@@ -189,6 +188,11 @@ use SLN\RegisterBundle\Entity\User;
      * @ORM\Column(type="array")
      */
     protected $groupe_jours;
+
+    /**
+     * @var Tarif[] $tarifs List of tarifs, populated by getTarifList
+     */
+    protected $tarifs;
 
 
     /**
@@ -462,9 +466,11 @@ Site: http://stadelaurentinnatation.fr</p>');
     /**
      * Get the inscription status: array of missing elements
      *
-     * @return string[] List of missing elements
+     * @param $id: Return names of FALSE, index of TRUE
+     *
+     * @return string[]|int[]: List of missing elements
      */
-    public function inscriptionMissingList() {
+    public function inscriptionMissingList($id=FALSE) {
         $missing = array();
         $names = self::getInscriptionNames();
 
@@ -473,8 +479,10 @@ Site: http://stadelaurentinnatation.fr</p>');
         foreach($names as $value => $name) {
             if ($this->groupe->getCategorie() == Groupe::LOISIR && $value == self::LICENCE)
                 continue;
-            if (!in_array($value, $this->inscription))
-                $missing[] = $name;
+            if (!in_array($value, $this->inscription)) {
+                if ($id) $missing[] = $value;
+                else $missing[] = $name;
+            }
         }
 
         return $missing;
@@ -500,6 +508,13 @@ Site: http://stadelaurentinnatation.fr</p>');
         return "Eléments manquants: " . implode(", ", $missing);
     }
 
+    /**
+     * Return true if missing a payment
+     */
+    public function inscriptionMissingPayment() {
+        if (!$this->groupe) return FALSE;
+        return !in_array(self::PAIEMENT, $this->inscription);
+    }
 
 
     /** @ignore */
@@ -515,6 +530,7 @@ Site: http://stadelaurentinnatation.fr</p>');
         $this->inscription = array();
 
         $this->payments  = new ArrayCollection();
+        $this->tarifs = NULL;
     }
 
     /**
@@ -538,6 +554,23 @@ Site: http://stadelaurentinnatation.fr</p>');
                   ->addViolation();
         }
     }
+
+    /**
+     * Return a tarif list for the licensee.
+     * Populated tarifs list
+     *
+     * @return Tarif[] List of tarifs
+     */
+    public function getTarifList() {
+        if ($this->tarifs) return $this->tarifs;
+
+        $this->tarifs = array();
+        if ($this->groupe != NULL)
+            $this->tarifs = $this->groupe->getLicenseeTarifs($this->groupe_jours);
+
+        return $this->tarifs;
+    }
+
 
     /**
      * @ignore
@@ -895,6 +928,13 @@ Site: http://stadelaurentinnatation.fr</p>');
     public function getInscription()
     {
         return $this->inscription;
+    }
+
+    /**
+     * Add a tarif to the tarifs list
+     */
+    public function addTarif($tarif) {
+        $this->tarifs[] = $tarif;
     }
 
 }

@@ -218,6 +218,36 @@ function cmpHoraire($a, $b) {
         if ($index != -1)
             unset($this->tarifs[$index]);
     }
+
+    /**
+     * Get a Tarif list for a specific licensee, depending on the days it is registered
+     * 
+     * @param bool[] jours: List of days user is registered (In case of multiple)
+     *
+     */
+    public function getLicenseeTarifs($jours) {
+        $tarifs = $this->getTarifList();
+        $one_day = FALSE;
+
+        if ($this->multiple) {
+            $num_days = 0;
+            foreach($jours as $jour => $value) {
+              if ($value) $num_days += 1;
+            }
+            $one_day = $num_days == 1;
+        }
+
+        $value = array();
+        foreach ($tarifs as &$tarif) {
+          if ( $one_day and $tarif->type == Tarif::TYPE_1DAY or
+              !$one_day and $tarif->type == Tarif::TYPE_GLOBAL or
+               $tarif->type == Tarif::TYPE_EQUIPMENT) 
+            $value[] = $tarif;
+        }
+
+        return $value;
+    }
+
  
     /**
      * Get id
@@ -391,10 +421,12 @@ function cmpHoraire($a, $b) {
         $ret = array();
 
         foreach ($this->tarifs as $tarif) {
-            $ret[] = new Tarif($tarif['type'], $tarif['value'], $tarif['description']);
+            $ret[] = new Tarif($tarif['type'], $tarif['value'], 
+                               array_key_exists('description', $tarif) ? $tarif['description'] : "Pas de description");
         }
         return $ret;
     }
+
 
     /**
      * Virtual property for Multiple field

@@ -17,6 +17,10 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Entity\UserPayment;
+use SLN\RegisterBundle\Entity\Tarif;
+
+use SLN\RegisterBundle\Form\DataTransformer\PriceTransformer;
+
 
 
 /**
@@ -180,6 +184,121 @@ class User extends BaseUser
 
         $this->licensees = new ArrayCollection();
     }
+
+    
+    /** Sort function (Reverse order) */
+    static function sort_cotisations($a, $b) {
+        return $b["value"] - $a["value"];
+    }
+
+    /**
+     * Add extra Tarif to each licensee
+     */
+    public function addExtraTarif() {
+        $cotisations = array();
+
+        foreach ($this->licensees as &$licensee) {
+            $tarifs = $licensee->getTarifList();
+            if (intval($this->code_postal) != 6700) {
+                $licensee->addTarif(new Tarif(Tarif::TYPE_ST_LAURENT)); 
+            }
+
+            foreach($tarifs as &$tarif) {
+                if ($tarif->type == Tarif::TYPE_GLOBAL or
+                    $tarif->type == Tarif::TYPE_1DAY) {
+
+                    if (in_array(Licensee::BUREAU, $licensee->getFonctions())) {
+                        $licensee->addTarif(new Tarif(Tarif::TYPE_REDUC_MANAGT, $tarif->value));
+                    } else {
+                        $cotisations[] = array("value" => $tarif->value, "licensee" => &$licensee);
+                    }
+                }
+            }
+        }
+
+        if (count($cotisations > 1)) {
+            // Sort from higher value to smaller
+            usort($cotisations, array("SLN\RegisterBundle\Entity\User", "sort_cotisations"));
+            $num = 1;
+            foreach ($cotisations as &$cotisation) {
+                $type = NULL;
+                switch($num) {
+                  case 1:  break;
+                  case 2:  $type = Tarif::TYPE_REDUC_FAMILY2; break;
+                  case 3:  $type = Tarif::TYPE_REDUC_FAMILY3; break;
+                  default: $type = Tarif::TYPE_REDUC_FAMILY4; break; 
+                }
+
+                if ($type) $cotisation["licensee"]->addTarif(new Tarif($type, $cotisation["value"]));
+                $num++;
+            }
+        }
+    }
+
+    
+    /**
+     * Total of cotisations
+     *
+     * Assume that addExtraTarif() has been called first
+     *
+     * @return int Price value suitable for PriceTransformer
+     */
+    public function totalCotisations() {
+        $total = 0;
+        foreach ($this->licensees as &$licensee) {
+            $tarifs = $licensee->getTarifList();
+            foreach ($tarifs as &$tarif) {
+               $total += $tarif->value; 
+            }
+        }
+        return $total;
+    }
+
+    /**
+     * Total of payments
+     *
+     * @return int Price value suitable for PriceTransformer
+     */
+    public function totalPayments() {
+        $total = 0;
+        foreach ($this->payments as &$payment) {
+            $total += $payment->getValue();
+        }
+        return $total;
+    }
+
+    /**
+     * Array of cotisation and payment information
+     *
+     * @return string[] Array of string descriptions
+     */
+    public function paymentInfo() {
+        $total_cotisations = $this->totalCotisations();
+        $total_payments = $this->totalPayments();
+        $diff = $total_cotisations - $total_payments;
+        $t = new PriceTransformer();
+
+        return array("total_cotisations" => $t->transform($total_cotisations),
+                     "total_payments"    => $t->transform($total_payments),
+                     "diff_payments"     => $t->transform(abs($diff)),
+                     "diff_value"        => $diff); 
+    }
+
+
+    /**
+     * Return true if at least one licensee has Missing payment flag
+     * This may not correspond to the total of payments and cotisations
+     *
+     * @return bool
+     */
+    public function licenseesMissingPayment() {
+        foreach ($this->licensees as &$licensee) {
+            if ($licensee->inscriptionMissingPayment())
+                return TRUE;
+        }
+        return FALSE;
+    }
+
 
     /**
      * String to use for choice lists

@@ -44,8 +44,8 @@ class UserPayment {
     const LIQUIDE  = 2;
 
     const LICENCE  = 11;
-    const FAMILLE  = 11;
-    const BUREAU   = 12;
+    const FAMILLE  = 12;
+    const BUREAU   = 13;
 
     /**
      * Return an array to convert integer to string for type
@@ -55,13 +55,13 @@ class UserPayment {
      */
     public static function getTypes($type=0) {
         $v = array();
-        if ($type != 2) {
+        if ($type == 0 or $type == 2) {
           $v[self::LICENCE] = "Déjà licencié";
           $v[self::FAMILLE] = "Réduction famille";
           $v[self::BUREAU]  = "Réduction membre du bureau";
         }
 
-        if ($type != 1) {
+        if ($type == 0 or $type == 1) {
           $v[self::CHEQUE]   = "Chèque";
           $v[self::VACANCES] = "Chèque(s) vacances";
           $v[self::LIQUIDE]  = "Liquide";

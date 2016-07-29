@@ -15,7 +15,7 @@
 <table class='table table-striped'>
 <thead>
 <tr>
-  <th>Nom</th><th>Description</th><th>Horaires</th><th>Action</th>
+  <th>Nom</th><th>Description</th><th>Horaires et tarifs</th><th>Action</th>
 <tr>
 </thead>
   {% for groupe in groupes %}
@@ -23,10 +23,18 @@
   <td><a href="{{ path('SLNRegisterBundle_groupe_show', {id: groupe.getId}) }}">{{ groupe.nom }}</a></td>
   <td>{{ groupe.description | nl2br }}</td>
   <td>
+    <p>
     {% for horaire in groupe.getFormatedHoraires %}
       {{ horaire.getJour|capitalize }},&nbsp;de&nbsp;{{ horaire.getDebut }}&nbsp;à&nbsp;{{ horaire.getFin }}&nbsp;({{ horaire.description }})
       {% if not loop.last %}<br/>{% endif %}
     {% endfor %}
+    </p>
+    <p>
+    {% for tarif in groupe.getTarifList %}
+      {{ tarif.getTypeStr|capitalize }} ({{ tarif.description|capitalize }}): {{ tarif.getPrice }}
+      {% if not loop.last %}<br/>{% endif %}
+    {% endfor %}
+    </p>
   </td>
   <td><a href="{{ path('SLNRegisterBundle_groupe_edit', {id: groupe.getId}) }}" title='Modifier ce groupe'>
       <span class="glyphicon glyphicon-pencil"></span></a>
