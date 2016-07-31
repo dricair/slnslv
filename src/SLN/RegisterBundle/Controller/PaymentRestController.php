@@ -70,7 +70,8 @@ class PaymentRestController extends Controller {
 
         $missing = FALSE;
         $em = $this->getDoctrine()->getManager();
-        foreach ($user->getLicensees() as &$licensee) {
+        $licensees = $user->getLicensees();
+        foreach ($licensees as &$licensee) {
             $missing = $missing or $licensee->setInscriptionMissing(Licensee::PAIEMENT, $missing);
             $em->persist($licensee);
             $em->flush();
