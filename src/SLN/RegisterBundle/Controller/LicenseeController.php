@@ -157,7 +157,7 @@ class LicenseeController extends Controller
         $em->persist($user);
         $em->flush();
 
-        return $this->redirect($this->generateUrl($admin ? 'SLNRegisterBundle_admin_licensee_list' : 'SLNRegisterBundle_homepage'));
+        return $this->redirectToPrevPage();
     }
 
     /** 
@@ -361,5 +361,21 @@ class LicenseeController extends Controller
         $em = $this->getDoctrine()
                    ->getManager();
         return $em->getRepository('SLNRegisterBundle:Licensee');
+    }
+
+
+    /**
+     * Return a rediction to the previous page
+     *
+     * @return Redirect
+     */
+    protected function redirectToPrevPage() {
+        $request = $this->getRequest();
+        $referer = $request->headers->get('referer');
+        $baseUrl = $request->getBaseUrl();
+        $lastPath = substr($referer, strpos($referer, $baseUrl) + strlen($baseUrl));
+        $params = $this->get('router')->getMatcher()->match($lastPath);
+
+        return $this->redirect($this->generateUrl($params['_route']));
     }
 }
