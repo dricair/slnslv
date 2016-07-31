@@ -1,0 +1,87 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    {{ user.prenom }} {{ user.nom }} 
+    <a href="{{ path('SLNRegisterBundle_member_edit', { id: user.id }) }}" title='Modifier ce membre'>
+      <span class="glyphicon glyphicon-pencil"></span></a>
+  </div>
+  <div class="panel-body">
+  </div>
+
+  <table id="inscription_table" class="table" 
+         data-licensee-function='{{ path('api_edit_licensee_inscription_missing', {'id': '__id__', 'inscription': '__inscr__', 'missing': '__missing__'}) }}'
+         data-payment-function='{{ path('api_edit_user_payment_missing', {'id': '__id__', 'inscription': '__inscr__', 'missing': '__missing__'}) }}'>
+  <tr>
+    <th>Nom</th>
+    {% for i, str in inscription_names if i != payment_val %}
+    <th> <p title="{{str}}">{{ str|slice(0,3) }}.</p> </th>
+    {% endfor %}
+    <th>Cotisations</th>
+  </tr>
+  {% for licensee in user.getLicensees %}
+     {% if licensee.groupe %}
+  <tr data-licensee='{{ licensee.id }}'>
+    <td>{{ licensee.prenom }} {{ licensee.nom }}<br/>{{ licensee.groupe }}</td>
+      {% set licensee_missing = licensee.inscriptionMissingList(TRUE) %}
+      {% for i, str in inscription_names if i != payment_val %}
+    <td class='inscription_toggle' data-index='{{ i }}' data-missing='{{ i in licensee_missing }}'>
+        {% if i in licensee_missing %} <span class="text-danger glyphicon glyphicon-remove" title="{{ str }}"></span>
+        {% else %}<span class="text-success glyphicon glyphicon-ok" title="{{ str }}"></span>{% endif %}
+    </td>
+      {% endfor %}
+
+    <td>
+      {% for tarif in licensee.getTarifList %}
+        {{ tarif.getTypeStr|capitalize }} 
+        {% if tarif.description %}({{ tarif.description|capitalize }}){% endif %}: {{ tarif.getPrice }}
+        {% if not loop.last %}<br/>{% endif %}
+      {% endfor %}
+    </td>
+  </tr>
+    {% endif %}
+  {% endfor %}
+
+  {% set info = user.paymentInfo %}
+  <tr data-user='{{ user.id }}' data-value='info.diff_value'>
+    <td>Paiements:</td>
+    <td class='inscription_toggle' data-index='{{ payment_val }}' data-missing='{{ user.licenseesMissingPayment }}'>
+      {% if user.licenseesMissingPayment %}
+        <span class="text-danger glyphicon glyphicon-remove" title="Confirmer paiements complets."></span>
+      {% else %}
+        <span class="text-success glyphicon glyphicon-ok" title="Confirmer paiements non complets"></span>
+      {% endif %}
+    </td>
+
+    <td colspan='2'>
+      <p class={% if info.diff_value == 0 %} "text-success" {% else %} "text-danger" {% endif %}>
+        {% if info.diff_value == 0 %}
+          Paiement complet.
+        {% elseif info.diff_value > 0 %}
+          Manquant: {{ info.diff_payments }}
+        {% else %}
+          Trop perçu: {{ info.diff_payments }}
+        {% endif %}
+      </p>
+    </td>
+    <td>
+      {% if payments_detail %}
+        {% for payment in user.payments %}
+        {{ payment.getPtypeStr }}{% if payment.description %} {{ payment.description }}{% endif %}: {{ payment.getValueStr }}
+        <a href="{{ path('SLNRegisterBundle_payment_edit', { user_id: payment.user.id, id: payment.id }) }}" title='Modifier ce paiement'>
+          <span class="glyphicon glyphicon-pencil"></span></a>
+        <a href="{{ path('SLNRegisterBundle_payment_delete', { id: payment.id }) }}" title='Supprimer ce paiement'
+         onclick="return confirm('Etes-vous sûr de vouloir effacer le paiement ?');">
+         <span class="glyphicon glyphicon-trash"></span></a>
+        <br/>
+        {% endfor %}
+        {% if info.diff_value != 0 %}
+      <a href="{{ path('SLNRegisterBundle_payment_user', { user_id: user.id }) }}">
+        Ajouter un paiement</a>
+        {% endif %}
+      {% else %}
+        Total des paiements: {{ info.total_payments }}
+      {% endif %}
+    </td>
+  </tr>
+  </table>
+</div>
+

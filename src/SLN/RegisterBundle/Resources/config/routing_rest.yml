@@ -13,4 +13,9 @@ mail:
     resource: "SLNRegisterBundle:MailRest"
     name_prefix: api_
 
+payments:
+    type: rest
+    resource: "SLNRegisterBundle:PaymentRest"
+    name_prefix: api_
+
 

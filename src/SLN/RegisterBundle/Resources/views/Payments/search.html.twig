@@ -4,101 +4,26 @@
 
 {% block body %}
 
-<div class="well">
-  <form action='{{ path('SLNRegisterBundle_payment_search') }}' method='post' {{ form_enctype(searchform) }} class="form-horizontal" role="form">
-      <div class="input-group">
-        {{ form_widget(searchform.search) }}
-        <span class="input-group-btn">
-            <button class="btn btn-primary" type="button">Rechercher</button>
-        </span>
-      </div>
-  </form>
-</div>
+{% include 'SLNRegisterBundle:Payments:search_content.html.twig' with { 'searchform': searchform } %}
+
+<p>Cliquez directement sur les icônes <span class="text-success glyphicon glyphicon-ok"></span> ou
+   <span class="text-danger glyphicon glyphicon-remove"></span> pour mettre à jour l'inscription</p>
 
 {% for user in users %}
-<div class="panel panel-default">
-  <div class="panel-heading">
-    {{ user.prenom }} {{ user.nom }} 
-    <a href="{{ path('SLNRegisterBundle_member_edit', { id: user.id }) }}" title='Modifier ce membre'>
-      <span class="glyphicon glyphicon-pencil"></span></a>
-  </div>
-  <div class="panel-body">
-  </div>
-
-  <table class="table">
-  <tr>
-    <th>Nom</th>
-    {% for i, str in inscription_names %}
-    <th> <p title="{{str}}">{{ str|slice(0,1) }}</p> </th>
-    {% endfor %}
-    <th>Cotisations</th>
-  </tr>
-  {% for licensee in user.getLicensees %}
-     {% if licensee.groupe %}
-  <tr>
-    <td>{{ licensee.prenom }} {{ licensee.nom }}<br/>{{ licensee.groupe }}</td>
-      {% set licensee_missing = licensee.inscriptionMissingList(TRUE) %}
-      {% for i, str in inscription_names %}
-    <td>
-        {% if i in licensee_missing %} <p class="text-danger" title="{{ str }}"><span class="glyphicon glyphicon-remove"></span></p>
-        {% else %} <p class="text-success" title="{{ str }}"><span class="glyphicon glyphicon-ok"></span></p> {% endif %}
-    </td>
-      {% endfor %}
-
-    <td>
-      {% for tarif in licensee.getTarifList %}
-        {{ tarif.getTypeStr|capitalize }} ({{ tarif.description|capitalize }}): {{ tarif.getPrice }}
-        {% if not loop.last %}<br/>{% endif %}
-      {% endfor %}
-    </td>
-  </tr>
-    {% endif %}
-  {% endfor %}
-
-  {% set info = user.paymentInfo %}
-  <tr>
-    <td>Paiements:</td>
-    <td>
-      {% if user.licenseesMissingPayment %}
-        <p class="text-danger" title="Confirmer paiements complets."><span class="glyphicon glyphicon-remove"></span></p>
-      {% else %}
-        <p class="text-success" title="Confirmer paiements non complets"><span class="glyphicon glyphicon-ok"></span></p>
-      {% endif %}
-    </td>
-
-    <td colspan='3'>
-      <p class={% if info.diff_value == 0 %} "text-success" {% else %} "text-danger" {% endif %}>
-        {% if info.diff_value == 0 %}
-          Paiement complet.
-        {% elseif info.diff_value > 0 %}
-          Manquant: {{ info.diff_payments }}
-        {% else %}
-          Trop perçu: {{ info.diff_payments }}
-        {% endif %}
-      </p>
-    </td>
-    <td>
-      {% for payment in user.payments %}
-        {{ payment.getPtypeStr }}{% if payment.description %} {{ payment.description }}{% endif %}: {{ payment.getValueStr }}
-        <a href="{{ path('SLNRegisterBundle_payment_edit', { user_id: payment.user.id, id: payment.id }) }}" title='Modifier ce paiement'>
-          <span class="glyphicon glyphicon-pencil"></span></a>
-        <a href="{{ path('SLNRegisterBundle_payment_delete', { id: payment.id }) }}" title='Supprimer ce paiement'
-         onclick="return confirm('Etes-vous sûr de vouloir effacer le paiement ?');">
-         <span class="glyphicon glyphicon-trash"></span></a>
-        {% if loop.last %}
-        <a href="{{ path('SLNRegisterBundle_payment_user', { user_id: user.id }) }}" title='Ajouter un paiement'>
-          <span class="glyphicon glyphicon-plus"></span></a></a>
-        {% endif %}
-        <br/>
-      {% else %}
-        <a href="{{ path('SLNRegisterBundle_payment_user', { user_id: user.id }) }}">
-          Ajouter un paiement</a>
-      {% endfor %}
-    </td>
-  </tr>
-  </table>
-</div>
+  {% include 'SLNRegisterBundle:Payments:user_detail.html.twig' with { 'user': user, 'inscription_names': inscription_names,
+                                                                       'payment_val': payment_val,
+                                                                       'admin': true, 'payments_detail': true } %}
 {% endfor %}
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/slnregister/js/payments.js') }}"></script>
+    <script type="text/javascript">
+      $( document ).ready(function() { 
+        setup_payments(); 
+      });
+    </script>
 {% endblock %}
 

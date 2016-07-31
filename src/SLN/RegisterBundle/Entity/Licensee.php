@@ -931,6 +931,27 @@ Site: http://stadelaurentinnatation.fr</p>');
     }
 
     /**
+     * Change value for an inscription
+     *
+     * @param int $index: Inscription Index
+     * @param int $missing: New missing value
+     * @return int New missing value
+     */
+    public function setInscriptionMissing($index, $missing) {
+        if ($missing and in_array($index, $this->inscription)) {
+            $key = array_search($index, $this->inscription);
+            unset($this->inscription[$key]);
+            $this->inscription = array_values($this->inscription);
+        }
+
+        if (!$missing and !in_array($index, $this->inscription)) {
+            $this->inscription[] = $index;
+        }
+
+        return !in_array($index, $this->inscription);
+    }
+
+    /**
      * Add a tarif to the tarifs list
      */
     public function addTarif($tarif) {

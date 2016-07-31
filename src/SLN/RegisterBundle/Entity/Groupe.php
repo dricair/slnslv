@@ -230,11 +230,7 @@ function cmpHoraire($a, $b) {
         $one_day = FALSE;
 
         if ($this->multiple) {
-            $num_days = 0;
-            foreach($jours as $jour => $value) {
-              if ($value) $num_days += 1;
-            }
-            $one_day = $num_days == 1;
+            $one_day = count($jours) == 1;
         }
 
         $value = array();
@@ -422,7 +418,7 @@ function cmpHoraire($a, $b) {
 
         foreach ($this->tarifs as $tarif) {
             $ret[] = new Tarif($tarif['type'], $tarif['value'], 
-                               array_key_exists('description', $tarif) ? $tarif['description'] : "Pas de description");
+                               array_key_exists('description', $tarif) ? $tarif['description'] : "");
         }
         return $ret;
     }

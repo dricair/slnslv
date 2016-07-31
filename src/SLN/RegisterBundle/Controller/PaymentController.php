@@ -42,6 +42,7 @@ class PaymentController extends Controller {
      */
     public function editAction($user_id, $id=0) {
         $user = $this->getUserFromID($user_id);
+        $user->addExtraTarif();
 
         if ($id == 0) {
             $payment = new UserPayment();
@@ -79,11 +80,14 @@ class PaymentController extends Controller {
         }
 
         $payments = $this->getPaymentsRepository()->getPaymentsForUSer($user_id);
+        $inscription_names = Licensee::getInscriptionNames();
 
         return $this->render('SLNRegisterBundle:Payments:edit.html.twig', array(
             'title' => sprintf("Paiements pour %s %s", $user->getPrenom(), $user->getNom()),
-            'user_id' => $user_id,
+            'user' => $user,
             'id' => $id,
+            'inscription_names' => $inscription_names, 
+            'payment_val' => Licensee::PAIEMENT,
             'payments' => $payments,
             'form' => $form->createView(),
             'admin' => TRUE
@@ -117,6 +121,7 @@ class PaymentController extends Controller {
 
         return $this->render('SLNRegisterBundle:Payments:search.html.twig',
                              array('searchform' => $form->createView(),
+                                   'payment_val' => Licensee::PAIEMENT,
                                    'users' => array_values($users),
                                    'inscription_names' => $inscription_names));
     }

@@ -1,6 +1,6 @@
-<form action='{{ path('SLNRegisterBundle_payment_edit', {'user_id': user_id, 'id': id}) }}' method="post" class="form-horizontal" role="form">
+<form action='{{ path('SLNRegisterBundle_payment_edit', {'user_id': user.id, 'id': id}) }}' method="post" class="form-horizontal" role="form">
   <div class="panel panel-default">
-    <div class="panel-heading">Identité</div>
+    <div class="panel-heading">{{ title }}</div>
     <div class="panel-body">
       {{ form_row(form.ptype) }}
       {{ form_row(form.description) }}

@@ -4,16 +4,33 @@
 
 {% block body %}
 
-<h1>{{ title }}</h1>
+<p>Cliquez directement sur les icônes <span class="text-success glyphicon glyphicon-ok"></span> ou
+   <span class="text-danger glyphicon glyphicon-remove"></span> pour mettre à jour l'inscription</p>
 
-<h2>Liste des paiements</h2>
+{% include 'SLNRegisterBundle:Payments:user_detail.html.twig' with { 'user': user, 'inscription_names': inscription_names,
+                                                                     'payment_val': payment_val,
+                                                                     'admin': true, 'payments_detail': false } %}
 
 {% include 'SLNRegisterBundle:Payments:list_content.html.twig' with { 'payments': payments, 'admin': admin } %}
 
-<h2>{% if id == 0 %}Ajouter un paiement{% else %}Editer le paiement{% endif %}</h2>
+{% if id == 0 %}
+  {% set title="Ajouter un paiement" %}
+{% else %}
+  {% set title="Editer le paiement" %}
+{% endif %}
 
-{% include 'SLNRegisterBundle:Payments:form.html.twig' with { 'form': form, 'admin': admin, 
-   'cancel_addr': path('SLNRegisterBundle_payment_user', { user_id: user_id }) } %}
+{% include 'SLNRegisterBundle:Payments:form.html.twig' with { 'title': title, 'form': form, 'admin': admin, 'user': user,
+                                                              'cancel_addr': path('SLNRegisterBundle_payment_user', { user_id: user.id }) } %}
   
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/slnregister/js/payments.js') }}"></script>
+    <script type="text/javascript">
+      $( document ).ready(function() { 
+        setup_payments(); 
+      });
+    </script>
 {% endblock %}
 
