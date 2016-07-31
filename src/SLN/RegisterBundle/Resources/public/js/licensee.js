@@ -2,8 +2,6 @@
 function setup_group_description() {
   var groupe_choice = $('#sln_registerbundle_licenseetype_groupe');
 
-  
-
   if (groupe_choice.length > 0) {
     console.log("Found groupe choice");
     var groupe_description = $('#groupe-description');
@@ -51,16 +49,35 @@ function update_groupe_description(groupe_description, data) {
     groupe_description.find('.groupe-description').html(description_str);
 
     var horaires = "";
-    for (index = 0; index < data.horaire_list.length; index++) {
-      var horaire = data.horaire_list[index];
-      horaires += horaire.description + ", le " + horaire.jour + " de " + horaire.debut + " à " + horaire.fin;
-      if (index < data.horaire_list.length - 1) horaires += "<br/>";
+    if (data.horaire_list.length == 0) {
+      url = "http://www.stadelaurentinnatation.fr/mapage3/index.html";
+      horaires = "<p>Vous pouvez voir les horaires pour les groupes sur <a href='" + url + 
+                 "' title='Page des horaires'>cette page</a></p>";
     }
-    var horaires_str = "<div class='panel panel-info'>" +
-                       "  <div class='panel-heading'>Horaires</div>" +
-                       "  <div class='panel-body'>" + horaires + "</div>" +
-                       "</div>"
-    groupe_description.find('.groupe-horaires').html(horaires_str);
+    else {
+      for (index = 0; index < data.horaire_list.length; index++) {
+        var horaire = data.horaire_list[index];
+        horaires += horaire.description + ", le " + horaire.jour + " de " + horaire.debut + " à " + horaire.fin;
+        if (index < data.horaire_list.length - 1) horaires += "<br/>";
+      }
+    }
+    
+    var tarifs = "";
+    for (index = 0; index < data.tarif_list.length; index++) {
+      var tarif = data.tarif_list[index];
+      tarifs += tarif.type;
+      if (tarif.description) tarifs += "(" + tarif.description + ")";
+      tarifs += " : " + tarif.value;
+      if (index < data.tarif_list.length - 1) tarifs += "<br/>";
+    }
+    var tarifs_horaires_str = "<div class='panel panel-info'>" +
+                              "  <div class='panel-heading'>Horaires et tarifs</div>" +
+                              "  <div class='panel-body'>" + 
+                              "    <p>" + horaires + "</p>" +
+                              "    <p>" + tarifs + "</p>" +
+                              "  </div>" +
+                              "</div>"
+    groupe_description.find('.groupe-horaires').html(tarifs_horaires_str);
 
     var multiple_list = data["multiple_list"];
     if (multiple_list) {

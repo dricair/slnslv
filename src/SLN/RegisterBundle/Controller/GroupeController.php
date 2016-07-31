@@ -96,6 +96,10 @@ class GroupeController extends Controller {
         $licensees =  $em->getRepository('SLNRegisterBundle:Licensee')->getAllForGroupe($groupe);
         $groupes = Licensee::sortByGroups($licensees);
 
+        if (!array_key_exists($groupe->getNom(), $groupes)) {
+            $groupes[$groupe->getNom()] = array("num" => 0, "licensees" => array(), "multiple" => false);
+        }
+
         return $this->render('SLNRegisterBundle:Groupe:show.html.twig', array(
           'groupe' => $groupe,
           'licensees' => $groupes[$groupe->getNom()],

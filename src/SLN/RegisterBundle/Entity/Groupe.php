@@ -90,6 +90,12 @@ function cmpHoraire($a, $b) {
      */
     protected $order;
 
+    /**
+     * @var bool $show_public 
+     * @ORM\Column(type="boolean")
+     */
+    protected $show_public;
+
     
     /**
      * Return array to convert category values to strings
@@ -117,15 +123,21 @@ function cmpHoraire($a, $b) {
 
      /**
       * @var Horaire[] $horaires List of Horaire slots
-      * @ORM\Column(type="json_array")
+      * @ORM\Column(type="json_array", nullable=True)
       */
     protected $horaires;
 
      /**
       * @var Tarif[] $tarifs List of Tarif
-      * @ORM\Column(type="json_array")
+      * @ORM\Column(type="json_array", nullable=True)
       */
     protected $tarifs;
+
+    /**
+     * @var int $capacity Maximum number of licensees
+     * @ORM\Column(type="integer")
+     */
+    protected $capacity;
 
 
     /** @ignore */
@@ -155,6 +167,8 @@ function cmpHoraire($a, $b) {
         $this->horaires = Array((array)new Horaire());
         $this->tarifs = Array((array)new Tarif());
         $this->multiple = false;
+        $this->show_public = true;
+        $this->order = 1;
 
         // Default groupe used in Licensee
         $this->categorie = $this::ECOLE;
@@ -423,6 +437,22 @@ function cmpHoraire($a, $b) {
         return $ret;
     }
 
+    /**
+     * Virtual property for tarifs
+     * 
+     * @return string[] List of tarifs as string
+     * @VirtualProperty
+     */
+    public function tarifList() {
+        $ret = array();
+        foreach($this->getTarifList() as $tarif) {
+            $ret[] = array('type' => $tarif->getTypeStr(),
+                           'value' => $tarif->getPrice(),
+                           'description' => $tarif->description);
+        }
+        return $ret;
+    }
+
 
     /**
      * Virtual property for Multiple field
@@ -584,5 +614,51 @@ function cmpHoraire($a, $b) {
     public function getOrder()
     {
         return $this->order;
+    }
+
+    /**
+     * Set show_public
+     *
+     * @param boolean $showPublic
+     * @return Groupe
+     */
+    public function setShowPublic($showPublic)
+    {
+        $this->show_public = $showPublic;
+
+        return $this;
+    }
+
+    /**
+     * Get show_public
+     *
+     * @return boolean 
+     */
+    public function getShowPublic()
+    {
+        return $this->show_public;
+    }
+
+    /**
+     * Set capacity
+     *
+     * @param integer $capacity
+     * @return Groupe
+     */
+    public function setCapacity($capacity)
+    {
+        $this->capacity = $capacity;
+
+        return $this;
+    }
+
+    /**
+     * Get capacity
+     *
+     * @return integer 
+     */
+    public function getCapacity()
+    {
+        return $this->capacity;
     }
 }

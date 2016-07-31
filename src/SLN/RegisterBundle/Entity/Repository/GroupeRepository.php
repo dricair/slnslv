@@ -32,4 +32,22 @@ class GroupeRepository extends EntityRepository
         return $qb->getQuery()
                   ->getResult();
     }
+
+    /**
+     * Return the groups, sorted by category and order, which can be publicly visible
+     *
+     * @param bool $query: if true, return a query instead of results
+     * @return QueryBuilder|Groupe[] list of groups
+     */
+    public function findPublic($query=FALSE) {
+        $qb = $this->createQueryBuilder('g')
+                   ->select('g')
+                   ->where('g.show_public != 0')
+                   ->addOrderBy('g.categorie', 'ASC')
+                   ->addOrderBy('g.order', 'ASC');
+
+        return $query ? $qb : $qb->getQuery()
+                                 ->getResult();
+    }
+
 }

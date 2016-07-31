@@ -13,6 +13,7 @@ use SLN\RegisterBundle\Entity\Member;
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Entity\Horaire;
 use SLN\RegisterBundle\Entity\Repository\UserRepository;
+use SLN\RegisterBundle\Entity\Repository\GroupeRepository;
 
 
 /**
@@ -37,7 +38,6 @@ class LicenseeType extends AbstractType
                                              "years" => range(date('Y')-100, date('Y')-3)))
             ->add('sexe', 'choice', array(
                   'choices' => Licensee::getGenders(),))
-            ->add('groupe', null, array("group_by" => 'categorieName'))
             ->add('groupe_jours', 'choice', array(
                   'label' => 'Choix des jours',
                   'choices' => Horaire::getJours(),
@@ -47,11 +47,19 @@ class LicenseeType extends AbstractType
             ->add('autorisation_photos', 'checkbox', array('required'=>false));
 
         if ($options["admin"])
+            $builder->add('groupe', null, array("group_by" => 'categorieName'));
+        else
+            $builder->add('groupe', null, array("group_by" => 'categorieName',
+                                                "empty_data" => null,
+                                                "query_builder" => function (GroupeRepository $er) {
+                                                     return $er->findPublic(TRUE);
+                                                }));
+        if ($options["admin"])
             $builder->add('user', 'entity', array("class" => 'SLNRegisterBundle:User',
                                                   "query_builder" => function (UserRepository $er) {
                                                      return $er->createQueryBuilder('u')
-                                                            ->select('u')
-                                                            ->addOrderBy('u.nom', 'ASC');
+                                                               ->select('u')
+                                                               ->addOrderBy('u.nom', 'ASC');
                                                   },
                                                   "label" => "Rattaché au compte"))
                     ->add('inscription', 'choice', array(

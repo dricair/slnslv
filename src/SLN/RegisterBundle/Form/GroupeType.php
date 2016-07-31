@@ -30,6 +30,11 @@ class GroupeType extends AbstractType
             ->add('categorie', 'choice', array(
                   'choices' => Groupe::getCategories(),))
             ->add('description', 'textarea')
+            ->add('show_public', null, array('label' => 'Visible à l\'inscription',
+                                             'required' => false))
+            ->add('capacity', null, array('label' => 'Capacité',
+                                          'attr' => array('placeholder' => 'Nombre de licenciés')))
+            ->add('description', 'textarea')
             ->add('horaires', 'collection', array(
                   'type' => new HoraireType(),
                   'prototype' => true,
@@ -46,9 +51,8 @@ class GroupeType extends AbstractType
                   'by_reference' => false,
                   'options' => array()
                 ))
-            ->add('multiple', null, array(
-                  'label' => 'Horaires indépendents',
-                  'required' => false));
+            ->add('multiple', null, array('label' => 'Horaires indépendents',
+                                          'required' => false));
     }
 
     /** @ignore */
