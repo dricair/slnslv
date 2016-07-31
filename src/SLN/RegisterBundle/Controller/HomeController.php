@@ -12,6 +12,7 @@ namespace SLN\RegisterBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Entity\Repository\LicenseeRepository;
 
 /**
@@ -30,6 +31,7 @@ class HomeController extends Controller
         $year = date('Y');
         $month = date('n');
         if ($month < 5) $year = $year - 1;
+        $details = null;
 
         if ($this->isLoggedIn()) {
             $currentUser = $this->getUser();
@@ -39,10 +41,16 @@ class HomeController extends Controller
             $activeLicensees = $em->getRepository('SLNRegisterBundle:Licensee')
                                ->getLicenseesForUser($currentUser->getId());
 
+            $currentUser->addExtraTarif();
+            $details = $currentUser->paymentInfo();
+
         }
 
         return $this->render('SLNRegisterBundle:Home:index.html.twig', array('activeLicensees' => $activeLicensees,
-                                                                             'year' => $year));
+                                                                             'year' => $year,
+                                                                             'inscription_names' => Licensee::getInscriptionNames(),
+                                                                             'payment_val' => Licensee::PAIEMENT,
+                                                                             'payments_detail' => $details));
     }
 
 

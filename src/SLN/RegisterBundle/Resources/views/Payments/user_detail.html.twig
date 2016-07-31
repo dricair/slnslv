@@ -1,8 +1,10 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    {{ user.prenom }} {{ user.nom }} 
+    {{ user.prenom }} {{ user.nom }}
+    {% if admin %}
     <a href="{{ path('SLNRegisterBundle_member_edit', { id: user.id }) }}" title='Modifier ce membre'>
       <span class="glyphicon glyphicon-pencil"></span></a>
+    {% endif %}
   </div>
   <div class="panel-body">
   </div>
@@ -22,11 +24,13 @@
   <tr data-licensee='{{ licensee.id }}'>
     <td>
       {{ licensee.prenom }} {{ licensee.nom }}
+      {% if admin %}
       <a href="{{ path('SLNRegisterBundle_admin_licensee_edit', { id: licensee.id }) }}" title='Modifier ce licencié'>
         <span class="glyphicon glyphicon-pencil"></span></a>
       <a href="{{ path('SLNRegisterBundle_licensee_delete', { id: licensee.id }) }}" title='Supprimer ce licencié'
          onclick="return confirm('Etes-vous sûr de vouloir effacer le licencié {{ licensee.prenom }} {{ licensee.nom }} ?');">
         <span class="glyphicon glyphicon-trash"></span></a>
+      {% endif %}
       <br/>{{ licensee.groupe }}
     </td>
       {% set licensee_missing = licensee.inscriptionMissingList(TRUE) %}
@@ -53,9 +57,9 @@
     <td>Paiements:</td>
     <td class='inscription_toggle' data-index='{{ payment_val }}' data-missing='{{ user.licenseesMissingPayment }}'>
       {% if user.licenseesMissingPayment %}
-        <span class="text-danger glyphicon glyphicon-remove" title="Confirmer paiements complets."></span>
+        <span class="text-danger glyphicon glyphicon-remove" title="Paiements non complets."></span>
       {% else %}
-        <span class="text-success glyphicon glyphicon-ok" title="Confirmer paiements non complets"></span>
+        <span class="text-success glyphicon glyphicon-ok" title="Paiements complets"></span>
       {% endif %}
     </td>
 
@@ -74,14 +78,16 @@
       {% if payments_detail %}
         {% for payment in user.payments %}
         {{ payment.getPtypeStr }}{% if payment.description %} {{ payment.description }}{% endif %}: {{ payment.getValueStr }}
+        {% if admin %}
         <a href="{{ path('SLNRegisterBundle_payment_edit', { user_id: payment.user.id, id: payment.id }) }}" title='Modifier ce paiement'>
           <span class="glyphicon glyphicon-pencil"></span></a>
         <a href="{{ path('SLNRegisterBundle_payment_delete', { id: payment.id }) }}" title='Supprimer ce paiement'
          onclick="return confirm('Etes-vous sûr de vouloir effacer le paiement ?');">
          <span class="glyphicon glyphicon-trash"></span></a>
+        {% endif %}
         <br/>
         {% endfor %}
-        {% if info.diff_value != 0 %}
+        {% if admin and info.diff_value != 0 %}
       <a href="{{ path('SLNRegisterBundle_payment_user', { user_id: user.id }) }}">
         Ajouter un paiement</a>
         {% endif %}

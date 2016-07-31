@@ -14,13 +14,18 @@
 
   {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': activeLicensees, 'admin': false } %}
 
+  <p>Vous pouvez encore <a href='{{ path('SLNRegisterBundle_licensee_create', { user_id: app.user.id }) }}'>ajouter des licenciés</a>
+     en cliquant sur ce lien.</p>
+
+  <h1>Documents à imprimer</h1>
+
   <div class='row'>
     <div class='col-sm-6'>
       <div class="panel panel-default">
         <div class="panel-heading">Feuilles d'inscription</div>
         <div class="panel-body">
           <p>Une fois toutes les inscriptions complétées, vous devez imprimer les feuilles d'inscription:</p>
-          <a class='btn btn-primary btn-block' role="button" href="{{ path('SLNRegisterBundle_member_inscriptions_pdf', {'user_id': app.user.getId}) }}" target="_blank">
+          <a class='btn btn-primary btn-block' role="button" href="{{ path('SLNRegisterBundle_member_inscriptions_pdf', {'user_id': app.user.id}) }}" target="_blank">
             Imprimer les feuilles d'inscription pré-remplies</a>
         </div>
       </div>
@@ -39,20 +44,19 @@
     </div>
   </div>
 
- {% endif %}
+  <h1>Etat des inscriptions</h1>
 
-  <!--
-  <h1>Inscriptions à renouveler</h1>
+  {% include 'SLNRegisterBundle:Payments:user_detail.html.twig' with { 'user': app.user, 'admin': false } %}
 
-  <p>Ces inscriptions ont été activées les années précédentes mais ne sont plus valide pour cette saison. Vous pouvez choisir de les 
-     renouveller.</p>
-  -->
+ {% else %}
 
   <h1>Ajouter une inscription pour la saison {{ year }}-{{year + 1 }}</h1>
 
   <p>Ajoutez une inscription pour vous-même ou un de vos enfants. Vous avez la possibilité d'en ajouter plusieurs sur cet espace.</p>
 
   {{ render(controller('SLNRegisterBundle:Licensee:edit', { 'id': 0, 'user_id': app.user.id, 'inside_page': TRUE, 'admin': false })) }}
+
+ {% endif %}
 
 {% endblock %}
 
