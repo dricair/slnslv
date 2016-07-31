@@ -477,8 +477,6 @@ Site: http://stadelaurentinnatation.fr</p>');
         if (!$this->groupe) return $missing;
 
         foreach($names as $value => $name) {
-            if ($this->groupe->getCategorie() == Groupe::LOISIR && $value == self::LICENCE)
-                continue;
             if (!in_array($value, $this->inscription)) {
                 if ($id) $missing[] = $value;
                 else $missing[] = $name;
