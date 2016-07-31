@@ -280,8 +280,7 @@ Site: http://stadelaurentinnatation.fr</p>');
 
         $html = sprintf('
 <div style="text-align:center; color:#1f487c; font-weight: bold; font-size: 14; ">%s - SAISON %d-%d</div>
-<ul>
-  <li>1 photo d\'identité</li>', strtoupper($values['title']), $year, $year+1);
+<ul>', strtoupper($values['title']), $year, $year+1);
 
         if ($values['certificat']) {
             $html .= "
