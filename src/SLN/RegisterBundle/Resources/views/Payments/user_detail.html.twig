@@ -20,7 +20,15 @@
   {% for licensee in user.getLicensees %}
      {% if licensee.groupe %}
   <tr data-licensee='{{ licensee.id }}'>
-    <td>{{ licensee.prenom }} {{ licensee.nom }}<br/>{{ licensee.groupe }}</td>
+    <td>
+      {{ licensee.prenom }} {{ licensee.nom }}
+      <a href="{{ path('SLNRegisterBundle_admin_licensee_edit', { id: licensee.id }) }}" title='Modifier ce licencié'>
+        <span class="glyphicon glyphicon-pencil"></span></a>
+      <a href="{{ path('SLNRegisterBundle_licensee_delete', { id: licensee.id }) }}" title='Supprimer ce licencié'
+         onclick="return confirm('Etes-vous sûr de vouloir effacer le licencié {{ licensee.prenom }} {{ licensee.nom }} ?');">
+        <span class="glyphicon glyphicon-trash"></span></a>
+      <br/>{{ licensee.groupe }}
+    </td>
       {% set licensee_missing = licensee.inscriptionMissingList(TRUE) %}
       {% for i, str in inscription_names if i != payment_val %}
     <td class='inscription_toggle' data-index='{{ i }}' data-missing='{{ i in licensee_missing }}'>
