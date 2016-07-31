@@ -44,11 +44,6 @@ class LicenseeType extends AbstractType
                   'multiple' => true,
                   'expanded' => true))
             ->add('iuf', null, array("attr" => array("placeholder" => "01234567")))
-            ->add('fonctions', 'choice', array(
-                  'label' => 'Fonctions spéciales',
-                  'choices' => Licensee::getFonctionNames(),
-                  'multiple' => true,
-                  'expanded' => true))
             ->add('autorisation_photos', 'checkbox', array('required'=>false));
 
         if ($options["admin"])
@@ -62,6 +57,11 @@ class LicenseeType extends AbstractType
                     ->add('inscription', 'choice', array(
                           'label' => 'Etat de l\'inscription',
                           'choices' => Licensee::getInscriptionNames(),
+                          'multiple' => true,
+                          'expanded' => true))
+                    ->add('fonctions', 'choice', array(
+                          'label' => 'Fonctions spéciales',
+                          'choices' => Licensee::getFonctionNames(),
                           'multiple' => true,
                           'expanded' => true));
     }

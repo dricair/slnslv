@@ -54,13 +54,6 @@
   </div>
 
   <div class="panel panel-default">
-    <div class="panel-heading">Fonctions spéciales</div>
-    <div class="panel-body">
-      {{ form_row(form.fonctions) }}
-    </div>
-  </div>
-
-  <div class="panel panel-default">
     <div class="panel-heading">Autorisations</div>
     <div class="panel-body">
     <p class='help'>J’accepte que les résultats sportifs, le nom  ainsi que la photo (podium, photo de groupe...) de mon enfant puissent apparaître 
@@ -70,6 +63,13 @@
   </div>
 
   {% if admin %}
+  <div class="panel panel-default">
+    <div class="panel-heading">Fonctions spéciales</div>
+    <div class="panel-body">
+      {{ form_row(form.fonctions) }}
+    </div>
+  </div>
+
   <div class="panel panel-default">
     <div class="panel-heading">Etat de l'inscription</div>
     <div class="panel-body">
