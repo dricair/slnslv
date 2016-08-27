@@ -27,7 +27,7 @@ class GroupeRepository extends EntityRepository
         $qb = $this->createQueryBuilder('g')
                    ->select('g')
                    ->addOrderBy('g.categorie', 'ASC')
-                   ->addOrderBy('g.order', 'ASC');
+                   ->addOrderBy('g.groupe_order', 'ASC');
 
         return $qb->getQuery()
                   ->getResult();
@@ -44,7 +44,7 @@ class GroupeRepository extends EntityRepository
                    ->select('g')
                    ->where('g.show_public != 0')
                    ->addOrderBy('g.categorie', 'ASC')
-                   ->addOrderBy('g.order', 'ASC');
+                   ->addOrderBy('g.groupe_order', 'ASC');
 
         return $query ? $qb : $qb->getQuery()
                                  ->getResult();

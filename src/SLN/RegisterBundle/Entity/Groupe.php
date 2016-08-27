@@ -85,10 +85,10 @@ function cmpHoraire($a, $b) {
     const LOISIR=2;
 
     /**
-     * @var int $order Order to print to the screen
+     * @var int $groupe_order Order to print to the screen
      * @ORM\Column(type="integer")
      */
-    protected $order;
+    protected $groupe_order;
 
     /**
      * @var bool $show_public 
@@ -168,7 +168,7 @@ function cmpHoraire($a, $b) {
         $this->tarifs = Array((array)new Tarif());
         $this->multiple = false;
         $this->show_public = true;
-        $this->order = 1;
+        $this->groupe_order = 1;
 
         // Default groupe used in Licensee
         $this->categorie = $this::ECOLE;
@@ -594,26 +594,26 @@ function cmpHoraire($a, $b) {
     }
 
     /**
-     * Set order
+     * Set groupe_order
      *
-     * @param integer $order
+     * @param integer $groupe_order
      * @return Groupe
      */
-    public function setOrder($order)
+    public function setOrder($groupe_order)
     {
-        $this->order = $order;
+        $this->groupe_order = $groupe_order;
 
         return $this;
     }
 
     /**
-     * Get order
+     * Get groupe_order
      *
      * @return integer 
      */
     public function getOrder()
     {
-        return $this->order;
+        return $this->groupe_order;
     }
 
     /**
