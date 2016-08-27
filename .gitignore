@@ -17,3 +17,6 @@ composer.lock
 *~
 mail.log
 backup
+run.log
+run.html
+web/uploads
