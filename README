@@ -34,7 +34,7 @@ Mettre à jour la DB:
 cat backup/drop_tables.sql backup/stadelau.sql | mysql -D slnslv -u slnslv -p
 
 Tests:
-rm -f app/logs/test.log && phpunit -c app src/SLN/
+phpunit --stop-on-error --stop-on-fail -v -c app src/SLN/RegisterBundle/Tests | tee run.log
 
 Documentation:
 vendor/phpdocumentor/phpdocumentor/bin/phpdoc -d ./src/ -t ./docs/

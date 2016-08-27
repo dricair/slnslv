@@ -3,7 +3,7 @@ SLNRegisterBundle:
     prefix:   /
 
 app:
-    resource: @AppBundle/Controller/
+    resource: "@AppBundle/Controller/"
     type:     annotation
 
 fos_user: 

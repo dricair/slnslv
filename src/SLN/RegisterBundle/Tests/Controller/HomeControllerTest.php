@@ -53,7 +53,7 @@ class HomeControllerTest extends SLNTestCase
     public function testMenu() {
         $this->userLogin();
         $crawler = $this->client->request('GET', '/');
-        $menu = $crawler->filter("nav.navbar")->first();
+        $menu = $crawler->filter(".navbar")->first();
 
         $user = $this->getDoctrineManager()->getRepository('SLNRegisterBundle:User')->find(self::TEST_USER_ID);
         $nom = $user->getNom();
@@ -143,6 +143,22 @@ class HomeControllerTest extends SLNTestCase
     public function testAddLicenseeInline() {
         $this->userLogin();
 
+        // No inline form when licensees exist
+        $crawler = $this->client->request('GET', '/');
+        $this->assertTrue($crawler->filter('form')->count() == 0);
+
+        // Remove licensees so that inline form appears
+        $manager = $this->getDoctrineManager();
+        $user = $manager->getRepository('SLNRegisterBundle:User')->find(self::TEST_USER_ID);
+        $licensees = $user->getLicensees();
+        foreach($licensees as $licensee) {
+          $user->removeLicensee($licensee);
+          $manager->remove($licensee);
+        }
+
+        $manager->persist($user);
+        $manager->flush();
+
         $crawler = $this->client->request('GET', '/');
         $this->assertTrue($crawler->filter('form')->count() == 1);
 
@@ -155,7 +171,13 @@ class HomeControllerTest extends SLNTestCase
          * @todo Check link for licensee sheet
          * @todo Check Delete and Edit actions
          */
+
     }
+
+    /**
+     * @todo Test inscription list and price
+     * @todo Test payment list
+     */
 
 
     /**

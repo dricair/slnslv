@@ -207,7 +207,8 @@ class User extends BaseUser
                 if ($tarif->type == Tarif::TYPE_GLOBAL or
                     $tarif->type == Tarif::TYPE_1DAY) {
 
-                    if (in_array(Licensee::BUREAU, $licensee->getFonctions())) {
+                    $fonctions = $licensee->getFonctions();
+                    if ($fonctions and in_array(Licensee::BUREAU, $fonctions)) {
                         $licensee->addTarif(new Tarif(Tarif::TYPE_REDUC_MANAGT, $tarif->value));
                     } else {
                         $cotisations[] = array("value" => $tarif->value, "licensee" => &$licensee);

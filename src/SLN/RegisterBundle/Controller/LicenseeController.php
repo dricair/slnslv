@@ -178,7 +178,7 @@ class LicenseeController extends Controller
         foreach ($no_group as $key => $licensee) {
             $licensee_fonctions = $licensee->getFonctions();
             foreach(Licensee::getFonctionNames() as $index => $fonction) {
-                if (in_array($index, $licensee_fonctions))
+                if ($licensee_fonctions and in_array($index, $licensee_fonctions))
                     $fonctions[$fonction][] = $licensee;
             }
 
@@ -192,7 +192,7 @@ class LicenseeController extends Controller
         foreach($licensees as $licensee) {
             $licensee_fonctions = $licensee->getFonctions();
             foreach(Licensee::getFonctionNames() as $index => $fonction) {
-                if (in_array($index, $licensee_fonctions))
+                if ($licensee_fonctions and in_array($index, $licensee_fonctions))
                     $fonctions[$fonction][] = $licensee;
             }
         }
@@ -373,9 +373,14 @@ class LicenseeController extends Controller
         $request = $this->getRequest();
         $referer = $request->headers->get('referer');
         $baseUrl = $request->getBaseUrl();
-        $lastPath = substr($referer, strpos($referer, $baseUrl) + strlen($baseUrl));
-        $params = $this->get('router')->getMatcher()->match($lastPath);
-
-        return $this->redirect($this->generateUrl($params['_route']));
+        if ($baseUrl != "") {
+          $lastPath = substr($referer, strpos($referer, $baseUrl) + strlen($baseUrl));
+          $params = $this->get('router')->getMatcher()->match($lastPath);
+          return $this->redirect($this->generateUrl($params['_route']));
+        }
+        else {
+          // referer not defined with phpunit
+          return $this->redirect($this->generateUrl('SLNRegisterBundle_homepage'));
+        }
     }
 }

@@ -61,6 +61,7 @@ class SLNTestCase extends WebTestCase {
      */
     public function doLogin($username, $password) {
       $crawler = $this->client->request('GET', '/login');
+
       $form = $crawler->selectButton('_submit')->form(array(
         '_username'  => $username,
         '_password'  => $password,
