@@ -23,6 +23,8 @@
     <!--<a href="{{ path('SLNRegisterBundle_member_delete', { id: member.id }) }}" title='Supprimer ce membre'
          onclick="return confirm('Etes-vous sûr de vouloir effacer le membre {{ member.prenom }} {{ member.nom }} ?');">
       <span class="glyphicon glyphicon-trash"></span></a>-->
+    <a href="{{ path('SLNRegisterBundle_payment_user', { user_id: member.id }) }}" title='Suivi des inscriptions'>
+      <span class="glyphicon glyphicon-euro"></span></a>
     {% if member.hasRole('ROLE_ADMIN') %}
     <span class="glyphicon glyphicon-wrench" title="Administrateur"></span>
     {% endif %}

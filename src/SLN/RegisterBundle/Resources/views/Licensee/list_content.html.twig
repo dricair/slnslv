@@ -46,6 +46,8 @@
       <span class="glyphicon glyphicon-print"></span></a>
     <a href="{{ path('SLNRegisterBundle_mail_licensee_select', { defaultLicensee: licensee.getId }) }}" title="Envoyer un mail à ce licencié">
       <span class="glyphicon glyphicon-envelope"></span></a>
+    <a href="{{ path('SLNRegisterBundle_payment_user', { user_id: licensee.user.id }) }}" title="Envoyer un mail à ce licencié">
+      <span class="glyphicon glyphicon-euro"></span></a>
   {% endif %}
   </td>
 </tr>
