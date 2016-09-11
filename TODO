@@ -1,15 +1,13 @@
 Bugs:
-- Inscription si pas de groupe
-- Modification de mail: un nouveau mail est créé
-- Modification de mail: liste de licenciés vide
+- Effacer un licencié depuis la page d'admin: http://stadelaurentinnatation.fr/register/web/admin/member/edit/98
+- Enlever le paiement ok quand il est coché
+- Desactiver les licences en fin d'année, réactiver depuis page d'accueil.
 
 Inscriptions:
 - Ajouter des photos
 - Remplir la feuille de licence
 - Attestation
 - Liste d'attente
-- Fonction de recherche pour inscriptions
-- Groupe pour inscriptions
 
 Mail:
 - Lien seulement
@@ -22,7 +20,6 @@ Licencié
 Divers:
 - Relevé de notes pour 2 semaines
 - assetic
-- Page avec les prix
 
 https://github.com/comur/ComurImageBundle
 https://jqueryui.com
