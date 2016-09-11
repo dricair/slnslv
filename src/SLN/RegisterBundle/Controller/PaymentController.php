@@ -96,7 +96,9 @@ class PaymentController extends Controller {
         $search = $request->query->get('search', "");
 
         if ($search !== "") {
-            $users = $this->getUserRepository()->searchUsers($search);
+            foreach($this->getUserRepository()->searchUsers($search) as &$user) {
+              $users[$user->getId()] = $user;
+            }
             $licensees = $this->getLicenseeRepository()->searchLicensees($search);
         }
 
