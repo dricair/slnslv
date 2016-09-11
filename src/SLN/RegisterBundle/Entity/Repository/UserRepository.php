@@ -32,4 +32,22 @@ class UserRepository extends EntityRepository
                   ->getResult();
     }
 
+    /**
+     * Search users
+     */
+    public function searchUsers($search) {
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('u')
+           ->where('u.nom LIKE :search')
+           ->orWhere('u.prenom LIKE :search')
+           ->orWhere('u.email LIKE :search')
+           ->orWhere('u.secondary_email LIKE :search')
+           ->addOrderBy('u.nom',  'ASC')
+           ->addOrderBy('u.prenom', 'ASC')
+           ->setParameter('search', "%$search%");
+
+        return $qb->getQuery()
+                  ->getResult();
+
+    }
 }

@@ -12,6 +12,7 @@ namespace SLN\RegisterBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Request;
 
 use SLN\RegisterBundle\Entity\User;
 use SLN\RegisterBundle\Entity\Groupe;
@@ -20,14 +21,6 @@ use SLN\RegisterBundle\Entity\UserPayment;
 use SLN\RegisterBundle\Form\Type\UserPaymentType;
 
 use SLN\RegisterBundle\Entity\Repository\UserPaymentRepository;
-
-/**
- * Small class for user/licensee search 
- */
-class PaymentSearch {
-    public $search;
-}
-
 
 /**
  * Payment controller.
@@ -40,7 +33,7 @@ class PaymentController extends Controller {
      * @param int $user_id  Id of the User
      * @param int $id       Id of the payment to edit. If 0, a new payment is created
      */
-    public function editAction($user_id, $id=0) {
+    public function editAction(Request $request, $user_id, $id=0) {
         $user = $this->getUserFromID($user_id);
         $user->addExtraTarif();
 
@@ -56,7 +49,6 @@ class PaymentController extends Controller {
             }
         }
 
-        $request = $this->getRequest();
         $form    = $this->createForm(new UserPaymentType(), $payment);
         $form->handleRequest($request);
 
@@ -99,14 +91,19 @@ class PaymentController extends Controller {
      * Search all payments/registerings that are incomplete
      * Return a full list by default
      */
-    public function searchAction() {
-        $search = new PaymentSearch();
-        $form = $this->createFormBuilder($search) 
-                     ->add('search', null, array("label" => "Recherche", "attr" => array("placeholder" => "Utilisateur, licencié ou numéro")))
-                     ->getForm();
-
-        $licensees = $this->getLicenseeRepository()->getAllIncomplete();
+    public function searchAction(Request $request) {
         $users = array();
+        $search = $request->query->get('search', "");
+
+        if ($search !== "") {
+            $users = $this->getUserRepository()->searchUsers($search);
+            $licensees = $this->getLicenseeRepository()->searchLicensees($search);
+        }
+
+        else {
+            $licensees = $this->getLicenseeRepository()->getAllIncomplete();
+        }
+
         foreach($licensees as &$licensee) {
             $user_id = $licensee->getUser()->getId();
             if (!array_key_exists($user_id, $users))
@@ -120,7 +117,7 @@ class PaymentController extends Controller {
         $inscription_names = Licensee::getInscriptionNames();
 
         return $this->render('SLNRegisterBundle:Payments:search.html.twig',
-                             array('searchform' => $form->createView(),
+                             array('search' => $search,
                                    'payment_val' => Licensee::PAIEMENT,
                                    'users' => array_values($users),
                                    'inscription_names' => $inscription_names));
@@ -132,7 +129,7 @@ class PaymentController extends Controller {
      *
      * @param int $id Id of the payment
      */
-    public function deleteAction($id) {
+    public function deleteAction(Request $request, $id) {
         $payment = $this->getPaymentsRepository()->find($id);
 
         if (!$payment instanceof UserPayment) {
@@ -191,6 +188,16 @@ class PaymentController extends Controller {
         return $em->getRepository('SLNRegisterBundle:UserPayment');
     }
 
+    /**
+     * Get repository for the users
+     *
+     * @return LicenseeRepository Repository for Licensee instances.
+     */
+    protected function getUserRepository() {
+        $em = $this->getDoctrine()
+                   ->getManager();
+        return $em->getRepository('SLNRegisterBundle:User');
+    }
     /**
      * Get repository for the licensees
      *

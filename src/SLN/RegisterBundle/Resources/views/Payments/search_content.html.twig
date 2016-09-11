@@ -1,11 +1,16 @@
 <div class="well">
-  <form action='{{ path('SLNRegisterBundle_payment_search') }}' method='post' {{ form_enctype(searchform) }} class="form-horizontal" role="form">
+  <form action='{{ path('SLNRegisterBundle_payment_search') }}' method='get' class="form-horizontal" role="form">
       <div class="input-group">
-        {{ form_widget(searchform.search) }}
+        <input id="form_search" name="search" placeholder="Nom, prénom ou email" class="form-control" type="text" value='{{search}}'>
         <span class="input-group-btn">
-            <button class="btn btn-primary" type="button">Rechercher</button>
+            <button class="btn btn-default" type="submit"><span class='glyphicon glyphicon-search'></button>
+            {% block buttons %}
+            {% endblock %}
         </span>
       </div>
   </form>
+
+  {% block extra %}
+  {% endblock %}
 </div>
 

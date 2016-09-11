@@ -191,4 +191,21 @@ class LicenseeRepository extends EntityRepository {
         return $qb->getQuery()
                   ->getResult();
     }
+
+    /**
+     * Search licensees
+     */
+    public function searchLicensees($search) {
+        $qb = $this->createQueryBuilder('l');
+        $qb->select('l')
+           ->where('l.nom LIKE :search')
+           ->orWhere('l.prenom LIKE :search')
+           ->addOrderBy('l.nom',  'ASC')
+           ->addOrderBy('l.prenom', 'ASC')
+           ->setParameter('search', "%$search%");
+
+        return $qb->getQuery()
+                  ->getResult();
+
+    }
 }

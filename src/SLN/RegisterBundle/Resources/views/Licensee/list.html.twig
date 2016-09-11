@@ -3,10 +3,13 @@
 {% block title %}Liste des licenciés{% endblock %}
 
 {% block body %}
-<div class="btn-group btn-group-justified">
+
+{% embed 'SLNRegisterBundle:Payments:search_content.html.twig' with { 'search': '' } %}
+  {% block buttons %}
   <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_create') }}">Créer un licencié</a>
   <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_export') }}" target="_blank">Exporter en fichier Excel</a>
-</div>
+  {% endblock %}
+{% endembed %}
 
 <h1>Liste des licenciés</h1>
 
