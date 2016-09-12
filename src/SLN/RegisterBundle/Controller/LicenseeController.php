@@ -295,7 +295,7 @@ class LicenseeController extends Controller
         }
 
         foreach($group_data as $gnom => $gdata) {
-            $group_sheet = new \PHPExcel_Worksheet($phpExcelObject, $gnom);
+            $group_sheet = new \PHPExcel_Worksheet($phpExcelObject, substr($gnom,0,30));
             $phpExcelObject->addSheet($group_sheet, $sheet+1);
             $group_sheet->fromArray($gdata, NULL, 'A1');
             $sheet += 1;
