@@ -35,36 +35,36 @@ class UserPayment {
     /**
      * var int $ptype Integer type of Payment / Refund
      * @ORM\Column(type="integer")
-     * @Assert\Choice(callback = "getTypes", message="Merci de sélectionner une valeur")
      */
     protected $ptype;
     
     const CHEQUE   = 0;
     const VACANCES = 1;
     const LIQUIDE  = 2;
-
-    const LICENCE  = 11;
-    const FAMILLE  = 12;
-    const BUREAU   = 13;
+    const COUPON   = 3;
+    const LICENCE  = 4;
+    const FAMILLE  = 5;
+    const BUREAU   = 6;
 
     /**
      * Return an array to convert integer to string for type
      *
-     * @param  int $type: 0 => all types, 1 => payment types, 2 => reduction types
+     * @param  int $stype: 0 => all types, 1 => payment types, 2 => reduction types
      * @return string[] List of string for type.
      */
-    public static function getTypes($type=0) {
+    public static function getTypes($stype=0) {
         $v = array();
-        if ($type == 0 or $type == 2) {
+        if ($stype == 0 or $stype == 2) {
           $v[self::LICENCE] = "Déjà licencié";
           $v[self::FAMILLE] = "Réduction famille";
           $v[self::BUREAU]  = "Réduction membre du bureau";
         }
 
-        if ($type == 0 or $type == 1) {
+        if ($stype == 0 or $stype == 1) {
           $v[self::CHEQUE]   = "Chèque";
           $v[self::VACANCES] = "Chèque(s) vacances";
           $v[self::LIQUIDE]  = "Liquide";
+          $v[self::COUPON]   = "Coupon(s) sport";
         }
 
         return $v;
@@ -72,7 +72,7 @@ class UserPayment {
 
     /**
      * @var string $description Description or reference
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, nullable=True)
      */
     protected $description;
 
@@ -85,12 +85,6 @@ class UserPayment {
     {
         if ($this->ptype == self::CHEQUE and preg_match("/^\w+\s*-\s*\w+\s+\d+$/", $this->description) != 1) {
             $context->buildViolation('Le numéro de chèque doit être spécifié sous la forme: <NOM> - <BANQUE> <numéro>, avec <numéro> en chiffres.')
-                ->atPath('description')
-                ->addViolation();
-        }
-
-        if ($this->ptype == self::VACANCES) {
-            $context->buildViolation('Chèque vacances: TODO il faut rajouter une référence.')
                 ->atPath('description')
                 ->addViolation();
         }

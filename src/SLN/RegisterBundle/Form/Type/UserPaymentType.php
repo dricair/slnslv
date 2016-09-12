@@ -29,7 +29,7 @@ class UserPaymentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('ptype', 'choice', array('choices' => UserPayment::getTypes(1), 
                                                'label' => 'Type de paiement'))
-                ->add('description', 'text')
+                ->add('description', 'text', array('required' => FALSE))
                 ->add('value', 'text', array('label' => 'Valeur'));
 
         $builder->get('value')->addModelTransformer(new PriceTransformer());
