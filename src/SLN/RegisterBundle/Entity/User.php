@@ -144,7 +144,7 @@ class User extends BaseUser
 
     /**
      * @var string $secondary_email Secondary email
-     * @ORM\Column(type="string", length=20, nullable=True)
+     * @ORM\Column(type="string", length=50, nullable=True)
      * @Assert\Email()
      */
     protected $secondary_email;
