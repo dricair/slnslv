@@ -68,16 +68,16 @@ class PaymentRestController extends Controller {
             throw $this->createNotFoundException("Cet utilisateur n'existe pas.");
         }
 
-        $missing = FALSE;
+        $new_missing = FALSE;
         $em = $this->getDoctrine()->getManager();
         $licensees = $user->getLicensees();
         foreach ($licensees as &$licensee) {
-            $missing = $missing or $licensee->setInscriptionMissing(Licensee::PAIEMENT, $missing);
+            $new_missing = $new_missing or $licensee->setInscriptionMissing(Licensee::PAIEMENT, $missing);
             $em->persist($licensee);
             $em->flush();
         }
 
-        return $missing;
+        return $new_missing;
     }
 
 
