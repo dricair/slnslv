@@ -17,6 +17,7 @@ use Symfony\Bundle\TwigBundle\Extension;
 use SLN\RegisterBundle\Entity\User;
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Entity\Licensee;
+use SLN\RegisterBundle\Entity\Horaire;
 use SLN\RegisterBundle\Form\LicenseeType;
 
 use SLN\RegisterBundle\Entity\Repository\LicenseeRepository;
@@ -246,14 +247,18 @@ class LicenseeController extends Controller
         return $response;
     }
 
+    private function groupeNom($groupe, $day=-1) {
+        if ($day == -1) return $groupe->getNom();
+        else {
+            $days = Horaire::getJours();
+            return $days[$day] . " - " . $groupe->getNom();
+        }
+    }
 
     /**
      * Export the list of licensees to an Excel file
      *
      * Return an excel file to download.
-     *
-     * @todo: options to select fields to export
-     * @todo: split categories in sheets
      */
     public function exportAction() {
         $licensees = array_merge($this->getLicenseeRepository()->getAllByGroups(),
@@ -265,19 +270,23 @@ class LicenseeController extends Controller
            ->setSubject("Liste des licenciés du club");
 
         $data = array(array("Nom", "Prénom", "Sexe", "Catégorie", "Date naissance", "IUF", "Responsable légal", "Ville", "Tél. fixe", "Tél portable", "Email"));
+        $gdata = array(array("Nom", "Prénom", "Sexe", "Date naissance", "Inscription"));
         $group_data = array();
         $sheet = 0;
 
-        foreach($licensees as $licensee) {
+        foreach($licensees as &$licensee) {
           $user = $licensee->getUser();
           $groupe = $licensee->getGroupe();
-          if ($groupe == NULL) {
-            $groupe = new Groupe();
-            $groupe->setNom('<Pas de groupe>');
-          }
+          if ($groupe == NULL) continue;
 
-          if (!array_key_exists($groupe->getNom(), $group_data)) {
-              $group_data[$groupe->getNom()] = array($data[0]);
+          $days = array(-1);
+          if ($groupe->getMultiple()) $days = $groupe->multipleList();
+          if ($days === null) $days = array(-1);
+          foreach($days as $day) {
+              $gnom = $this->groupeNom($groupe, $day);
+              if (!array_key_exists($gnom, $group_data)) {
+                  $group_data[$gnom] = array($gdata[0]);
+              }
           }
 
           $data[] = array($licensee->getNom(), 
@@ -291,7 +300,21 @@ class LicenseeController extends Controller
                           $user->getTelDomicile(),
                           $user->getTelPortable(),
                           $user->getEmail());
-          $group_data[$groupe->getNom()][] = $data[count($data)-1];
+
+          $missing = "Complet";
+          if ($licensee->inscriptionMissingNum() > 0)
+              $missing = $licensee->inscriptionMissingString();
+          $gdata[1] = array($licensee->getNom(), 
+                            $licensee->getPrenom(),
+                            $licensee->getSexeName(),
+                            $licensee->getNaissance()->format("d/m/Y"),
+                            $missing);
+
+          $days = array(-1);
+          if ($groupe->getMultiple()) $days = $licensee->getGroupeJours();
+          foreach ($days as $day) {
+            $group_data[$this->groupeNom($groupe, $day)][] = $gdata[1];
+          }
         }
 
         foreach($group_data as $gnom => $gdata) {
