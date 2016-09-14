@@ -393,17 +393,7 @@ class LicenseeController extends Controller
      * @return Redirect
      */
     protected function redirectToPrevPage() {
-        $request = $this->getRequest();
-        $referer = $request->headers->get('referer');
-        $baseUrl = $request->getBaseUrl();
-        if ($baseUrl != "") {
-          $lastPath = substr($referer, strpos($referer, $baseUrl) + strlen($baseUrl));
-          $params = $this->get('router')->getMatcher()->match($lastPath);
-          return $this->redirect($this->generateUrl($params['_route']));
-        }
-        else {
-          // referer not defined with phpunit
-          return $this->redirect($this->generateUrl('SLNRegisterBundle_homepage'));
-        }
+        $referer = $this->getRequest()->headers->get('referer', $this->generateUrl('SLNRegisterBundle_homepage'));
+        return $this->redirect($referer);
     }
 }
