@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    {{ user.prenom }} {{ user.nom }}
+    {{ user.prenom }} {{ user.nom }} ({{ user.email }})
     {% if admin %}
     <a href="{{ path('SLNRegisterBundle_member_edit', { id: user.id }) }}" title='Modifier ce membre'>
       <span class="glyphicon glyphicon-pencil"></span></a>

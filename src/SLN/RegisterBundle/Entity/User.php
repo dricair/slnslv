@@ -199,7 +199,7 @@ class User extends BaseUser
 
         foreach ($this->licensees as &$licensee) {
             $tarifs = $licensee->getTarifList();
-            if (intval($this->code_postal) != 6700) {
+            if ($licensee->getGroupe() !== NULL and intval($this->code_postal) != 6700) {
                 $licensee->addTarif(new Tarif(Tarif::TYPE_ST_LAURENT)); 
             }
 
