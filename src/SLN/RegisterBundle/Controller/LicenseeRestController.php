@@ -53,10 +53,21 @@ class LicenseeRestController extends Controller {
                 throw $this->createNotFoundException("La fonction $id n'existe pas");
 
             $licensees = [];
-            foreach($licenseeRepository->getAllForFonction($id) as $licensee) {
+            foreach($licenseeRepository->getAllForFonction($id) as &$licensee) {
                 if ($id != Licensee::OFFICIEL or $extra == -1 or $licenseeRepository->userHasInGroup($licensee, $extra))
-                    $licensees[] = array("id" => $licensee->getId(), "name" => $licensee->getPrenom() . " " . $licensee->getNom());
+                    $licensees[] = $licensee;
             }
+        }
+         
+        else if ($id >= Licensee::COMPETITION_OFFSET) {
+            // Competition categories
+            $id = $id - Licensee::COMPETITION_OFFSET;
+            $competitions = Groupe::competitionCategories();
+            $cnames = array_keys($competitions);
+            if (!array_key_exists($id, $cnames))
+                throw $this->createNotFoundException("Le groupe $id n'existe pas");
+            
+            $licensees = $licenseeRepository->getAllForCompetitionGroup($id);
         }
 
         else {
@@ -68,12 +79,16 @@ class LicenseeRestController extends Controller {
             $licensees = [];
             foreach($licenseeRepository->getAllForGroupe($groupe) as $licensee) {
                 if ($extra == -1 or !$groupe->getMultiple() or in_array($extra, $licensee->getGroupeJours()))
-                    $licensees[] = array("id" => $licensee->getId(), "name" => $licensee->getPrenom() . " " . $licensee->getNom());
+                    $licensees[] = $licensee;
             }
             
         }
 
-        return $licensees;
+        $result = [];
+        foreach($licensees as &$licensee) {
+            $result[] = array("id" => $licensee->getId(), "name" => $licensee->getPrenom() . " " . $licensee->getNom());
+        }
+        return $result;
     }
 }
 

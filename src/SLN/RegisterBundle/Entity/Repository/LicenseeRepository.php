@@ -152,6 +152,58 @@ class LicenseeRepository extends EntityRepository {
     }
 
     /**
+     * Select conditions to get licensees from a specific competition group
+     *
+     * @param QueryBuilder $qb: query builder
+     * @param int $id: Index of the group
+     *
+     * @return $qb
+     */
+    protected function selCompetitionGroup(&$qb, $id) {
+        $competitions = Groupe::competitionCategories();
+        $cnames = array_keys($competitions);
+        if (!array_key_exists($id, $cnames))
+            return $qb;
+        $competition = $competitions[$cnames[$id]];
+
+        $qb->join('l.groupe', 'g')
+           ->where($qb->expr()->orX(
+               $qb->expr()->andX(
+                 $qb->expr()->eq('l.sexe', Licensee::FEMME),
+                 $qb->expr()->in('YEAR(l.naissance)', $competition["F"])
+               ),
+               $qb->expr()->andX(
+                 $qb->expr()->eq('l.sexe', Licensee::HOMME),
+                 $qb->expr()->in('YEAR(l.naissance)', $competition["H"])
+               )
+             )
+           )
+           ->andWhere('l.groupe IS NOT NULL')
+           ->andWhere('g.categorie = :competition_group')
+           ->addOrderBy('l.nom',  'ASC')
+           ->addOrderBy('l.prenom', 'ASC')
+           ->setParameter('competition_group', Groupe::COMPETITION);
+  
+        return $qb;
+    }
+
+    /**
+     * Return a list of users for a given competition group
+     *
+     * @param int id: Competition group index
+     *
+     * @return Licensee[] List of licensees
+     */
+    public function getAllForCompetitionGroup($id) {
+        $qb = $this->createQueryBuilder('l');
+        $qb->select('l');
+        $qb = $this->selCompetitionGroup($qb, $id);
+
+        return $qb->getQuery()
+                  ->getResult();
+    }
+
+    /**
      * Return true if the User for the given Licensee has any Licensee in the given
      * group
      *
@@ -161,12 +213,11 @@ class LicenseeRepository extends EntityRepository {
      * @return bool True if one of the licensees is in the Groupe
      */
     public function userHasInGroup(Licensee $licensee, $groupe_id) {
-        $qb = $this->createQueryBuilder('l')
-                   ->select('COUNT(l)')
-                   ->where('l.user = :user_id')
-                   ->andWhere('l.groupe = :groupe_id')
-                   ->setParameter('user_id', $licensee->getUser()->getId())
-                   ->setParameter('groupe_id', $groupe_id);
+        $qb = $this->createQueryBuilder('l');
+        $qb->select('COUNT(l)');
+        $qb = $this->selCompetitionGroup($qb, $groupe_id);
+        $qb->andWhere('l.user = :user_id')
+           ->setParameter('user_id', $licensee->getUser()->getId());
 
         return $qb->getQuery()->getSingleScalarResult() > 0;
     }

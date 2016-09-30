@@ -33,7 +33,6 @@ class LicenseeMailFormType extends AbstractType
         if (!$defaultGroup) $defaultGroup = new Groupe();
 
         $groupChoices = [];
-        $competition = [];
 
         // List of groups
         foreach ($em->getRepository('SLNRegisterBundle:Groupe')->findAll() as $groupe) {
@@ -47,21 +46,26 @@ class LicenseeMailFormType extends AbstractType
                     $groupChoices[$category][sprintf("%s.%s", $groupe->getId(), $jour)] = sprintf("%s du %s", $groupe->getNom(), $jours[$jour]);
                 }
             }
+        }
 
-            // Groupes that require "Officiel". TODO: Should be an option for the group
-            if ($groupe->getCategorie() == Groupe::COMPETITION or strpos($groupe->getNom(), "Poussin") !== false)
-                $competition[$groupe->getId()] = $groupe->getNom();
+        // Competition categories
+        $competition = "Catégories de compétition";
+        foreach(array_keys(Groupe::competitionCategories()) as $index => $name) {
+          $groupChoices[$competition][Licensee::COMPETITION_OFFSET + $index] = $name;
         }
 
         // Special functions
         $special = "Fonctions spéciales";
         foreach (Licensee::getFonctionNames() as $index => $fonction) {
-            $groupChoices[$special][Licensee::FONCTIONS_OFFSET + $index] = $fonction;
 
             if ($index == Licensee::OFFICIEL) {
-                foreach($competition as $gid => $gname) 
-                    $groupChoices[$special][sprintf("%s.%s", Licensee::FONCTIONS_OFFSET + $index, $gid)] = "$fonction $gname";
+                foreach(array_keys(Groupe::competitionCategories()) as $cidx => $cname) {
+                    $groupChoices[$special][sprintf("%s.%s", Licensee::FONCTIONS_OFFSET + $index, $cidx)] = "$fonction $cname";
+                }
             }
+            
+            else
+              $groupChoices[$special][Licensee::FONCTIONS_OFFSET + $index] = $fonction;
         }
 
         $builder

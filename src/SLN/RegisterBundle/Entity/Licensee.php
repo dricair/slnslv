@@ -110,12 +110,19 @@ use SLN\RegisterBundle\Entity\User;
     const ENTRAINEUR=0;
     const BUREAU=1;
     const OFFICIEL=2;
+    const PERSONNALITE=3;
+
+    /**
+     * Offset for competition categories. They are selected as a special
+     * group with ID COMPETITION_OFFSET + special value
+     */
+    const COMPETITION_OFFSET = 100;
 
     /**
      * Offset for special functions. They are selected as a special
      * group with ID SPECIAL_OFFSET + special value
      */
-    const FONCTIONS_OFFSET = 100;
+    const FONCTIONS_OFFSET = 200;
 
     /**
      * Return an array of the possible fonctions
@@ -123,7 +130,10 @@ use SLN\RegisterBundle\Entity\User;
      * @return string[] List of strings for fonctions
      */
     public static function getFonctionNames() {
-        return array(self::ENTRAINEUR => "Entraineur", self::BUREAU => "Membre du bureau", self::OFFICIEL => "Officiel");
+        return array(self::ENTRAINEUR => "Entraineur",
+                     self::BUREAU => "Membre du bureau", 
+                     self::OFFICIEL => "Officiel",
+                     self::PERSONNALITE => "Personnalité");
     }
 
 
@@ -145,7 +155,8 @@ use SLN\RegisterBundle\Entity\User;
      */
     public static function getInscriptionNames() {
         return array(self::FEUILLE => "Inscription",  
-                     self::CERTIFICAT => "Certificat médical", self::PAIEMENT => "Paiement total",
+                     self::CERTIFICAT => "Certificat médical", 
+                     self::PAIEMENT => "Paiement total",
                      self::LICENCE => "Licence");
     }
 

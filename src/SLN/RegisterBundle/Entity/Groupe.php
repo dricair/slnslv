@@ -174,6 +174,7 @@ function cmpHoraire($a, $b) {
         $this->categorie = $this::ECOLE;
     }
 
+
     /**
      * @ignore
      * @ORM\PreUpdate
@@ -182,6 +183,27 @@ function cmpHoraire($a, $b) {
     {
        $this->setUpdated(new \DateTime());
     }
+
+    /** 
+     * Return competition categories, using age and sex.
+     * List of string -> array 
+     *
+     * @return list
+     */
+    public static function competitionCategories() {
+        $year = date('Y');
+        $month = date('n');
+        if ($month >= 9) $year = $year + 1;
+
+        $categories = array("Avenirs" => array("F" => array($year-9, $year-10),
+                                               "H" => array($year-9, $year-10, $year-11)),
+                            "Jeunes"  => array("F" => array($year-11, $year-12, $year-13),
+                                               "H" => array($year-12, $year-13, $year-14)),
+                            "Juniors" => array("F" => array($year-14, $year-15, $year-16, $year-17),
+                                               "H" => array($year-15, $year-16, $year-17, $year-18)));
+        return $categories;
+    }
+
 
     /**
      * Add a new Horaire
