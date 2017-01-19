@@ -246,6 +246,11 @@ SLNRegisterBundle_payment_delete:
     methods: GET
     id: \d+
 
+SLNRegisterBundle_payment_export:
+  path: /admin/payment/export.xlsx
+  defaults: { _controller: SLNRegisterBundle:Payment:export }
+  requirements:
+    methods: GET
 
 #
 # Others

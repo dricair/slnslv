@@ -18,14 +18,18 @@ use SLN\RegisterBundle\Entity\User;
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Entity\UserPayment;
+use SLN\RegisterBundle\Entity\Tarif;
 use SLN\RegisterBundle\Form\Type\UserPaymentType;
 
 use SLN\RegisterBundle\Entity\Repository\UserPaymentRepository;
+
+const FORMAT_CURRENCY_EUR		= '#,##0.00_-€';
 
 /**
  * Payment controller.
  */
 class PaymentController extends Controller {
+
 
     /**
      * Edit payments for a specific user. Contains form to create payments
@@ -147,6 +151,114 @@ class PaymentController extends Controller {
         $em->flush();
 
         return $this->redirect($this->generateUrl('SLNRegisterBundle_payment_user', array('user_id' => $user->getId())));
+    }
+
+    /**
+     * Export list of payments into Excel
+     */
+    public function exportAction(Request $request) {
+        $users = array();
+        $licensees = $this->getLicenseeRepository()->getAllByGroups();
+
+        foreach($licensees as &$licensee) {
+            $user_id = $licensee->getUser()->getId();
+            if (!array_key_exists($user_id, $users))
+                $users[$user_id] = $licensee->getUser();
+        }
+
+        foreach($users as $user_id => &$user) {
+            $user->addExtraTarif();
+        }
+
+        $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
+
+        $phpExcelObject->getProperties()->setCreator("Cédric Airaud")
+           ->setTitle("Suivi des inscriptions")
+           ->setSubject("Liste des cotisations et paiements");
+
+        $data_licensees = array(array("Id", "Nom", "Prénom", "Groupe", "Cotisation", "Equipement", "Autres"));
+
+        foreach ($licensees as &$licensee) {
+            $total_cotisation = 0;
+            $total_equipment = 0;
+            $total_other = 0;
+            $has_cotisation = FALSE;
+
+            $tarifs = $licensee->getTarifList();
+            foreach ($tarifs as &$tarif) {
+                if ($tarif->type == Tarif::TYPE_GLOBAL or $tarif->type == Tarif::TYPE_1DAY) $has_cotisation = TRUE;
+                if ($tarif->type == Tarif::TYPE_EQUIPMENT) $total_equipment += $tarif->value;
+                else $total_cotisation += $tarif->value; 
+            }
+
+            if ($has_cotisation) {
+                $data_licensees[] = array($licensee->getId(), $licensee->getNom(), $licensee->getPrenom(),
+                                          $licensee->getGroupe()->getNom(), 
+                                          $total_cotisation / 100, $total_equipment / 100, $total_other / 100);
+            }
+        }
+
+        $num = count($data_licensees);
+        $phpExcelObject->setActiveSheetIndex(0);
+        $activeSheet = $phpExcelObject->getActiveSheet();
+        $activeSheet->setTitle('Par licenciés');
+        $activeSheet->fromArray($data_licensees, NULL, 'A1');
+        $activeSheet->getStyle("E2:G$num")
+                    ->getNumberFormat()
+                    ->setFormatCode(FORMAT_CURRENCY_EUR);
+        $activeSheet->getStyle("A1:G1")->applyFromArray(array("font" => array( "bold" => true)));
+        $activeSheet->setAutoFilter("A1:G$num");
+
+        $num_total = $num + 2;
+        $activeSheet->setCellValue("D$num_total", "Total:");
+        foreach (array("E", "F", "G") as $column) {
+            $activeSheet->setCellValue("$column$num_total", "=SUM(${column}2:$column$num)");
+            $activeSheet->getStyle("$column$num_total")
+                        ->getNumberFormat()
+                        ->setFormatCode(FORMAT_CURRENCY_EUR);
+        }
+
+        $data_payments  = array(array("Id", "Nom", "Prénom", "Paiement", "Valeur", "Description"));
+
+        foreach ($users as &$user) {
+            foreach ($user->getPayments() as &$payment) {
+                $data_payments[] = array($user->getId(), $user->getNom(), $user->getPrenom(),
+                                         $payment->getPtypeStr(), $payment->getValue() / 100, $payment->getDescription());
+            }
+        }
+
+        $num = count($data_payments);
+        $phpExcelObject->createSheet(1);
+        $phpExcelObject->setActiveSheetIndex(1);
+        $activeSheet = $phpExcelObject->getActiveSheet();
+        $activeSheet->setTitle('Paiements');
+        $activeSheet->fromArray($data_payments, NULL, 'A1');
+        $activeSheet->getStyle("E2:E$num")
+                    ->getNumberFormat()
+                    ->setFormatCode(FORMAT_CURRENCY_EUR);
+        $activeSheet->getStyle("A1:F1")->applyFromArray(array("font" => array( "bold" => true)));
+        $activeSheet->setAutoFilter("A1:F$num");
+
+        $num_total = $num + 2;
+        $activeSheet->setCellValue("D$num_total", "Total:");
+        $activeSheet->setCellValue("E$num_total", "=SUM(E2:E$num)");
+        $activeSheet->getStyle("E$num_total")
+                    ->getNumberFormat()
+                    ->setFormatCode(FORMAT_CURRENCY_EUR);
+
+        // Create the response
+        $writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel2007');
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        $dispositionHeader = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'ListePayments.xlsx'
+        );
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'maxage=1');
+        $response->headers->set('Content-Disposition', $dispositionHeader);
+
+        return $response;
     }
 
 

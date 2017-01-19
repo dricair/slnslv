@@ -4,7 +4,11 @@
 
 {% block body %}
 
-{% include 'SLNRegisterBundle:Payments:search_content.html.twig' with { 'search': search } %}
+{% embed 'SLNRegisterBundle:Payments:search_content.html.twig' with { 'search': search } %}
+  {% block buttons %}
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_payment_export') }}">Exporter les paiements</a>
+  {% endblock %}
+{% endembed %}
 
 <p>Cliquez directement sur les icônes <span class="text-success glyphicon glyphicon-ok"></span> ou
    <span class="text-danger glyphicon glyphicon-remove"></span> pour mettre à jour l'inscription</p>
