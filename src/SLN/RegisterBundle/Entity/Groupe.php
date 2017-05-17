@@ -683,4 +683,27 @@ function cmpHoraire($a, $b) {
     {
         return $this->capacity;
     }
+
+    /**
+     * Set groupe_order
+     *
+     * @param integer $groupeOrder
+     * @return Groupe
+     */
+    public function setGroupeOrder($groupeOrder)
+    {
+        $this->groupe_order = $groupeOrder;
+
+        return $this;
+    }
+
+    /**
+     * Get groupe_order
+     *
+     * @return integer 
+     */
+    public function getGroupeOrder()
+    {
+        return $this->groupe_order;
+    }
 }
