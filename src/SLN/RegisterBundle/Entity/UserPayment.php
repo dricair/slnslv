@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 use SLN\RegisterBundle\Entity\User;
+use SLN\RegisterBundle\Entity\Saison;
 use SLN\RegisterBundle\Form\DataTransformer\PriceTransformer;
 
 
@@ -120,6 +121,14 @@ class UserPayment {
      * @Assert\NotBlank(message="Un paiement doit être rattaché à un utilisateur.")
      */
     protected $user;
+
+    /**
+     * @var Saison $saison_id Corresponding saison. 
+     * @ORM\ManyToOne(targetEntity="Saison", inversedBy="payments")
+     * @ORM\JoinColumn(name="saison_id", referencedColumnName="id")
+     * @Assert\NotBlank(message="Un paiement doit être rattaché à une saison.")
+     */
+    protected $saison;
 
 
     /** @ignore */
@@ -307,5 +316,28 @@ class UserPayment {
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set saison
+     *
+     * @param \SLN\RegisterBundle\Entity\Saison $saison
+     * @return UserPayment
+     */
+    public function setSaison(\SLN\RegisterBundle\Entity\Saison $saison = null)
+    {
+        $this->saison = $saison;
+
+        return $this;
+    }
+
+    /**
+     * Get saison
+     *
+     * @return \SLN\RegisterBundle\Entity\Saison 
+     */
+    public function getSaison()
+    {
+        return $this->saison;
     }
 }

@@ -13,6 +13,8 @@ namespace SLN\RegisterBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use SLN\RegisterBundle\Entity\Licensee;
+use SLN\RegisterBundle\Entity\Saison;
+use SLN\RegisterBundle\Entity\LicenseeSaison;
 use SLN\RegisterBundle\Entity\Repository\LicenseeRepository;
 
 /**
@@ -28,28 +30,50 @@ class HomeController extends Controller
     public function indexAction()
     {
         $activeLicensees = NULL;
-        $year = date('Y');
-        $month = date('n');
-        if ($month < 5) $year = $year - 1;
-        $details = null;
+        $details = array();
 
-        if ($this->isLoggedIn()) {
-            $currentUser = $this->getUser();
-            $em = $this->getDoctrine()
-                       ->getManager();
-
-            $activeLicensees = $em->getRepository('SLNRegisterBundle:Licensee')
-                               ->getLicenseesForUser($currentUser->getId());
-
-            $currentUser->addExtraTarif();
-            $details = $currentUser->paymentInfo();
-
+        if (!$this->isLoggedIn()) {
+            throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
         }
 
-        return $this->render('SLNRegisterBundle:Home:index.html.twig', array('activeLicensees' => $activeLicensees,
-                                                                             'year' => $year,
-                                                                             'inscription_names' => Licensee::getInscriptionNames(),
-                                                                             'payment_val' => Licensee::PAIEMENT,
+        $em = $this->getDoctrine()->getManager();
+
+        $open_saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen();
+        $currentUser = $this->getUser();
+
+        $all_licensees = $em->getRepository('SLNRegisterBundle:Licensee')
+                            ->getLicenseesForUser($currentUser->getId(), NULL);
+        $active_licensees = array();
+        $available_licensees = array();
+        $no_licensee = count($all_licensees) == 0;
+
+        $all_ok = TRUE;
+
+        foreach ($all_licensees as &$licensee) {
+            if ($licensee->getSaisonLink($open_saison)) {
+                $active_licensees[] = $licensee;
+                if ($licensee->inscriptionMissingNum($open_saison) != 0)
+                    $all_ok = FALSE;
+            } 
+
+            else {
+                $available_licensees[] = $licensee;
+            }
+        }
+
+
+        if ($open_saison) {
+            $currentUser->addExtraTarif($open_saison);
+            $details = $currentUser->paymentInfo($open_saison);
+        }
+
+        return $this->render('SLNRegisterBundle:Home:index.html.twig', array('available_licensees' => $available_licensees,
+                                                                             'active_licensees' => $active_licensees,
+                                                                             'no_licensee' => $no_licensee,
+                                                                             'all_ok' => $all_ok,
+                                                                             'open_saison' => $open_saison,
+                                                                             'inscription_names' => LicenseeSaison::getInscriptionNames(),
+                                                                             'payment_val' => LicenseeSaison::PAIEMENT,
                                                                              'payments_detail' => $details));
     }
 

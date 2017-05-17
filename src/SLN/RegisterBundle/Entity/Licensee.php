@@ -14,6 +14,8 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Entity\User;
+use SLN\RegisterBundle\Entity\Saison;
+use SLN\RegisterBundle\Entity\LicenseeSaison;
 
 /**
  * Licensee class, representing an inscription.
@@ -96,12 +98,6 @@ use SLN\RegisterBundle\Entity\User;
     protected $iuf;
     
     /**
-     * @var \Datetime $date_licence Date for license creation
-     * @ORM\Column(type="date", nullable=True)
-     */
-    protected $date_licence;
-
-    /**
      * var bool[] $fonctions Special functions
      * @ORM\Column(type="array")
      */
@@ -140,26 +136,9 @@ use SLN\RegisterBundle\Entity\User;
     /**
      * var bool[] $inscription State for inscription
      * @ORM\Column(type="array")
+     * TODO: Remove
      */
     protected $inscription;
-
-    const FEUILLE=0;
-    const CERTIFICAT=2;
-    const PAIEMENT=3;
-    const LICENCE=4;
-
-    /**
-     * Return an array of the possible inscription states
-     *
-     * @return string[] List of strings for inscription
-     */
-    public static function getInscriptionNames() {
-        return array(self::FEUILLE => "Inscription",  
-                     self::CERTIFICAT => "Certificat médical", 
-                     self::PAIEMENT => "Paiement total",
-                     self::LICENCE => "Licence");
-    }
-
 
     /**
      * @var bool $autorisation_photos True if authorization for photos is ok
@@ -181,7 +160,7 @@ use SLN\RegisterBundle\Entity\User;
 
     /**
      * @var User $user Connected User class
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="licensees")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="licensees", fetch="EAGER")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * @Assert\NotBlank(message="Un licencié doit être rattaché à un utilisateur.", groups={"Registration", "Profile"})
      */
@@ -191,12 +170,14 @@ use SLN\RegisterBundle\Entity\User;
      * @var Groupe $groupe Selected groupe
      * @ORM\ManyToOne(targetEntity="Groupe", inversedBy="licensees")
      * @ORM\JoinColumn(name="groupe_id", referencedColumnName="id", nullable=True)
+     * TODO: Remove
      */
     protected $groupe;
 
     /**
      * @var bool[] $groupe_jours Selected days for the groups
      * @ORM\Column(type="array")
+     * TODO: Remove
      */
     protected $groupe_jours;
 
@@ -205,6 +186,17 @@ use SLN\RegisterBundle\Entity\User;
      */
     protected $tarifs;
 
+
+    /**
+     * @var LicenseeSaison[] $saison_links List of activated saisons links
+     * @ORM\OneToMany(targetEntity="LicenseeSaison", mappedBy="licensee")
+     */
+    protected $saison_links;
+
+    /**
+     * @var LicenseeSaison $form_saison_link Saison link used in forms
+     */
+    protected $form_saison_link;
 
     /**
      * Return Age in years
@@ -246,7 +238,7 @@ use SLN\RegisterBundle\Entity\User;
      * @return TCPDF Generated PDF
      *
      */
-    public function inscriptionSheet($pdf, $assets, $title='') {
+    public function inscriptionSheet($pdf, $assets, $saison, $title='') {
         assert($this->groupe != Null);
 
         if ($title != "") {
@@ -263,6 +255,7 @@ use SLN\RegisterBundle\Entity\User;
         $year = date('Y');
         $month = date('n');
         if ($month < 5) $year = $year - 1;
+        $groupe = $this->getGroupe($saison);
 
         $groupeValues = array(Groupe::ECOLE       => array('title'      => 'Dossier d\'inscription Ecole',
                                                            'certificat' => '1 certificat médical d\'aptitude à la pratique de la natation'),
@@ -273,15 +266,15 @@ use SLN\RegisterBundle\Entity\User;
                               Groupe::LOISIR      => array('title'      => "Dossier d'inscription Loisirs",
                                                            'certificat' => '1 certificat médical d\'aptitude à la pratique de la natation')
                              );
-        $values = $groupeValues[$this->groupe->getCategorie()];
+        $values = $groupeValues[$groupe->getCategorie()];
         $femme = $this->sexe == $this::FEMME;
 
         $pdf->AddPage();
         $pdf->Image(__DIR__ . '../../Resources/public/images/logo_club_t.png', 10, 0, 30);
         $pdf->Image(__DIR__ . '../../Resources/public/images/titre_club_t.png', 60, 5, 90);
-        if ($this->groupe->getCategorie() == Groupe::COMPETITION)
+        if ($groupe->getCategorie() == Groupe::COMPETITION)
           $pdf->Image(__DIR__ . '../../Resources/public/images/logo_ffn.png', 160, 5, 40);
-        else if ($this->groupe->getCategorie() == Groupe::ECOLE)
+        else if ($groupe->getCategorie() == Groupe::ECOLE)
           $pdf->Image(__DIR__ . '../../Resources/public/images/ecole_natation.gif', 160, 5, 40);
           
         $html = sprintf('
@@ -389,7 +382,7 @@ Site: http://stadelaurentinnatation.fr</p>');
   <td style="border: 1px solid #888888;">&nbsp;</td> <td style="border: 1px solid #888888;">&nbsp;</td>
 </tr>
 </table>
-', $this->groupe->getNom());
+', $groupe->getNom());
         $pdf->WriteHTMLCell(/*w*/0, /*h*/0, /*x*/10, /*y*/265, $html, /*border*/array('LTRB' => array('width' => 0.2, 'color' => array(0xcc, 0xcc, 0xcc))), 
           /*ln*/1, /*fill*/0, /*reseth*/true, /*align*/'C', /*autopadding*/false);
         
@@ -405,7 +398,12 @@ Site: http://stadelaurentinnatation.fr</p>');
      * @return string String representation for the entity
      **/
     public function __toString() {
-        return sprintf("%s %s (%s)", $this->prenom, $this->nom, $this->groupe ? $this->groupe->getNom() : "Pas de groupe");
+        $groupe = null;
+        if ($this->getSaisonLinks()->length() > 0) {
+            $saison_link = $this->getSaisonLinks()->end();
+            $groupe = $saison_link->getGroupe();
+        }
+        return sprintf("%s %s (%s)", $this->prenom, $this->nom, $groupe ? $groupe->getNom() : "Pas de groupe");
     }
 
 
@@ -418,12 +416,12 @@ Site: http://stadelaurentinnatation.fr</p>');
      *
      * @return array[] Licensees by groups.
      */
-    public static function sortByGroups($licensees) {
+    public static function sortByGroups($licensees, $saison) {
         $groupes = array();
 
         foreach($licensees as $licensee) {
-            if ($licensee->getGroupe() == Null) continue;
-            $groupe = $licensee->getGroupe();
+            if ($licensee->getGroupe($saison) == Null) continue;
+            $groupe = $licensee->getGroupe($saison);
             $groupe_nom = $groupe->getNom();
 
             $multiple = $groupe->getMultiple();
@@ -446,7 +444,7 @@ Site: http://stadelaurentinnatation.fr</p>');
 
             $groupes[$groupe_nom]["num"] += 1;
             if ($multiple) {
-                $groupe_jours = $licensee->getGroupeJours();
+                $groupe_jours = $licensee->getGroupeJours($saison);
                 foreach ($days as $day) {
                     if(in_array($day, $groupe_jours)) {
                         $groupes[$groupe_nom]["jours"][$day]["licensees"][] = $licensee;
@@ -474,20 +472,72 @@ Site: http://stadelaurentinnatation.fr</p>');
 
 
     /**
+     * Return the saison link corresponding to the current saison, NULL if None
+     *
+     * @return NULL|LicenseeSaison
+     */
+    public function getSaisonLink(Saison $saison) {
+        foreach($this->getSaisonLinks() as &$saison_link) {
+            if ($saison_link->getSaison()->getId() == $saison->getId())
+                return $saison_link;
+        }
+        return NULL;
+    }
+
+
+    /**
+     * Get groupe for the given saison
+     * @param Saison $saison Saison to use
+     *
+     * @return Groupe|NULL 
+     */
+    public function getGroupe(Saison $saison)
+    {
+        $saison_link = $this->getSaisonLink($saison);
+        return $saison_link ? $saison_link->getGroupe() : NULL;
+    }
+
+    /**
+     * Get groupe_jours for the saison
+     * @param Saison $saison Saison to use
+     *
+     * @return array
+     */
+    public function getGroupeJours(Saison $saison)
+    {
+        $saison_link = $this->getSaisonLink($saison);
+        return $saison_link ? $saison_link->getGroupeJours() : NULL;
+    }
+
+    /**
+     * Get inscription for the saison
+     *
+     * @return array 
+     */
+    public function getInscription(Saison $saison)
+    {
+        $saison_link = $this->getSaisonLink($saison);
+        return $saison_link ? $saison_link->getInscription() : NULL;
+    }
+
+    /**
      * Get the inscription status: array of missing elements
      *
      * @param $id: Return names of FALSE, index of TRUE
      *
      * @return string[]|int[]: List of missing elements
      */
-    public function inscriptionMissingList($id=FALSE) {
+    public function inscriptionMissingList(Saison $saison, $id=FALSE) {
         $missing = array();
-        $names = self::getInscriptionNames();
+        $names = LicenseeSaison::getInscriptionNames();
 
-        if (!$this->groupe) return $missing;
+        if (!$this->getGroupe($saison)) return $missing;
+
+        $inscription = $this->getInscription($saison);
+        if ($inscription === null) return $missing;
 
         foreach($names as $value => $name) {
-            if (!in_array($value, $this->inscription)) {
+            if (!in_array($value, $inscription)) {
                 if ($id) $missing[] = $value;
                 else $missing[] = $name;
             }
@@ -502,8 +552,8 @@ Site: http://stadelaurentinnatation.fr</p>');
      *
      * @return Int Number of missing elements
      */
-    public function inscriptionMissingNum() {
-        return count($this->inscriptionMissingList());
+    public function inscriptionMissingNum(Saison $saison) {
+        return count($this->inscriptionMissingList($saison));
     }
 
     /**
@@ -511,17 +561,17 @@ Site: http://stadelaurentinnatation.fr</p>');
      *
      * @return String List of missing elements
      */
-    public function inscriptionMissingString() {
-        $missing = $this->inscriptionMissingList();
+    public function inscriptionMissingString(Saison $saison) {
+        $missing = $this->inscriptionMissingList($saison);
         return "Eléments manquants: " . implode(", ", $missing);
     }
 
     /**
      * Return true if missing a payment
      */
-    public function inscriptionMissingPayment() {
-        if (!$this->groupe) return FALSE;
-        return !in_array(self::PAIEMENT, $this->inscription);
+    public function inscriptionMissingPayment(Saison $saison) {
+        if (!$this->getGroupe($saison)) return FALSE;
+        return !in_array(LicenseeSaison::PAIEMENT, $this->getInscription($saison));
     }
 
 
@@ -533,34 +583,15 @@ Site: http://stadelaurentinnatation.fr</p>');
         $this->setNaissance(new \DateTime("2000-01-01"));
         $this->setAutorisationPhotos(True);
 
-        $this->groupe_jours = array();
         $this->fonction = array();
-        $this->inscription = array();
 
-        $this->payments  = new ArrayCollection();
         $this->tarifs = NULL;
-    }
+        $this->saison_links = new ArrayCollection();
+        $this->form_saison_link = NULL;
 
-    /**
-     * Validate the values and throws an exception if this is not correct.
-     * @param ExecutionContextInterface $context Context
-     * @Assert\Callback
-     */
-    public function validate(ExecutionContextInterface $context)
-    {
-        // Check that at least one day is selected when group is 'Multiple'
-        if ($this->groupe and $this->groupe->getMultiple()) {
-            $found = false;
-            $list_jours = $this->groupe->multipleList();
-            foreach ($this->groupe_jours as $jour) {
-                if (in_array($jour, $list_jours)) $found = true;
-            }
-
-            if (!$found) 
-              $context->buildViolation('Veuillez sélectionner au moins un jour.')
-                  ->atPath('groupe_jours')
-                  ->addViolation();
-        }
+        // TODO: Remove
+        $this->groupe_jours = array();
+        $this->inscription = array();
     }
 
     /**
@@ -569,12 +600,13 @@ Site: http://stadelaurentinnatation.fr</p>');
      *
      * @return Tarif[] List of tarifs
      */
-    public function getTarifList() {
+    public function getTarifList(Saison $saison) {
         if ($this->tarifs) return $this->tarifs;
 
         $this->tarifs = array();
-        if ($this->groupe != NULL)
-            $this->tarifs = $this->groupe->getLicenseeTarifs($this->groupe_jours);
+        $groupe = $this->getGroupe($saison);
+        if ($groupe)
+            $this->tarifs = $groupe->getLicenseeTarifs($this->getGroupeJours($saison));
 
         return $this->tarifs;
     }
@@ -716,29 +748,6 @@ Site: http://stadelaurentinnatation.fr</p>');
     }
 
     /**
-     * Set date_licence
-     *
-     * @param DateTime $dateLicence
-     * @return Licensee
-     */
-    public function setDateLicence($dateLicence)
-    {
-        $this->date_licence = $dateLicence;
-
-        return $this;
-    }
-
-    /**
-     * Get date_licence
-     *
-     * @return DateTime 
-     */
-    public function getDateLicence()
-    {
-        return $this->date_licence;
-    }
-
-    /**
      * Set created
      *
      * @param DateTime $created
@@ -843,55 +852,6 @@ Site: http://stadelaurentinnatation.fr</p>');
     }
 
 
-
-    /**
-     * Set groupe
-     *
-     * @param Groupe $groupe
-     * @return Licensee
-     */
-    public function setGroupe(Groupe $groupe = null)
-    {
-        $this->groupe = $groupe;
-
-        return $this;
-    }
-
-    /**
-     * Get groupe
-     *
-     * @return Groupe 
-     */
-    public function getGroupe()
-    {
-        return $this->groupe;
-    }
-
-
-    /**
-     * Set groupe_jours
-     *
-     * @param array $groupeJours
-     * @return Licensee
-     */
-    public function setGroupeJours($groupeJours)
-    {
-        $this->groupe_jours = $groupeJours;
-
-        return $this;
-    }
-
-    /**
-     * Get groupe_jours
-     *
-     * @return array 
-     */
-    public function getGroupeJours()
-    {
-        return $this->groupe_jours;
-    }
-
-
     /**
      * Set fonctions
      *
@@ -916,6 +876,113 @@ Site: http://stadelaurentinnatation.fr</p>');
     }
 
     /**
+     * Add a tarif to the tarifs list
+     */
+    public function addTarif($tarif) {
+        $this->tarifs[] = $tarif;
+    }
+
+    /**
+     * Add saison_links
+     *
+     * @param LicenseeSaison $saisonLinks
+     * @return Licensee
+     */
+    public function addSaisonLink(LicenseeSaison $saisonLinks)
+    {
+        $this->saison_links[] = $saisonLinks;
+
+        return $this;
+    }
+
+    /**
+     * Remove saison_links
+     *
+     * @param LicenseeSaison $saisonLinks
+     */
+    public function removeSaisonLink(LicenseeSaison $saisonLinks)
+    {
+        $this->saison_links->removeElement($saisonLinks);
+    }
+
+    /**
+     * Get saison_links
+     *
+     * @return Collection 
+     */
+    public function getSaisonLinks()
+    {
+        return $this->saison_links;
+    }
+
+    /**
+     * Get saison, for forms only
+     * Return the last saison of the collection
+     */
+    public function getFormSaisonLink() {
+        return $this->form_saison_link;
+    }
+
+    /**
+     * Set saison, for forms only
+     */
+    public function setFormSaisonLink(LicenseeSaison $saison_link) {
+        $this->form_saison_link = $saison_link;
+    }
+
+    /**
+     * Get saisons
+     *
+     * @return Saison[]
+     */
+    public function getSaisons() {
+        $saisons = array();
+        foreach($this->getSaisonLinks() as &$saison_link) 
+            $saisons[] = $saison_link->getSaison();
+        return $saisons;
+    }
+
+
+    /**
+     * TODO: To remove !
+     */
+
+    /**
+     * Get groupe
+     *
+     * @return Groupe 
+     */
+    public function getGroupeOld()
+    {
+        return $this->groupe;
+    }
+
+    /**
+     * Get groupe_jours
+     *
+     * @return array 
+     */
+    public function getGroupeJoursOld()
+    {
+        return $this->groupe_jours;
+    }
+
+    /**
+     * Get inscription
+     *
+     * @return array 
+     *
+     * TODO: Remove
+     */
+    public function getInscriptionOld()
+    {
+        return $this->inscription;
+    }
+
+
+
+
+    /**
      * Set inscription
      *
      * @param array $inscription
@@ -929,41 +996,28 @@ Site: http://stadelaurentinnatation.fr</p>');
     }
 
     /**
-     * Get inscription
+     * Set groupe_jours
      *
-     * @return array 
+     * @param array $groupeJours
+     * @return Licensee
      */
-    public function getInscription()
+    public function setGroupeJours($groupeJours)
     {
-        return $this->inscription;
+        $this->groupe_jours = $groupeJours;
+
+        return $this;
     }
 
     /**
-     * Change value for an inscription
+     * Set groupe
      *
-     * @param int $index: Inscription Index
-     * @param int $missing: New missing value
-     * @return int New missing value
+     * @param \SLN\RegisterBundle\Entity\Groupe $groupe
+     * @return Licensee
      */
-    public function setInscriptionMissing($index, $missing) {
-        if ($missing and in_array($index, $this->inscription)) {
-            $key = array_search($index, $this->inscription);
-            unset($this->inscription[$key]);
-            $this->inscription = array_values($this->inscription);
-        }
+    public function setGroupe(\SLN\RegisterBundle\Entity\Groupe $groupe = null)
+    {
+        $this->groupe = $groupe;
 
-        if (!$missing and !in_array($index, $this->inscription)) {
-            $this->inscription[] = $index;
-        }
-
-        return !in_array($index, $this->inscription);
+        return $this;
     }
-
-    /**
-     * Add a tarif to the tarifs list
-     */
-    public function addTarif($tarif) {
-        $this->tarifs[] = $tarif;
-    }
-
 }

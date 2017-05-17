@@ -1,0 +1,39 @@
+{% extends 'SLNRegisterBundle::layout.html.twig' %}
+
+{% block title %}Saison {{ saison.nom }}{% endblock %}
+
+{% block body %}
+<div class="btn-group btn-group-justified">
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_saison_list') }}">Liste des saisons</a>
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_saison_edit', {id: saison.getId}) }}">Modifier cette saison</a>
+</div>
+
+<h1>Saison {{ saison.nom }}</h1>
+
+<h2>Réductions</h2>
+
+<p>Pour la saison <span class="mark">{{ saison.nom }}</span>, les réductions sont les suivantes:</p>
+
+<table class='table table-striped'>
+<thead>
+<tr>
+  <th>Début</th><th>Réduction</th>
+<tr>
+</thead>
+{% for reduction in saison.getFormatedReductions %}
+<tr>
+  <td>{{ reduction.getStart }}</td><td>{{ reduction.reduction }} %</td>
+</tr>
+{% endfor %}
+</table>
+
+<h2>Liste des licenciés</h2>
+
+<p>{{ licensees|length }} licenciés</p>
+
+  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': licensees, 'admin': admin, 'saison': saison } %}
+  
+{% endblock %}
+  
+  
+

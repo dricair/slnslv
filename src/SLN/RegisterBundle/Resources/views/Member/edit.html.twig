@@ -13,8 +13,14 @@
   <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_create_for_user', {'user_id': id}) }}">Ajouter un licencié à ce compte</a>
 </div>
 
-<h1>Liste des licenciés attachés au compte</h1>
-  {%include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': licensees, 'admin': admin } %}
+{%   if open_saison %}
+<h1>Liste des licenciés attachés au compte (Saison {{ open_saison.nom }})</h1>
+  {%include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': open_licensees, 'admin': admin } %}
+{%   endif %}
+
+<h1>Liste des licenciés attachés au compte (Saison {{ current_saison.nom }})</h1>
+  {%include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': current_licensees, 'admin': admin } %}
+
 {% endif %}
 
 <h1>{{ title }}</h1>

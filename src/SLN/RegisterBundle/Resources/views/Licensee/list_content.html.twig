@@ -12,8 +12,9 @@
 </thead>
 <tbody>
 {% for licensee in licensees %}
-  {% set missingNum = licensee.inscriptionMissingNum %}
-  {% set missingStr = licensee.inscriptionMissingString %}
+  {% set missingNum = licensee.inscriptionMissingNum(saison) %}
+  {% set missingStr = licensee.inscriptionMissingString(saison) %}
+  {% set groupe = licensee.getGroupe(saison) %}
 
 <tr>
   <td>
@@ -29,29 +30,33 @@
   <td>{{ licensee.prenom }}</td>
   <td>{{ licensee.naissance|date('d/m/Y') }}</td>
   <td>
-      {% if licensee.groupe %}
-        {% if admin %}<a href="{{ path('SLNRegisterBundle_groupe_show', { id: licensee.groupe.id }) }}">{{ licensee.groupe.nom }}</a>
-        {% else %}{{ licensee.groupe.nom }}{% endif %}
+      {% if groupe %}
+        {% if admin %}<a href="{{ path('SLNRegisterBundle_groupe_show', { 'id': groupe.id, 'saison_id': saison.id }) }}">{{ groupe.nom }}</a>
+        {% else %}{{ groupe.nom }}{% endif %}
       {% else %} Pas de groupe sélectionné.{% endif %}
   </td>
   <td>{{ licensee.getTelephone }}</td>
   <td>
-    <a href="{% if admin %}{{ path('SLNRegisterBundle_admin_licensee_edit', { id: licensee.getId }) }}
-             {% else %}{{ path('SLNRegisterBundle_licensee_edit', { id: licensee.getId }) }}{% endif %}" title='Modifier ce licencié'>
+    {% if saison.activated %}
+    <a href="{% if admin %}{{ path('SLNRegisterBundle_admin_licensee_edit', { 'id': licensee.getId, 'saison_id': saison.id }) }}
+             {% else %}{{ path('SLNRegisterBundle_licensee_edit', { 'id': licensee.getId, 'saison_id': saison.id }) }}{% endif %}" title='Modifier ce licencié'>
       <span class="glyphicon glyphicon-pencil"></span></a>
     <a href="{{ path('SLNRegisterBundle_licensee_delete', { id: licensee.getId }) }}" title='Supprimer ce licencié'
          onclick="return confirm('Etes-vous sûr de vouloir effacer le licencié {{ licensee.prenom }} {{ licensee.nom }} ?');">
       <span class="glyphicon glyphicon-trash"></span></a>
+    {% endif %}
   {% if admin %}
     {% if member_link | default(true) %}
     <a href="{{ path('SLNRegisterBundle_member_edit', { id: licensee.user.id }) }}" title="Fiche du membre">
       <span class="glyphicon glyphicon-user"></span></a>
     {% endif %}
-    <a href="{{ path('SLNRegisterBundle_admin_licensee_inscription', { id: licensee.getId }) }}" title="Fiche d'inscription pour ce licencié" target="_blank">
+    {% if saison.activated %}
+    <a href="{{ path('SLNRegisterBundle_admin_licensee_inscription', { 'id': licensee.getId, 'saison_id': saison.id }) }}" title="Fiche d'inscription pour ce licencié" target="_blank">
       <span class="glyphicon glyphicon-print"></span></a>
-    <a href="{{ path('SLNRegisterBundle_mail_licensee_select', { defaultLicensee: licensee.getId }) }}" title="Envoyer un mail à ce licencié">
+    {% endif %}
+    <a href="{{ path('SLNRegisterBundle_mail_licensee_select', { 'defaultLicensee': licensee.getId, 'saison_id': saison.id }) }}" title="Envoyer un mail à ce licencié">
       <span class="glyphicon glyphicon-envelope"></span></a>
-    <a href="{{ path('SLNRegisterBundle_payment_user', { user_id: licensee.user.id }) }}" title="Envoyer un mail à ce licencié">
+    <a href="{{ path('SLNRegisterBundle_payment_user', { user_id: licensee.user.id }) }}" title="Paiements pour ce licencié">
       <span class="glyphicon glyphicon-euro"></span></a>
   {% endif %}
   </td>

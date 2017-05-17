@@ -17,23 +17,24 @@
     {% for i, str in inscription_names if i != payment_val %}
     <th> <p title="{{str}}">{{ str|slice(0,3) }}.</p> </th>
     {% endfor %}
-    <th>Cotisations</th>
+    <th>Paiements</th>
   </tr>
   {% for licensee in user.getLicensees %}
-     {% if licensee.groupe %}
+     {% if licensee.getGroupe(saison) %}
   <tr data-licensee='{{ licensee.id }}'>
     <td>
+      {% set licensee_missing = licensee.inscriptionMissingList(saison, TRUE) %}
       {{ licensee.prenom }} {{ licensee.nom }}
-      {% if admin %}
-      <a href="{{ path('SLNRegisterBundle_admin_licensee_edit', { id: licensee.id }) }}" title='Modifier ce licencié'>
+      {% if admin or licensee_missing|length > 0 %}
+      <a href="{% if admin %}{{ path('SLNRegisterBundle_admin_licensee_edit', { id: licensee.id }) }}
+               {% else %}{{ path('SLNRegisterBundle_licensee_edit', { id: licensee.id }) }}{% endif %}" title='Modifier ce licencié'>
         <span class="glyphicon glyphicon-pencil"></span></a>
-      <a href="{{ path('SLNRegisterBundle_licensee_delete', { id: licensee.id }) }}" title='Supprimer ce licencié'
-         onclick="return confirm('Etes-vous sûr de vouloir effacer le licencié {{ licensee.prenom }} {{ licensee.nom }} ?');">
+      <a href="{{ path('SLNRegisterBundle_licensee_delete', { id: licensee.id }) }}" title='Supprimer ce licencié pour la saison {{ saison.nom }}'
+         onclick="return confirm('Etes-vous sûr de vouloir effacer le licencié {{ licensee.prenom }} {{ licensee.nom }} pour la saison {{ saison.nom }}?');">
         <span class="glyphicon glyphicon-trash"></span></a>
       {% endif %}
-      <br/>{{ licensee.groupe }}
+      <br/>{{ licensee.getGroupe(saison) }}
     </td>
-      {% set licensee_missing = licensee.inscriptionMissingList(TRUE) %}
       {% for i, str in inscription_names if i != payment_val %}
     <td class='inscription_toggle' data-index='{{ i }}' data-missing='{{ i in licensee_missing }}'>
         {% if i in licensee_missing %} <span class="text-danger glyphicon glyphicon-remove" title="{{ str }}"></span>
@@ -42,7 +43,7 @@
       {% endfor %}
 
     <td>
-      {% for tarif in licensee.getTarifList %}
+      {% for tarif in licensee.getTarifList(saison) %}
         {{ tarif.getTypeStr|capitalize }} 
         {% if tarif.description %}({{ tarif.description|capitalize }}){% endif %}: {{ tarif.getPrice }}
         {% if not loop.last %}<br/>{% endif %}
@@ -52,11 +53,11 @@
     {% endif %}
   {% endfor %}
 
-  {% set info = user.paymentInfo %}
+  {% set info = user.paymentInfo(saison) %}
   <tr data-user='{{ user.id }}' data-value='info.diff_value'>
     <td>Paiements:</td>
-    <td class='inscription_toggle' data-index='{{ payment_val }}' data-missing='{{ user.licenseesMissingPayment }}'>
-      {% if user.licenseesMissingPayment %}
+    <td class='inscription_toggle' data-index='{{ payment_val }}' data-missing='{{ user.licenseesMissingPayment(saison) }}'>
+      {% if user.licenseesMissingPayment(saison) %}
         <span class="text-danger glyphicon glyphicon-remove" title="Paiements non complets."></span>
       {% else %}
         <span class="text-success glyphicon glyphicon-ok" title="Paiements complets"></span>
@@ -66,17 +67,23 @@
     <td colspan='2'>
       <p class={% if info.diff_value == 0 %} "text-success" {% else %} "text-danger" {% endif %}>
         {% if info.diff_value == 0 %}
+          {% if user.licenseesMissingPayment(saison) %}
+          En attente de validation.
+          {% else %}
           Paiement complet.
-        {% elseif info.diff_value > 0 %}
-          Manquant: {{ info.diff_payments }}
+          {% endif %}
         {% else %}
+          {% if info.diff_value > 0 %}
+          Manquant: {{ info.diff_payments }}
+          {% else %}
           Trop perçu: {{ info.diff_payments }}
+          {% endif %}
         {% endif %}
       </p>
     </td>
     <td>
       {% if payments_detail %}
-        {% for payment in user.payments %}
+        {% for payment in user.getSaisonPayments(saison) %}
         {{ payment.getPtypeStr }}{% if payment.description %} {{ payment.description }}{% endif %}: {{ payment.getValueStr }}
         {% if admin %}
         <a href="{{ path('SLNRegisterBundle_payment_edit', { user_id: payment.user.id, id: payment.id }) }}" title='Modifier ce paiement'>

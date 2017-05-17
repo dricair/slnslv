@@ -59,9 +59,11 @@ class Builder extends ContainerAware {
                 ->setAttribute('icon', 'euro')
     			->setAttribute('divider_append', true);
 
-            $menu['Admin']->addChild('Liste des licenciés', array('route' => 'SLNRegisterBundle_admin_licensee_list'))
+            $menu['Admin']->addChild('Liste des licenciés', array('route' => 'SLNRegisterBundle_admin_licensee_list',
+                                                                  'routeParameters' => array('saison_id' => 0),))
                 ->setAttribute('icon', 'th-list');
-            $menu['Admin']->addChild('Ajouter un licencié', array('route' => 'SLNRegisterBundle_admin_licensee_create'))
+            $menu['Admin']->addChild('Ajouter un licencié', array('route' => 'SLNRegisterBundle_admin_licensee_create',
+                                                                  'routeParameters' => array('saison_id' => 0),))
                 ->setAttribute('icon', 'user')
     			->setAttribute('divider_append', true);
 
@@ -70,10 +72,11 @@ class Builder extends ContainerAware {
     			->setAttribute('divider_append', true);
 
             $menu['Admin']->addChild('Liste des mails', array('route' => 'SLNRegisterBundle_mail_list',
-                                                                         'routeParameters' => array('page' => 1, 'admin' => TRUE),))
+                                                              'routeParameters' => array('page' => 1, 'admin' => TRUE),))
                 ->setAttribute('icon', 'th-list');
 
-            $menu['Admin']->addChild('Envoyer un email', array('route' => 'SLNRegisterBundle_mail_licensee'))
+            $menu['Admin']->addChild('Envoyer un email', array('route' => 'SLNRegisterBundle_mail_licensee',
+                                                               'routeParameters' => array('saison_id' => 0),))
                 ->setAttribute('icon', 'envelope');
 
         }

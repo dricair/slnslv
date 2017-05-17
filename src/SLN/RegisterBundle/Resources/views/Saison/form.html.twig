@@ -1,0 +1,51 @@
+{% set tr_open='<tr><td>' %}
+{% set tr_close='</tr></td>' %}
+{% set td='</td><td>' %}
+
+<form action="{{ path('SLNRegisterBundle_saison_edit', {'id': id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal" role="form">
+  {{ form_errors(form) }}
+
+  <div class="panel panel-default">
+    <div class="panel-heading">Description</div>
+    <div class="panel-body">
+      {{ form_row(form.nom) }}
+      {{ form_row(form.start) }}
+      {{ form_row(form.activated) }}
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">Réductions</div>
+    <div class="add-row panel-body">
+      <table class='table table-striped'>
+        <thead>
+        <tr>
+          <th>Début</th><th>Réduction</th><th>Action</th>
+        </tr>
+        </thead>
+        <tbody data-prototype='
+{{ tr_open|e }}{{ form_widget(form.reductions.vars.prototype.start)|e }} {{ form_widget(form.reductions.vars.prototype.start)|e }}
+     {{ td|e }}{{ form_widget(form.reductions.vars.prototype.reduction)|e }} {{ form_widget(form.reductions.vars.prototype.reduction)|e }}
+     {{ td|e }}{{ tr_close|e }}'>
+        {% for reduction in form.reductions %}
+        <tr>
+          <td>{{ form_widget(reduction.start) }} {{ form_errors(reduction.start) }}</td>
+          <td>{{ form_widget(reduction.reduction) }} {{ form_errors(reduction.reduction) }}</td>
+          <td></td>
+        </tr>
+    {% endfor %}
+       </tbody>
+      </table>
+    </div>
+  </div>
+
+  {{ form_rest(form) }}
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-7">
+      <input type="submit" class="btn btn-primary" type="submit" value="Envoyer" />
+    </div>
+  </div>
+</form>
+
+     
+

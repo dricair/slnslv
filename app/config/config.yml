@@ -6,7 +6,8 @@ imports:
 
 framework:
     #esi:             ~
-    translator:      { fallbacks: ["%locale%"] }
+    translator:      
+        enabled: false
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -33,7 +34,7 @@ twig:
     form_themes:
         - 'SLNRegisterBundle:Form:fields.html.twig'
     globals:
-        version: 0.6.7
+        version: 0.7.0
 
 # Assetic Configuration
 assetic:

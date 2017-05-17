@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Entity\UserPayment;
 use SLN\RegisterBundle\Entity\Tarif;
+use SLN\RegisterBundle\Entity\Saison;
 
 use SLN\RegisterBundle\Form\DataTransformer\PriceTransformer;
 
@@ -51,6 +52,7 @@ class User extends BaseUser
 
     /**
      * Returns an array to convert Title integer to string
+
      *
      * @return string[] List of title strings
      */
@@ -194,12 +196,12 @@ class User extends BaseUser
     /**
      * Add extra Tarif to each licensee
      */
-    public function addExtraTarif() {
+    public function addExtraTarif(Saison $saison) {
         $cotisations = array();
 
         foreach ($this->licensees as &$licensee) {
-            $tarifs = $licensee->getTarifList();
-            if ($licensee->getGroupe() !== NULL and intval($this->code_postal) != 6700) {
+            $tarifs = $licensee->getTarifList($saison);
+            if ($licensee->getGroupe($saison) !== NULL and intval($this->code_postal) != 6700) {
                 $licensee->addTarif(new Tarif(Tarif::TYPE_ST_LAURENT)); 
             }
 
@@ -244,10 +246,10 @@ class User extends BaseUser
      *
      * @return int Price value suitable for PriceTransformer
      */
-    public function totalCotisations() {
+    public function totalCotisations(Saison $saison) {
         $total = 0;
         foreach ($this->licensees as &$licensee) {
-            $tarifs = $licensee->getTarifList();
+            $tarifs = $licensee->getTarifList($saison);
             foreach ($tarifs as &$tarif) {
                $total += $tarif->value; 
             }
@@ -260,9 +262,9 @@ class User extends BaseUser
      *
      * @return int Price value suitable for PriceTransformer
      */
-    public function totalPayments() {
+    public function totalPayments(Saison $saison) {
         $total = 0;
-        foreach ($this->payments as &$payment) {
+        foreach ($this->getSaisonPayments($saison) as &$payment) {
             $total += $payment->getValue();
         }
         return $total;
@@ -273,9 +275,9 @@ class User extends BaseUser
      *
      * @return string[] Array of string descriptions
      */
-    public function paymentInfo() {
-        $total_cotisations = $this->totalCotisations();
-        $total_payments = $this->totalPayments();
+    public function paymentInfo(Saison $saison) {
+        $total_cotisations = $this->totalCotisations($saison);
+        $total_payments = $this->totalPayments($saison);
         $diff = $total_cotisations - $total_payments;
         $t = new PriceTransformer();
 
@@ -292,9 +294,9 @@ class User extends BaseUser
      *
      * @return bool
      */
-    public function licenseesMissingPayment() {
+    public function licenseesMissingPayment(Saison $saison) {
         foreach ($this->licensees as &$licensee) {
-            if ($licensee->inscriptionMissingPayment())
+            if ($licensee->inscriptionMissingPayment($saison))
                 return TRUE;
         }
         return FALSE;
@@ -660,4 +662,19 @@ class User extends BaseUser
     {
         return $this->payments;
     }
+
+    /**
+     * Get payments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSaisonPayments(Saison $saison)
+    {
+        $result = [];
+        foreach($this->payments as &$payment)
+            if ($payment->getSaison()->getId() == $saison->getId())
+                $result[] = $payment;
+        return $result;
+    }
+
 }

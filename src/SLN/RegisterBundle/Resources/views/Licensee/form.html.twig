@@ -40,12 +40,12 @@
       <p class="help">Sélectionnez le groupe de natation (pour la saison prochaine) si vous le connaissez.</p>
       <p class="help note">Les entraineurs peuvent changer les groupes de natation en fonction du niveau</p>
 
-      {{ form_row(form.groupe) }}
+      {{ form_row(form.form_saison_link.groupe) }}
 
       <div id='groupe-description' data-function="{{ path('api_get_group', {'id': '__id__'}) }}" class="row">
         <div id='groupe_jours'>
           <p class='help'>Choisissez le ou les jours auxquels vous souhaitez vous inscrire. Attention, le tarif dépend du nombre de cours.</p>
-          {{ form_row(form.groupe_jours) }}
+          {{ form_row(form.form_saison_link.groupe_jours) }}
         </div>
         <div class='groupe-description col-sm-6'></div>
         <div class='groupe-horaires col-sm-6'></div>

@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 use SLN\RegisterBundle\Entity\User;
 use SLN\RegisterBundle\Entity\Groupe;
+use SLN\RegisterBundle\Entity\Licensee;
+use SLN\RegisterBundle\Entity\LicenseeSaison;
 use SLN\RegisterBundle\Form\Type\UserType;
 
 use SLN\RegisterBundle\Entity\Repository\UserRepository;
@@ -94,9 +96,17 @@ class MemberController extends Controller
         }
 
 
-        $licensees = null;
+        $open_licensees = null;
+        $current_licensees = null;
+        $current_saison = null;
+        $open_saison = null;
         if ($admin) {
-            $licensees = $this->getLicenseeRepository()->getLicenseesForUser($user->getId());
+            $em = $this->getDoctrine()->getManager();
+            $current_saison = $em->getRepository('SLNRegisterBundle:Saison')->getCurrent();
+            $open_saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen();
+
+            $current_licensees = $this->getLicenseeRepository()->getLicenseesForUser($user->getId(), $current_saison);
+            $open_licensees = $this->getLicenseeRepository()->getLicenseesForUser($user->getId(), $open_saison);
         }
  
         return $this->render('SLNRegisterBundle:Member:edit.html.twig', array(
@@ -105,7 +115,10 @@ class MemberController extends Controller
             'title' => $id == 0 ? "Ajouter un membre" : "Modifier un membre",
             'id' => $id,
             'admin' => $admin,
-            'licensees' => $licensees));
+            'current_licensees' => $current_licensees,
+            'open_licensees' => $open_licensees,
+            'current_saison' => $current_saison,
+            'open_saison' => $open_saison));
     }
 
     /**
@@ -136,7 +149,9 @@ class MemberController extends Controller
      */
     public function inscriptions_pdfAction($user_id) {
         $user = $this->getUserFromID($user_id);
-        $licensees = $this->getLicenseeRepository()->getLicenseesForUser($user_id);
+        $em = $this->getDoctrine()->getManager();
+        $open_saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen();
+        $licensees = $this->getLicenseeRepository()->getLicenseesForUser($user_id, $open_saison);
 
         $pdf = $this->container->get("white_october.tcpdf")->create();
         $assets = $this->container->get('templating.helper.assets');
@@ -145,14 +160,20 @@ class MemberController extends Controller
         $first = True;
         foreach ($licensees as $licensee) {
             // For your people and no groupe selected, attach a default group (Not saved)
-            if ($licensee->getGroupe() == Null and $licensee->getAge() < 12) {
+            if ($licensee->getGroupe($open_saison) == Null and $licensee->getAge() < 12) {
                 $groupe = new Groupe();
                 $groupe->setNom("<Inconnu>");
-                $licensee->setGroupe(new Groupe());
+                $groupe->setCategorie(Groupe::ECOLE);
+
+                $saison_link = new LicenseeSaison();
+                $saison_link->setGroupe($groupe);
+                $saison_link->setSaison($open_saison);
+                $saison_link->setLicensee($licensee);
+                $licensee->addSaisonLink($saison_link);
             }
 
-            if ($licensee->getGroupe() != Null)
-                $licensee->inscriptionSheet($pdf, $assets, $title=$first ? $title : "");
+            if ($licensee->getGroupe($open_saison) != Null)
+                $licensee->inscriptionSheet($pdf, $assets, $open_saison, $title=$first ? $title : "");
         }
 
         $response = new Response($pdf->Output('inscriptions.pdf', 'I'));

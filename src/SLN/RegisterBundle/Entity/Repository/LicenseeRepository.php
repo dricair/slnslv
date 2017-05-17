@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityRepository;
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Entity\User;
+use SLN\RegisterBundle\Entity\Saison;
 
 /**
  * Licensee Repository
@@ -20,17 +21,27 @@ use SLN\RegisterBundle\Entity\User;
 class LicenseeRepository extends EntityRepository {
 
     /**
+     * Specify a saison for the query builder
+     * 'l' needs to be the licensee in the query builder
+     */
+    protected function addSaison(&$qb, Saison $saison) {
+      $qb->leftjoin('l.saison_links', 's')
+         ->andWhere('s.licensee=l.id')
+         ->andWhere('s.saison=:saison_id')
+         ->setParameter('saison_id', $saison->getId());
+    }
+
+    /**
      * Return the licensees for a specific user.
      *
      * @param int  $user_id Id of the User containing the Licensee
-     * @param bool $active  If False, only select the Licensee that are active
+     * @param Saison $saison Licensees for the specific Saison; All if NULL
      *
      * @return Licensee[] List of Licensee
      *
      * @see User Licensees for a specific User
-     * @todo Active filter not done for getLicenseesForUser
      */
-    public function getLicenseesForUser($userId, $active = True) {
+    public function getLicenseesForUser($userId, $saison) {
 
         $qb = $this->createQueryBuilder('l')
                    ->select('l')
@@ -38,15 +49,9 @@ class LicenseeRepository extends EntityRepository {
                    ->addOrderBy('l.naissance')
                    ->setParameter('user_id', $userId);
 
-        //if ($active === True) {
-        //    // activeDate: 1er sept - 31 août
-        //    $activeDate = new \DateTime();
-        //    if (date('n', $activeDate->getTimestamp()) >= 9) $activeDate->setDate(date('Y', $activeDate->getTimestamp()), 9, 1);
-        //    else $activeDate->setDate(date('Y', $activeDate->getTimestamp())-1, 9, 1);
-
-        //    $qb->andWhere('l.date_licence is NULL OR l.date_licence >= :activeDate')
-        //       ->setParameter('activeDate', $activeDate);
-        //}
+        if ($saison) {
+            $this->addSaison($qb, $saison);
+        }
 
         return $qb->getQuery()
                   ->getResult();
@@ -57,12 +62,16 @@ class LicenseeRepository extends EntityRepository {
      *
      * @return Licensee[] List of licensee
      */
-    public function getAll() {
+    public function getAll(Saison $saison) {
         $qb = $this->createQueryBuilder('l')
                    ->select('l')
                    ->join('l.groupe', 'g')
                    ->addOrderBy('l.nom',  'ASC')
                    ->addOrderBy('l.prenom', 'ASC');
+
+        if ($saison) {
+            $this->addSaison($qb, $saison);
+        }
 
         return $qb->getQuery()
                   ->getResult();

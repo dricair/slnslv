@@ -12,8 +12,12 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use SLN\RegisterBundle\Entity\Member;
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Entity\Horaire;
+use SLN\RegisterBundle\Entity\Saison;
+use SLN\RegisterBundle\Entity\LicenseeSaison;
 use SLN\RegisterBundle\Entity\Repository\UserRepository;
 use SLN\RegisterBundle\Entity\Repository\GroupeRepository;
+
+use SLN\RegisterBundle\Form\Type\LicenseeSaisonType;
 
 
 /**
@@ -30,6 +34,7 @@ class LicenseeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $admin = $options["admin"];
+        $public_groups = $options["public_groups"];
 
         $builder
             ->add('nom', null, array("attr" => array("placeholder" => "Nom")))
@@ -38,22 +43,11 @@ class LicenseeType extends AbstractType
                                              "years" => range(date('Y')-100, date('Y')-3)))
             ->add('sexe', 'choice', array(
                   'choices' => Licensee::getGenders(),))
-            ->add('groupe_jours', 'choice', array(
-                  'label' => 'Choix des jours',
-                  'choices' => Horaire::getJours(),
-                  'multiple' => true,
-                  'expanded' => true))
             ->add('iuf', null, array("attr" => array("placeholder" => "01234567")))
-            ->add('autorisation_photos', 'checkbox', array('required'=>false));
+            ->add('autorisation_photos', 'checkbox', array('required'=>false))
+            ->add('form_saison_link', LicenseeSaisonType::class);
 
-        if ($options["admin"])
-            $builder->add('groupe', null, array("group_by" => 'categorieName'));
-        else
-            $builder->add('groupe', null, array("group_by" => 'categorieName',
-                                                "empty_data" => null,
-                                                "query_builder" => function (GroupeRepository $er) {
-                                                     return $er->findPublic(TRUE);
-                                                }));
+
         if ($options["admin"])
             $builder->add('user', 'entity', array("class" => 'SLNRegisterBundle:User',
                                                   "query_builder" => function (UserRepository $er) {
@@ -62,11 +56,6 @@ class LicenseeType extends AbstractType
                                                                ->addOrderBy('u.nom', 'ASC');
                                                   },
                                                   "label" => "Rattaché au compte"))
-                    ->add('inscription', 'choice', array(
-                          'label' => 'Etat de l\'inscription',
-                          'choices' => Licensee::getInscriptionNames(),
-                          'multiple' => true,
-                          'expanded' => true))
                     ->add('fonctions', 'choice', array(
                           'label' => 'Fonctions spéciales',
                           'choices' => Licensee::getFonctionNames(),
@@ -80,7 +69,8 @@ class LicenseeType extends AbstractType
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
-        $resolver->setDefaults(array("admin" => false));
+        $resolver->setDefaults(array("admin" => false,
+                                     "public_groups" => array()));
     }
 
     /** @ignore */

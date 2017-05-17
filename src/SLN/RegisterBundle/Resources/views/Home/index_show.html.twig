@@ -4,27 +4,69 @@
 
 {% block body %}
 
-  {% if activeLicensees %}
-  <h1>Inscriptions pour la saison {{ year }}-{{year + 1 }}</h1>
+  {% if open_saison %}
 
-  <p>Voici la liste des inscriptions enregistrées pour vous-même ou vos enfants pour la <span class='mark'>saison {{ year }}-{{year + 1 }}</span>.</p>
+  {%   if no_licensee %}
 
-  <p>Vous pouvez les modifier en cliquant sur le bouton <span class="glyphicon glyphicon-pencil" title="Modifier"></span>, 
-     ou supprimer en cliquant sur le bouton <span class="glyphicon glyphicon-trash" title="Supprimer"></span>.</p>
+  <h1>Ajouter une inscription pour la saison {{ open_saison.nom }}</h1>
 
-  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': activeLicensees, 'admin': false } %}
+  <p>Ajoutez une inscription pour vous-même ou un de vos enfants. Vous avez la possibilité d'en ajouter plusieurs sur cet espace.</p>
 
-  <p>Vous pouvez encore <a href='{{ path('SLNRegisterBundle_licensee_create', { user_id: app.user.id }) }}'>ajouter des licenciés</a>
-     en cliquant sur ce lien.</p>
+  {{ render(controller('SLNRegisterBundle:Licensee:edit', { 'id': 0, 'user_id': app.user.id, 'inside_page': TRUE, 'saison_id': 0, 'admin': false })) }}
 
-  <h1>Documents à imprimer</h1>
+  {%   else %}
+
+  <h1>Ajouter des inscriptions pour la saison {{ open_saison.nom }}</h1>
+
+  <p>Renouvelez les adhésions pour les membres de votre famille pour la saison {{ open_saison.nom }}, ou créez une nouvelle fiche:</p>
+
+  <table class="table table-striped">
+  <thead>
+  <tr>
+    <th>Nom</th><th>Prénom</th><th>Groupe</th><th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for licensee in available_licensees %}
+  {% set groupe = licensee.getGroupe(open_saison) %}
+  <tr>
+    <td>{{ licensee.nom }}</td>
+    <td>{{ licensee.prenom }}</td>
+    <td>{% if groupe %}{{ groupe.nom }}{% else %}Pas de groupe sélectionné.{% endif %}</td>
+    <td>
+      <a class='btn btn-primary btn-block' role="button" href='{{ path('SLNRegisterBundle_licensee_edit', { id: licensee.id }) }}'>
+        Renouveler l'adhésion</a>
+    </td>
+  </tr>
+  {% endfor %}
+  <tr>
+    <td colspan=3>Vous pouvez ajouter une nouvelle inscription en cliquant sur le bouton:</td>
+    <td><a class='btn btn-primary btn-block' role="button" href='{{ path('SLNRegisterBundle_licensee_create', { user_id: app.user.id }) }}'>
+     Ajouter une nouvelle inscription</a></td>
+  </tr>
+  </tbody>
+  </table>
+
+  {% if active_licensees|length %}
+  <h1>Etat des inscriptions pour la saison {{open_saison.nom}}</h1>
+
+  <p>Voici la liste des membres de votre famille qui sont enregistrés.<p>
+
+  {%   if all_ok %}
+
+  <p> Les dossiers d'inscription sont complets.
+
+  {%   else %}
+
+  <p>Seuls les dossiers complets permettent de garantir une place. Pour compléter, le dossier, vous devez imprimer ces documents&nbsp;:</p>
 
   <div class='row'>
     <div class='col-sm-6'>
       <div class="panel panel-default">
         <div class="panel-heading">Feuilles d'inscription</div>
         <div class="panel-body">
-          <p>Une fois toutes les inscriptions complétées, vous devez imprimer les feuilles d'inscription:</p>
+          <p>Une fois toutes les inscriptions complétées, vous devez imprimer les feuilles d'inscription. 
+             Cochez sur les feuilles les documents à fournir pour compléter le dossier.</p>
           <a class='btn btn-primary btn-block' role="button" href="{{ path('SLNRegisterBundle_member_inscriptions_pdf', {'user_id': app.user.id}) }}" target="_blank">
             Imprimer les feuilles d'inscription pré-remplies</a>
         </div>
@@ -35,28 +77,37 @@
       <div class="panel panel-default">
         <div class="panel-heading">Formulaires de licence</div>
         <div class="panel-body">
-          <p>Pensez aussi télécharger, remplir et imprimer un formulaire de licence par personne:</p>
-          {% set yearp1 = year+1%}
-          <a class='btn btn-primary btn-block' role="button" href="{{ asset('bundles/slnregister/images/formulaire_licence_'~yearp1~'.pdf') }}" target="_blank">
-           Télécharger le formulaire de licence {{ year }}-{{ year+1 }}</a>
+          <p>Vous devez télécharger, remplir et imprimer un formulaire de licence par personne.</p>
+          <a class='btn btn-primary btn-block' role="button" href="{{ asset('bundles/slnregister/images/formulaire_licence.pdf') }}" target="_blank">
+           Télécharger le formulaire de licence</a>
         </div>
       </div>
     </div>
   </div>
 
-  <h1>Etat des inscriptions</h1>
+  <p>Pour finaliser le dossier, plusieurs possibilités:</p>
+  <ul>
+    <li>Ramener le dossier pendant les heures d'ouverture du bureau, 
+        voir sur le <a href='http://stadelaurentinnatation.fr'>site du Stade Laurentin Natation</a>.</li>
+    <li>Laisser le dossier complet dans la boite au lettre du bungalow, à la piscine de St Laurent</a>. Il sera traité en quelques jours.</li>
+    <li>Envoyer le dossier complet par la poste: Stade Laurentin Natation, 1555 Espl. Edmond Jouhaud, 06700 St Laurent du Var.</li>
+  </ul>
 
-  {% include 'SLNRegisterBundle:Payments:user_detail.html.twig' with { 'user': app.user, 'admin': false } %}
+  <p>Si vous avez des questions, n'hésitez pas à <a href='{{ path('SLNRegisterBundle_contact') }}'>nous contacter.</a></p>
 
- {% else %}
+  {%   endif %}
 
-  <h1>Ajouter une inscription pour la saison {{ year }}-{{year + 1 }}</h1>
+  {% include 'SLNRegisterBundle:Payments:user_detail.html.twig' with { 'user': app.user, 'saison': open_saison, 'admin': false } %}
 
-  <p>Ajoutez une inscription pour vous-même ou un de vos enfants. Vous avez la possibilité d'en ajouter plusieurs sur cet espace.</p>
+  {%  endif %}
 
-  {{ render(controller('SLNRegisterBundle:Licensee:edit', { 'id': 0, 'user_id': app.user.id, 'inside_page': TRUE, 'admin': false })) }}
+  {% endif %}
 
- {% endif %}
+  {% else %}
+
+  <p>Il n'y a pas encore de saison ouverte pour l'inscription. 
+     Si vous avez des questions, vous pouvez <a href='{{ path('SLNRegisterBundle_contact') }}'>nous contacter.</a></p>
+  {% endif %}
 
 {% endblock %}
 

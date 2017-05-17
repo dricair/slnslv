@@ -25,28 +25,28 @@ SLNRegisterBundle_contact:
 # -------------------------
 SLNRegisterBundle_licensee_create:
   path: /licensee/create/{user_id}
-  defaults: { _controller: SLNRegisterBundle:Licensee:edit, id:0 }
+  defaults: { _controller: SLNRegisterBundle:Licensee:edit, id:0, saison_id: 0 }
   requirements:
     methods:  GET|POST
     user_id: \d+
 
 SLNRegisterBundle_licensee_edit:
   path: /licensee/edit/{id}
-  defaults: { _controller: SLNRegisterBundle:Licensee:edit }
+  defaults: { _controller: SLNRegisterBundle:Licensee:edit, saison_id: 0 }
   requirements:
     methods:  GET|POST
     id: \d+
 
 SLNRegisterBundle_licensee_show:
   path: /licensee/{id}
-  defaults: { _controller: SLNRegisterBundle:Licensee:show }
+  defaults: { _controller: SLNRegisterBundle:Licensee:show, saison_id: 0 }
   requirements:
     methods:  GET
     id: \d+
 
 SLNRegisterBundle_licensee_delete:
   path: /licensee/delete/{id}
-  defaults: { _controller: SLNRegisterBundle:Licensee:delete }
+  defaults: { _controller: SLNRegisterBundle:Licensee:delete, saison_id: 0 }
   requirements:
     methods:  GET
     id: \d+
@@ -92,7 +92,7 @@ SLNRegisterBundle_groupe_delete:
     id: \d+
 
 SLNRegisterBundle_groupe_show:
-  path: /admin/groupe/show/{id}
+  path: /admin/groupe/{saison_id}/show/{id}
   defaults: { _controller: SLNRegisterBundle:Groupe:show, admin: true }
   requirements:
     methods:  GET|POST
@@ -103,6 +103,42 @@ SLNRegisterBundle_groupe_list:
   defaults: { _controller: SLNRegisterBundle:Groupe:list }
   requirements:
     methods:  GET|POST
+
+#
+# Create and edit saisons
+# -----------------------
+SLNRegisterBundle_saison_create:
+  path: /admin/saison/create/
+  defaults: { _controller: SLNRegisterBundle:Saison:edit }
+  requirements:
+    methods:  GET|POST
+
+SLNRegisterBundle_saison_edit:
+  path: /admin/saison/edit/{id}
+  defaults: { _controller: SLNRegisterBundle:Saison:edit }
+  requirements:
+    methods:  GET|POST
+    id: \d+
+
+SLNRegisterBundle_saison_show:
+  path: /admin/saison/show/{id}
+  defaults: { _controller: SLNRegisterBundle:Saison:show, admin: true }
+  requirements:
+    methods:  GET|POST
+    id: \d+
+
+SLNRegisterBundle_saison_list:
+  path: /admin/saison/list
+  defaults: { _controller: SLNRegisterBundle:Saison:list }
+  requirements:
+    methods:  GET|POST
+
+SLNRegisterBundle_saison_update:
+  path: /admin/saison/update
+  defaults: { _controller: SLNRegisterBundle:Saison:update }
+  requirements:
+    methods: POST
+
 
 #
 # Create and edit members
@@ -138,40 +174,40 @@ SLNRegisterBundle_member_list:
 # Create and edit licensees
 # -------------------------
 SLNRegisterBundle_admin_licensee_create:
-  path: /admin/licensee/create
+  path: /admin/licensee/{saison_id}/create
   defaults: { _controller: SLNRegisterBundle:Licensee:edit, id:0, admin: true }
   requirements:
     methods:  GET|POST
 
 SLNRegisterBundle_admin_licensee_create_for_user:
-  path: /admin/licensee/create/{user_id}
+  path: /admin/licensee/{saison_id}/create/{user_id}
   defaults: { _controller: SLNRegisterBundle:Licensee:edit, id:0, admin: true }
   requirements:
     methods:  GET|POST
     user_id: \d+
 
 SLNRegisterBundle_admin_licensee_edit:
-  path: /admin/licensee/edit/{id}
+  path: /admin/licensee/{saison_id}/edit/{id}
   defaults: { _controller: SLNRegisterBundle:Licensee:edit, admin: true }
   requirements:
     methods:  GET|POST
     id: \d+
 
 SLNRegisterBundle_admin_licensee_list:
-  path: /admin/licensee/list
+  path: /admin/licensee/{saison_id}/list
   defaults: { _controller: SLNRegisterBundle:Licensee:list, admin: true }
   requirements:
     methods:  GET
 
 SLNRegisterBundle_admin_licensee_inscription:
-  path: /admin/licensee/inscription/{id}
+  path: /admin/licensee/{saison_id}/inscription/{id}
   defaults: { _controller: SLNRegisterBundle:Licensee:inscription, admin: true}
   requirements:
     methods:  GET|POST
     id: \d+
 
 SLNRegisterBundle_admin_licensee_export:
-  path: /admin/licensee/export.xlsx
+  path: /admin/licensee/{saison_id}/export.xlsx
   defaults: { _controller: SLNRegisterBundle:Licensee:export}
   requirements:
     methods:  GET
@@ -181,20 +217,20 @@ SLNRegisterBundle_admin_licensee_export:
 # Mail sending
 # ------------
 SLNRegisterBundle_mail_licensee:
-  path: /admin/mail/licensee
+  path: /admin/mail/{saison_id}/licensee
   defaults: { _controller: SLNRegisterBundle:Mail:mail, id:0, defaultGroup:0, defaultLicensee: 0 }
   requirements:
     methods: GET|POST
 
 SLNRegisterBundle_mail_edit:
-  path: /admin/mail/edit/{id}
+  path: /admin/mail/{saison_id}/edit/{id}
   defaults: { _controller: SLNRegisterBundle:Mail:mail, defaultGroup:0, defaultLicensee: 0 }
   requirements:
     methods: GET|POST
     id: \d+
 
 SLNRegisterBundle_mail_licensee_select:
-  path: /admin/mail/licensee/{defaultLicensee}
+  path: /admin/mail/{saison_id}/licensee/{defaultLicensee}
   defaults: { _controller: SLNRegisterBundle:Mail:mail, id:0, defaultGroup:0}
   requirements:
     methods: GET|POST

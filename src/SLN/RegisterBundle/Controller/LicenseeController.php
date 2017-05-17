@@ -17,7 +17,10 @@ use Symfony\Bundle\TwigBundle\Extension;
 use SLN\RegisterBundle\Entity\User;
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Entity\Licensee;
+use SLN\RegisterBundle\Entity\LicenseeSaison;
+use SLN\RegisterBundle\Entity\Saison;
 use SLN\RegisterBundle\Entity\Horaire;
+
 use SLN\RegisterBundle\Form\LicenseeType;
 
 use SLN\RegisterBundle\Entity\Repository\LicenseeRepository;
@@ -53,13 +56,24 @@ class LicenseeController extends Controller
      * Form to create a new licensee or edit an existing one. Answers to GET and POST requests.
      *
      * @param int  $id           Id of the Licensee to edit. If 0, a new Licensee instead.
+     * @param int  $saison_id    Id of the saison to edit. If 0, current open saison.
      * @param int  $user_id      Id of the User, used when a Licensee is created.
      * @param bool $inside_page  If true, the page is rendered inside another page, no header is generated
      * @param bool $admin        If true, the page is accessed with admin rights.
      *
      * @return Response Rendered page.
      */
-    public function editAction($id, $user_id=0, $inside_page=FALSE, $admin=FALSE) {
+    public function editAction($id, $saison_id, $user_id=0, $inside_page=FALSE, $admin=FALSE) {
+        $em = $this->getDoctrine()->getManager();
+
+        if ($saison_id == 0) 
+            $saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen();
+        else 
+            $saison = $em->getRepository('SLNRegisterBundle:Saison')->find($saison_id);
+
+        if (!$saison) 
+              throw $this->createNotFoundException("Cette saison n'existe pas.");
+
         if ($id == 0) {
           $licensee = new Licensee();
           if ($user_id == 0 and !$admin)
@@ -79,15 +93,24 @@ class LicenseeController extends Controller
           }
         }
             
-        $previousGroupe = $licensee->getGroupe();
+        $previousGroupe = $licensee->getGroupe($saison);
 
-        $request = $this->getRequest();
-        $form    = $this->createForm(new LicenseeType(), $licensee, array("admin" => $admin));
+        $form_saison_link = $licensee->getSaisonLink($saison);
+        if (!$form_saison_link) {
+            $form_saison_link = new LicenseeSaison();
+            $form_saison_link->setLicensee($licensee);
+            $form_saison_link->setSaison($saison);
+        }
+        $licensee->setFormSaisonLink($form_saison_link);
+
+        $request     = $this->getRequest();
+        $form        = $this->createForm(new LicenseeType(), $licensee, array("admin" => $admin));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($licensee);
+            $em->persist($licensee->getFormSaisonLink());
             $em->flush();
 
             $this->get('session')->getFlashBag()->add(
@@ -97,8 +120,9 @@ class LicenseeController extends Controller
 
             if ($admin) {
               // Send a mail to the user if group has changed
-              if ($id != 0 and $licensee->getGroupe() and ($previousGroupe != null and
-                                                           $licensee->getGroupe()->getId() != $previousGroupe->getId())) {
+              $groupe = $licensee->getGroupe($saison);
+              if ($id != 0 and $groupe and ($previousGroupe != null and
+                                            $groupe->getId() != $previousGroupe->getId())) {
                 
                 $message = \Swift_Message::newInstance()
                  ->setSubject("Changement de groupe pour {$licensee->getPrenom()} {$licensee->getNom()}")
@@ -113,6 +137,7 @@ class LicenseeController extends Controller
 
               return $this->redirect($this->generateUrl('SLNRegisterBundle_admin_licensee_edit', array(
                                      'id' => $licensee->getId(), $user_id => $licensee->getUser()->getId(),
+                                     'saison' => $saison,
                                      'admin' => $admin)
                                     ));
             } else {
@@ -131,6 +156,7 @@ class LicenseeController extends Controller
             'title' => $id == 0 ? "Ajouter un licencié" : "Editer le licencié \"{$licensee->getPrenom()} {$licensee->getNom()}\"",
             'id' => $id,
             'user_id' => $user_id,
+            'saison' => $saison,
             'admin' => $admin));
     }
 

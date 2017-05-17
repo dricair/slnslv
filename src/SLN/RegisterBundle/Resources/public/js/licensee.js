@@ -1,6 +1,6 @@
 // Find group row if available. Description will be updated based on it.
 function setup_group_description() {
-  var groupe_choice = $('#sln_registerbundle_licenseetype_groupe');
+  var groupe_choice = $('#sln_registerbundle_licenseetype_form_saison_link_groupe');
 
   if (groupe_choice.length > 0) {
     console.log("Found groupe choice");
@@ -29,6 +29,8 @@ function setup_group_description() {
       }
     })
     .change();
+  } else {
+    console.warning("Did not find groupe choice");
   }
 }
 

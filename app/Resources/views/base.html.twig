@@ -81,6 +81,8 @@
   <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
   <script src="{{ asset('js/bootstrap-datetimepicker.js') }}"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.15/datatables.min.js"></script>
+  <script type="text/javascript" src="{{ asset('js/moment.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('js/datetime-moment.js') }}"></script>
   <script src="{{ asset('js/jquery.details.js') }}"></script>
   <script>
   $(function() {
@@ -89,6 +91,9 @@
 
     // Emulate <details> where necessary and enable open/close event handlers
     $('details').details();
+
+    // Datatables date sorting
+    $.fn.dataTable.moment( 'DD/MM/Y' );
 
     // Tables with class datatable are defined as DataTable for sorting
     $('table.datatable').DataTable({
