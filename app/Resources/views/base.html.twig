@@ -8,12 +8,11 @@
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   {% block stylesheets %}
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/build/css/bootstrap-datetimepicker.css">
-    <!-- <link href='http://fonts.googleapis.com/css?family=Irish+Grover' rel='stylesheet' type='text/css'> -->
-    <!-- <link href='http://fonts.googleapis.com/css?family=La+Belle+Aurore' rel='stylesheet' type='text/css'> -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.css') }}">
     <link href="{{ asset('css/screen.css') }}" type="text/css" rel="stylesheet" />
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/jqc-1.12.4/dt-1.10.15/datatables.min.css"/>
   {% endblock %}
   <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
 </head>
@@ -77,10 +76,11 @@
 
 {% block javascripts %}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-  <script src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/src/js/bootstrap-datetimepicker.js"></script>
+  <script src="{{ asset('js/bootstrap-datetimepicker.js') }}"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.15/datatables.min.js"></script>
   <script src="{{ asset('js/jquery.details.js') }}"></script>
   <script>
   $(function() {
@@ -89,6 +89,13 @@
 
     // Emulate <details> where necessary and enable open/close event handlers
     $('details').details();
+
+    // Tables with class datatable are defined as DataTable for sorting
+    $('table.datatable').DataTable({
+        paging: false, 
+        "language": {
+            "url": "{{ asset('js/French.json') }}" }
+      });
   });
   </script>
 {% endblock %}

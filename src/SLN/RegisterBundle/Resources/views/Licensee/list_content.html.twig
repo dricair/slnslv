@@ -1,5 +1,6 @@
 {% if licensees|length > 0 %}
-<table class="table table-striped">
+<table class="table table-striped datatable">
+<thead>
 <tr>
   <th>Nom</th>
   <th>Prénom</th>
@@ -8,6 +9,8 @@
   <th>Téléphone</th>
   <th>Actions</th>
 </tr>
+</thead>
+<tbody>
 {% for licensee in licensees %}
   {% set missingNum = licensee.inscriptionMissingNum %}
   {% set missingStr = licensee.inscriptionMissingString %}
@@ -54,6 +57,7 @@
   </td>
 </tr>
 {% endfor %}
+</tbody>
 </table>
 
 {% else %}
