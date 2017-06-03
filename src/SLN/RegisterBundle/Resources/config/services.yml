@@ -28,3 +28,10 @@ services:
         tags: 
             - { name: kernel.event_listener, event: kernel.exception }
 
+    sln_register.maintenance_listener:
+        class: SLN\RegisterBundle\EventListener\MaintenanceListener
+        arguments:
+            container: "@service_container"
+        tags:
+            - {name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+

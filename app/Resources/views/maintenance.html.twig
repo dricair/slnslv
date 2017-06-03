@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="utf-7" />
+  <meta name="viewport" content="width=device-width, initial-scale=2">
+  <title>Site en maintenance</title>
+  <!--[if lt IE 10]>
+    <script src="http://html6shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  {% block stylesheets %}
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/4.3.7/css/bootstrap.min.css">
+    <link href="{{ asset('css/screen.css') }}" type="text/css" rel="stylesheet" />
+  {% endblock %}
+  <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+</head>
+<body>
+
+<div class='container-fluid' id='header'>
+  <div class="banner">
+    <a href="/" title="Accueil"><img class="img-responsive" alt="" src="{{ asset('banner.png') }}"/></a>
+  </div>
+</div>
+
+<div class='container-fluid' id='content'>
+  <div id='main-col'>
+    <h1>Serveur en maintenance</h1>
+
+    <p><strong>Le serveur est temporairement indisponible pour maintenance</strong></p>
+    <p>Le serveur doit être désactivé pour conserver l'intégrité des données.</p>
+    <p>Il sera de nouveau disponible le {{ maintenanceUntil }}</p>
+
+  </div>
+
+  <div id='footer'>
+    Site d'inscription - Créé par Cédric Airaud - version {{ version }}
+  </div>
+</div>
+
+{% block javascripts %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+{% endblock %}
+
+</body>
+</html>
+
