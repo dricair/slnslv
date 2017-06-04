@@ -66,10 +66,12 @@ class LicenseeController extends Controller
     public function editAction($id, $saison_id, $user_id=0, $inside_page=FALSE, $admin=FALSE) {
         $em = $this->getDoctrine()->getManager();
 
-        if ($saison_id == 0) 
-            $saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen();
-        else 
-            $saison = $em->getRepository('SLNRegisterBundle:Saison')->find($saison_id);
+        $currentUser = $this->getUser();
+        if ($saison_id != 0 and !$currentUser->hasRole('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException("Vous ne pouvez pas exécuter cette action.");
+        }
+
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrOpen($saison_id);
 
         if (!$saison) 
               throw $this->createNotFoundException("Cette saison n'existe pas.");
@@ -169,19 +171,23 @@ class LicenseeController extends Controller
       *
       * @return Response Rendered page.
       */
-    public function deleteAction($id, $admin=FALSE) {
+    public function deleteAction($id, $saison_id, $admin=FALSE) {
+        $em = $this->getDoctrine()->getManager();
         $licensee = $this->getLicenseeRepository()->find($id);
 
         if (!$licensee instanceof Licensee) {
             throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
         }
 
-        $user = $this->getUserFromID($licensee->getUser()->getId());
-        $user->removeLicensee($licensee);
+        if ($saison_id != 0 and !$currentUser->hasRole('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException("Vous ne pouvez pas exécuter cette action.");
+        }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($licensee);
-        $em->persist($user);
+        $user = $this->getUserFromID($licensee->getUser()->getId());
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrOpen($saison_id);
+
+        $saison_link = $licensee->getSaisonLink($saison);
+        $em->remove($saison_link);
         $em->flush();
 
         return $this->redirectToPrevPage();

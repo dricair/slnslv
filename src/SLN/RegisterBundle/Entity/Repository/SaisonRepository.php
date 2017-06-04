@@ -15,6 +15,20 @@ use SLN\RegisterBundle\Entity\Saison;
 class SaisonRepository extends EntityRepository
 {
     /**
+     * Return given saison, or open saison if index is 0
+     */
+    public function findOrOpen($id) {
+        return $id == 0 ? $this->getOpen() : $this->find($id);
+    }
+
+    /**
+     * Return given saison, or current saison if index is 0
+     */
+    public function findOrCurrent($id) {
+        return $id == 0 ? $this->getCurrent() : $this->find($id);
+    }
+
+    /**
      * Returns all the saisons
      *
      * @return Saison[] list of saisons
