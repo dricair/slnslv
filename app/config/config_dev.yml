@@ -45,5 +45,5 @@ assetic:
     use_controller: true
 
 swiftmailer:
-#    disable_delivery: true
+     disable_delivery: true
      delivery_address: cairaud@gmail.com

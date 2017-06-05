@@ -1,17 +1,17 @@
 {% extends 'SLNRegisterBundle::layout.html.twig' %}
 
-{% block title %}Liste des licenciés{% endblock %}
+{% block title %}Liste des licenciés pour la saison {{ saison.nom }}{% endblock %}
 
 {% block body %}
 
 {% embed 'SLNRegisterBundle:Payments:search_content.html.twig' with { 'search': '' } %}
   {% block buttons %}
-  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_create') }}">Créer un licencié</a>
-  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_export') }}" target="_blank">Exporter en fichier Excel</a>
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_create', {'saison_id': saison.id}) }}">Créer un licencié</a>
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_export', {'saison_id': saison.id}) }}" target="_blank">Exporter en fichier Excel</a>
   {% endblock %}
 {% endembed %}
 
-<h1>Liste des licenciés</h1>
+<h1>Liste des licenciés pour la saison {{ saison.nom }}</h1>
 
 {% for nom,groupe in groupes %}
 <h2>{{ nom }}</h2>
@@ -19,7 +19,7 @@
 <p>{{ groupe['num'] }} licencié(e)s</p>
 
   {% if groupe['multiple'] %}
-    {% for jour,values in groupe['jours'] %}
+    {% for jour,values in groupe['jours'] if values['licensees']|length > 0 %}
       {% if jour == -1 %}
 <h3>Pas de jour selectionné</h3>
       {% else %}
@@ -28,26 +28,19 @@
 
 <p>{{ values['num'] }} licencié(e)s</p>
   
-      {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': values['licensees'], 'admin': admin } %}
+      {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': values['licensees'], 'admin': admin, 'saison_id': saison.id } %}
     {% endfor %}
   {% else %}
-    {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': groupe['licensees'], 'admin': admin } %}
+    {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': groupe['licensees'], 'admin': admin, 'saison_id': saison.id } %}
   {% endif %}
 {% endfor %}
-
-{% if no_group|length > 0 %}
-<h2>Pas de groupe sélectionné</h2>
-
-  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': no_group, 'admin': admin } %}
-
-{% endif %}
 
 <h1>Fonctions spéciales</h1>
 
 {% for fonction, licensees in fonctions %}
 <h2>{{ fonction }}</h2>
 
-  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': licensees, 'admin': admin } %}
+  {% include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': licensees, 'admin': admin, 'saison_id': saison.id } %}
 {% endfor %}
 
 

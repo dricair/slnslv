@@ -121,38 +121,11 @@ class SaisonController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $saison = $em->getRepository('SLNRegisterBundle:Saison')->find(1);
-        if (!$saison) {
-            $saison = new Saison();
-            $saison->setNom("2016-2017");
-            $saison->setStart(\DateTime::createFromFormat('d/m/Y', '01/09/2016'));
-            $saison->setActivated(FALSE);
-            $em->persist($saison);
-
-            $new_saison = new Saison();
-            $new_saison->setNom("2017-2018");
-            $new_saison->setStart(\DateTime::createFromFormat('d/m/Y', '01/09/2017'));
-            $new_saison->setActivated(TRUE);
-            $em->persist($new_saison);
-        }
-
-        $licensees = $em->getRepository('SLNRegisterBundle:Licensee')->getAllByGroups();
+        $mails = $em->getRepository('SLNRegisterBundle:LicenseeMail')->findAll();
         
-        foreach ($licensees as &$licensee) {
-            $saison_link = new LicenseeSaison();
-            $saison_link->setLicensee($licensee);
-            $saison_link->setSaison($saison);
-            $saison_link->setStart(\DateTime::createFromFormat('d/m/Y', '01/09/2016'));
-            $saison_link->setInscription($licensee->getInscriptionOld());
-            $saison_link->setGroupe($licensee->getGroupeOld());
-            $saison_link->setGroupeJours($licensee->getGroupeJoursOld());
-
-            $em->persist($saison_link);
-        }
-
-        $payments = $em->getRepository('SLNRegisterBundle:UserPayment')->findAll();
-        foreach ($payments as &$payment) {
-            $payment->setSaison($saison);
-            $em->persist($payment);
+        foreach ($mails as &$mail) {
+            $mail->setSaison($saison);
+            $em->persist($mail);
         }
 
         $em->flush();

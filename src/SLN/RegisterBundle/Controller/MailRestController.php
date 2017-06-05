@@ -46,8 +46,8 @@ class MailRestController extends Controller {
 
         // Development version: force a destination address
         $delivery_address = null;
-        if ($this->container->hasParameter('swiftmailer.single_address') && $this->container->getParameter('swiftmailer.single_address')) {
-            $delivery_address = $this->container->getParameter('swiftmailer.single_address');
+        if ($this->container->hasParameter('swiftmailer.disable_delivery') && $this->container->getParameter('swiftmailer.disable_delivery')) {
+            $delivery_address = $this->container->getParameter('swiftmailer.delivery_address');
         }
 
         // Get session information
@@ -95,9 +95,6 @@ class MailRestController extends Controller {
                     if (!$uploadFile->getInline())
                         $email->addAttachment($uploadFile->getFile()->getRealPath(), $uploadFile->getFilename());
                 }
-
-                if (false) 
-                    $email->addAttachment("/docs/Cedric/Programmation/PHP/slnslv/web/uploads/Suivi individuel - {$licensee->getNom()} {$licensee->getPrenom()}.pdf");
 
                 $sendgrid->send($email);
 

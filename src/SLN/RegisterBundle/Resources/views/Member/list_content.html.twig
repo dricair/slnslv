@@ -1,4 +1,5 @@
-<table class='table table-striped'>
+<table class='table table-striped datatable'>
+<thead>
 <tr>
   <th>Nom</th>
   <th>Prénom</th>
@@ -7,7 +8,8 @@
   <th>Tél. portable</th>
   <th>Actions</th>
 </tr>
-
+</thead>
+<tbody>
 {% for member in members %}
 <tr>
   <td>
@@ -20,9 +22,6 @@
   <td>
     <a href="{{ path('SLNRegisterBundle_member_edit', { id: member.id }) }}" title='Modifier ce membre'>
       <span class="glyphicon glyphicon-pencil"></span></a>
-    <!--<a href="{{ path('SLNRegisterBundle_member_delete', { id: member.id }) }}" title='Supprimer ce membre'
-         onclick="return confirm('Etes-vous sûr de vouloir effacer le membre {{ member.prenom }} {{ member.nom }} ?');">
-      <span class="glyphicon glyphicon-trash"></span></a>-->
     <a href="{{ path('SLNRegisterBundle_payment_user', { user_id: member.id }) }}" title='Suivi des inscriptions'>
       <span class="glyphicon glyphicon-euro"></span></a>
     {% if member.hasRole('ROLE_ADMIN') %}
@@ -31,5 +30,6 @@
   </td>
 </tr>
 {% endfor %}
+</tbody>
 </table>
 

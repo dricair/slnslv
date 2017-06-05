@@ -24,10 +24,15 @@ class LicenseeRepository extends EntityRepository {
      * Specify a saison for the query builder
      * 'l' needs to be the licensee in the query builder
      */
-    protected function addSaison(&$qb, Saison $saison) {
-      $qb->leftjoin('l.saison_links', 's')
-         ->andWhere('s.licensee=l.id')
-         ->andWhere('s.saison=:saison_id')
+    protected function addSaison(&$qb, Saison $saison, $and_where=True) {
+      $qb->leftjoin('l.saison_links', 's');
+      if ($and_where)
+        $qb->andWhere('s.licensee=l.id');
+      else
+        $qb->where('s.licensee=l.id');
+
+      $qb->andWhere('s.saison=:saison_id')
+         ->join('s.groupe', 'g')
          ->setParameter('saison_id', $saison->getId());
     }
 
@@ -65,13 +70,10 @@ class LicenseeRepository extends EntityRepository {
     public function getAll(Saison $saison) {
         $qb = $this->createQueryBuilder('l')
                    ->select('l')
-                   ->join('l.groupe', 'g')
                    ->addOrderBy('l.nom',  'ASC')
                    ->addOrderBy('l.prenom', 'ASC');
 
-        if ($saison) {
-            $this->addSaison($qb, $saison);
-        }
+        $this->addSaison($qb, $saison, false);
 
         return $qb->getQuery()
                   ->getResult();
@@ -82,15 +84,16 @@ class LicenseeRepository extends EntityRepository {
      *
      * @return Licensee[] List of Licensee
      */
-    public function getAllByGroups() {
+    public function getAllByGroups(Saison $saison) {
         $qb = $this->createQueryBuilder('l')
                    ->select('l')
-                   ->join('l.groupe', 'g')
-                   ->where('g IS NOT NULL')
-                   ->addOrderBy('g.categorie',  'ASC')
-                   ->addOrderBy('g.groupe_order',  'ASC')
                    ->addOrderBy('l.nom',  'ASC')
                    ->addOrderBy('l.prenom', 'ASC');
+
+        $this->addSaison($qb, $saison, false);
+        $qb->andWhere('s.groupe IS NOT NULL')
+           ->addOrderBy('g.categorie',  'ASC')
+           ->addOrderBy('g.groupe_order',  'ASC');
 
         return $qb->getQuery()
                   ->getResult();
@@ -103,12 +106,14 @@ class LicenseeRepository extends EntityRepository {
      *
      * @return Licensee[] List of Licensee
      */
-    public function getAllNoGroups($builder=false) {
+    public function getAllNoGroups(Saison $saison, $builder=false) {
         $qb = $this->createQueryBuilder('l')
                    ->select('l')
-                   ->where('l.groupe IS NULL')
                    ->addOrderBy('l.nom',  'ASC')
                    ->addOrderBy('l.prenom', 'ASC');
+
+        $this->addSaison($qb, $saison, false);
+        $qb->andWhere('s.groupe IS NOT NULL');
 
         if ($builder) return $qb;
         return $qb->getQuery()
@@ -123,13 +128,15 @@ class LicenseeRepository extends EntityRepository {
      *
      * @return Licensee[] List of Licensee
      */
-    public function getAllForGroupe(Groupe $groupe, $builder=false) {
+    public function getAllForGroupe(Saison $saison, Groupe $groupe, $builder=false) {
         $qb = $this->createQueryBuilder('l')
                    ->select('l')
-                   ->where('l.groupe = :groupe_id')
                    ->addOrderBy('l.nom',  'ASC')
-                   ->addOrderBy('l.prenom', 'ASC')
-                   ->setParameter('groupe_id', $groupe->getId());
+                   ->addOrderBy('l.prenom', 'ASC');
+
+        $this->addSaison($qb, $saison, false);
+        $qb->andWhere('s.groupe = :groupe_id')
+           ->setParameter('groupe_id', $groupe->getId());
 
         if ($builder) return $qb;
         return $qb->getQuery()
@@ -175,8 +182,7 @@ class LicenseeRepository extends EntityRepository {
             return $qb;
         $competition = $competitions[$cnames[$id]];
 
-        $qb->join('l.groupe', 'g')
-           ->where($qb->expr()->orX(
+        $qb->andWhere($qb->expr()->orX(
                $qb->expr()->andX(
                  $qb->expr()->eq('l.sexe', Licensee::FEMME),
                  $qb->expr()->in('YEAR(l.naissance)', $competition["F"])
@@ -187,7 +193,7 @@ class LicenseeRepository extends EntityRepository {
                )
              )
            )
-           ->andWhere('l.groupe IS NOT NULL')
+           ->andWhere('s.groupe IS NOT NULL')
            ->andWhere('g.categorie = :competition_group')
            ->addOrderBy('l.nom',  'ASC')
            ->addOrderBy('l.prenom', 'ASC')
@@ -203,9 +209,10 @@ class LicenseeRepository extends EntityRepository {
      *
      * @return Licensee[] List of licensees
      */
-    public function getAllForCompetitionGroup($id) {
+    public function getAllForCompetitionGroup(Saison $saison, $id) {
         $qb = $this->createQueryBuilder('l');
         $qb->select('l');
+        $this->addSaison($qb, $saison, false);
         $qb = $this->selCompetitionGroup($qb, $id);
 
         return $qb->getQuery()
@@ -221,12 +228,14 @@ class LicenseeRepository extends EntityRepository {
      *
      * @return bool True if one of the licensees is in the Groupe
      */
-    public function userHasInGroup(Licensee $licensee, $groupe_id) {
+    public function userHasInGroup(Licensee $licensee, Saison $saison, $groupe_id) {
         $qb = $this->createQueryBuilder('l');
         $qb->select('COUNT(l)');
         $qb = $this->selCompetitionGroup($qb, $groupe_id);
         $qb->andWhere('l.user = :user_id')
            ->setParameter('user_id', $licensee->getUser()->getId());
+
+        $this->addSaison($qb, $saison);
 
         return $qb->getQuery()->getSingleScalarResult() > 0;
     }
@@ -235,18 +244,20 @@ class LicenseeRepository extends EntityRepository {
     /**
      * Return a list of all licensees which have incomplete inscription
      */
-    public function getAllIncomplete() {
+    public function getAllIncomplete(Saison $saison) {
         $inscriptions = Licensee::getInscriptionNames();
 
         $full_str = sprintf("a:%d:", count($inscriptions));
 
         $qb = $this->createQueryBuilder('l');
         $qb->select('l')
-           ->where('l.groupe IS NOT NULL')
            ->andWhere($qb->expr()->notLike('l.inscription', ':full_str'))
            ->addOrderBy('l.nom',  'ASC')
            ->addOrderBy('l.prenom', 'ASC')
            ->setParameter('full_str', $full_str . "%");
+
+        $this->addSaison($qb, $saison);
+        $qd->andWhere('s.groupe IS NOT NULL');
 
         return $qb->getQuery()
                   ->getResult();

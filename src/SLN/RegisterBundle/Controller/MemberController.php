@@ -64,8 +64,7 @@ class MemberController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()
-                   ->getManager();
+            $em = $this->getDoctrine()->getManager();
 
             // Password not set for new user
             if ($admin && $id == 0) {

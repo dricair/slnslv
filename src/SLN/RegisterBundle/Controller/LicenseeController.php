@@ -102,11 +102,12 @@ class LicenseeController extends Controller
             $form_saison_link = new LicenseeSaison();
             $form_saison_link->setLicensee($licensee);
             $form_saison_link->setSaison($saison);
+            $form_saison_link->setGroupe($previousGroupe);
         }
         $licensee->setFormSaisonLink($form_saison_link);
 
         $request     = $this->getRequest();
-        $form        = $this->createForm(new LicenseeType(), $licensee, array("admin" => $admin));
+        $form        = $this->createForm(LicenseeType::class, $licensee, array("admin" => $admin));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -196,11 +197,23 @@ class LicenseeController extends Controller
     /** 
      * List licensee with optional filters and sorting.
      * 
+     * @param int $saison_id Id of the saison to look at
      * @param bool $admin If True, the page is accessed with admin rights
      *
      * @return Response Rendered page.
      */
-    public function listAction($admin=FALSE) {
+    public function listAction($saison_id, $admin=FALSE) {
+        if (!$admin) {
+            throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrCurrent($saison_id);
+        if (!$saison) {
+            throw $this->createNotFoundException("Cette saison n'existe pas.");
+        }
+
+
         $fonctions = array();
         foreach(Licensee::getFonctionNames() as $fonction)
             $fonctions[$fonction] = array();
@@ -230,11 +243,12 @@ class LicenseeController extends Controller
             }
         }
 
-        $groupes = Licensee::sortByGroups($licensees);
+        $groupes = Licensee::sortByGroups($licensees, $saison);
 
         return $this->render('SLNRegisterBundle:Licensee:list.html.twig', array('no_group' => $no_group,
                                                                                 'groupes' => $groupes, 
                                                                                 'fonctions' => $fonctions,
+                                                                                'saison' => $saison,
                                                                                 'total' => $total, 
                                                                                 'admin' => $admin));
     }

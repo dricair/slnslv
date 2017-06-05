@@ -26,9 +26,10 @@ class LicenseeRestController extends Controller {
      * Get the list of licensees that are part of a group
      *
      * @param int $id Id for the Groupe
+     * @param int $saison_id Id for the Saison
      * @return Licensee[] List of licensees
      */
-    public function getLicenseesInGroupAction(Request $request, $id){
+    public function getLicenseesInGroupAction(Request $request, $id, $saison_id){
         if (!$this->getUser()->hasRole('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
         }
@@ -45,6 +46,11 @@ class LicenseeRestController extends Controller {
         $licenseeRepository = $em->getRepository('SLNRegisterBundle:Licensee');
         $groupeRepository = $em->getRepository('SLNRegisterBundle:Groupe');
 
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrCurrent($saison_id);
+        if (!$saison) {
+            throw $this->createNotFoundException("La saison $saison_id n'existe pas");
+        }
+
         if ($id >= Licensee::FONCTIONS_OFFSET) {
             // Special functions use a group index for the lookup
             $id = $id - Licensee::FONCTIONS_OFFSET;
@@ -54,7 +60,7 @@ class LicenseeRestController extends Controller {
 
             $licensees = [];
             foreach($licenseeRepository->getAllForFonction($id) as &$licensee) {
-                if ($id != Licensee::OFFICIEL or $extra == -1 or $licenseeRepository->userHasInGroup($licensee, $extra))
+                if ($id != Licensee::OFFICIEL or $extra == -1 or $licenseeRepository->userHasInGroup($licensee, $saison, $extra))
                     $licensees[] = $licensee;
             }
         }
@@ -67,7 +73,7 @@ class LicenseeRestController extends Controller {
             if (!array_key_exists($id, $cnames))
                 throw $this->createNotFoundException("Le groupe $id n'existe pas");
             
-            $licensees = $licenseeRepository->getAllForCompetitionGroup($id);
+            $licensees = $licenseeRepository->getAllForCompetitionGroup($saison, $id);
         }
 
         else {
@@ -77,7 +83,7 @@ class LicenseeRestController extends Controller {
             }
 
             $licensees = [];
-            foreach($licenseeRepository->getAllForGroupe($groupe) as $licensee) {
+            foreach($licenseeRepository->getAllForGroupe($saison, $groupe) as $licensee) {
                 if ($extra == -1 or !$groupe->getMultiple() or in_array($extra, $licensee->getGroupeJours()))
                     $licensees[] = $licensee;
             }

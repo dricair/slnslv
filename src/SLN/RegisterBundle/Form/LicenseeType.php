@@ -34,7 +34,6 @@ class LicenseeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $admin = $options["admin"];
-        $public_groups = $options["public_groups"];
 
         $builder
             ->add('nom', null, array("attr" => array("placeholder" => "Nom")))
@@ -69,8 +68,7 @@ class LicenseeType extends AbstractType
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
-        $resolver->setDefaults(array("admin" => false,
-                                     "public_groups" => array()));
+        $resolver->setDefaults(array("admin" => false));
     }
 
     /** @ignore */

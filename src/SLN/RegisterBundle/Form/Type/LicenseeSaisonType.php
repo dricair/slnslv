@@ -8,6 +8,8 @@ namespace SLN\RegisterBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 use SLN\RegisterBundle\Entity\Horaire;
 use SLN\RegisterBundle\Entity\Saison;
@@ -39,21 +41,28 @@ class LicenseeSaisonType extends AbstractType
 
         if ($options["admin"])
             $builder->add('groupe', 'entity', array("class" => "SLNRegisterBundle:Groupe",
-                                                    "group_by" => 'categorieName'));
-        else
-            $builder->add('groupe', 'entity', array("class" => "SLNRegisterBundle:Groupe",
-                                                    "group_by" => 'categorieName',
-                                                    "empty_data" => null,
-                                                    "query_builder" => function (GroupeRepository $er) {
-                                                   return $er->findPublic(TRUE);
-                                                }));
-
-        if ($options["admin"])
-            $builder->add('inscription', 'choice', array(
+                                                    "group_by" => 'categorieName'))
+                    ->add('inscription', 'choice', array(
                           'label' => 'Etat de l\'inscription',
                           'choices' => LicenseeSaison::getInscriptionNames(),
                           'multiple' => true,
                           'expanded' => true));
+        else {
+            // Only add the group when the data is available so that the current group is known
+            // and can be added to the list (findLicenseePublic)
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($builder, $options) { 
+              $currentData = $event->getData(); 
+              $form = $event->getForm();
+
+              $form->add('groupe', 'entity', array("class" => "SLNRegisterBundle:Groupe",
+                                                   "group_by" => 'categorieName',
+                                                   "empty_data" => null,
+                                                   "query_builder" => function (GroupeRepository $er) use ($currentData) {
+                                                        return $er->findLicenseePublic($currentData, TRUE);
+                                                   }
+                                                   ));
+            });
+        }
     }
 
     /**

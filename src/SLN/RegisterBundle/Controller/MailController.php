@@ -27,12 +27,21 @@ class MailController extends Controller {
      * @param int $defaultLicensee Licensee selected by default, none if Null
      * @param int $defaultGroup Groupe selected by default, none if Null
      */
-    public function mailAction(Request $request, $id=0, $defaultLicensee = null, $defaultGroup=null) {
+    public function mailAction(Request $request, $saison_id, $id=0, $defaultLicensee = null, $defaultGroup=null) {
         $title = "Envoi de mails";
 
         $defaultLicensees = array();
 
-        if ($id == 0) $mail = new LicenseeMail();
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrCurrent($saison_id);
+
+        if (!$saison) 
+              throw $this->createNotFoundException("Cette saison n'existe pas.");
+
+        if ($id == 0) {
+            $mail = new LicenseeMail();
+            $mail->setSaison($saison);
+        }
         else {
             $mail = $this->getLicenseeMailRepository()->find($id);
 
@@ -100,6 +109,7 @@ class MailController extends Controller {
         return $this->render('SLNRegisterBundle:Mail:edit.html.twig', array('id' => $id,
                                                                             'form' => $form->createView(), 
                                                                             'title' => $title, 
+                                                                            'saison' => $saison,
                                                                             'defaultLicensees' => $defaultLicensees ));
     }
 
@@ -120,7 +130,8 @@ class MailController extends Controller {
                                                                                'licensees' => $mail->getLicensees(), 
                                                                                'title' => $mail->getTitle(), 
                                                                                'body' => $mail->getBody(),
-                                                                               'files' => $mail->getFiles()));
+                                                                               'files' => $mail->getFiles(),
+                                                                               'saison' => $mail->getSaison()));
     }
 
 

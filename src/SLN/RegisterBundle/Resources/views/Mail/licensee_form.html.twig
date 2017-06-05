@@ -1,5 +1,5 @@
 
-<form action="{{ path('SLNRegisterBundle_mail_edit', {'id': id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal" role="form" id="my_form">
+<form action="{{ path('SLNRegisterBundle_mail_edit', {'id': id, 'saison_id': saison.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal" role="form" id="my_form">
   {{ form_errors(form) }}
 
   <div class="panel panel-default">
@@ -9,7 +9,7 @@
       <p>Sélectionner un groupe ci-dessous, puis des licenciés dans ce groupe. Cliquez sur un des boutons "Ajouter" pour déplacer
          la sélection dans la liste de droite, sur un des boutons "Supprimer" pour enlever de la liste de droite.</p>
       <div class="row">
-        <div class="col-sm-5" data-function="{{ path('api_get_licensees_in_group', {'id': '__id__'}) }}">{{ form_widget(form.groupe) }}</div>
+        <div class="col-sm-5" data-function="{{ path('api_get_licensees_in_group', {'id': '__id__', 'saison_id': saison.id}) }}">{{ form_widget(form.groupe) }}</div>
         <div class="col-sm-2"></div>
         <div class="col-sm-5"><p>Destinataires du mail</p></div>
       </div>

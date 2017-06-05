@@ -399,8 +399,8 @@ Site: http://stadelaurentinnatation.fr</p>');
      **/
     public function __toString() {
         $groupe = null;
-        if ($this->getSaisonLinks()->length() > 0) {
-            $saison_link = $this->getSaisonLinks()->end();
+        if ($this->getSaisonLinks()->count() > 0) {
+            $saison_link = $this->getSaisonLinks()->last();
             $groupe = $saison_link->getGroupe();
         }
         return sprintf("%s %s (%s)", $this->prenom, $this->nom, $groupe ? $groupe->getNom() : "Pas de groupe");

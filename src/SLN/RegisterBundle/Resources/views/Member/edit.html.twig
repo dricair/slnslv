@@ -10,16 +10,17 @@
 
 {% if admin and id != 0 %}
 <div class="btn-group btn-group-justified">
-  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_create_for_user', {'user_id': id}) }}">Ajouter un licencié à ce compte</a>
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_admin_licensee_create_for_user', {'user_id': id, 'saison_id': open_saison.id }) }}">
+     Ajouter un licencié à ce compte</a>
 </div>
 
-{%   if open_saison %}
-<h1>Liste des licenciés attachés au compte (Saison {{ open_saison.nom }})</h1>
-  {%include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': open_licensees, 'admin': admin } %}
+{%   if open_saison and open_saison.id != current_saison.id %}
+<h1>Liste des licenciés pour la saison {{ open_saison.nom }}</h1>
+  {%include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': open_licensees, 'admin': admin, 'saison': open_saison } %}
 {%   endif %}
 
-<h1>Liste des licenciés attachés au compte (Saison {{ current_saison.nom }})</h1>
-  {%include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': current_licensees, 'admin': admin } %}
+<h1>Liste des licenciés pour la saison {{ current_saison.nom }}</h1>
+  {%include 'SLNRegisterBundle:Licensee:list_content.html.twig' with { 'licensees': current_licensees, 'admin': admin, 'saison': current_saison } %}
 
 {% endif %}
 

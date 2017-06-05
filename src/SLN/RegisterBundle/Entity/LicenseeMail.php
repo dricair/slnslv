@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 use SLN\RegisterBundle\Entity\Licensee;
+use SLN\RegisterBundle\Entity\Saison;
 use SLN\RegisterBundle\Entity\UploadFile;
 use SLN\RegisterBundle\Entity\Groupe;
 
@@ -71,6 +72,14 @@ class LicenseeMail {
             );
         }
     }
+
+    /**
+     * @var Saison $saison_id Corresponding saison. 
+     * @ORM\ManyToOne(targetEntity="Saison")
+     * @ORM\JoinColumn(name="saison_id", referencedColumnName="id")
+     * @Assert\NotBlank(message="Un mail doit être rattaché à une saison.")
+     */
+    protected $saison;
 
     /**
      * @var Licensee[] $licensees List of licensees to send the mail to
@@ -366,5 +375,28 @@ class LicenseeMail {
           $this->files[] = $file;
 
         return $this;
+    }
+
+    /**
+     * Set saison
+     *
+     * @param Saison $saison
+     * @return LicenseeMail
+     */
+    public function setSaison(Saison $saison)
+    {
+        $this->saison = $saison;
+
+        return $this;
+    }
+
+    /**
+     * Get saison
+     *
+     * @return Saison 
+     */
+    public function getSaison()
+    {
+        return $this->saison;
     }
 }
