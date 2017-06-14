@@ -23,6 +23,9 @@ class Builder extends ContainerAware {
      * @return Knp\Menu\ItemInterface Built menu
      */
     public function mainMenu(FactoryInterface $factory, array $options) {
+        // access service from the container
+        $em = $this->container->get('doctrine')->getManager();
+
         $menu = $factory->createItem('root');
         $menu->setChildrenAttribute('class', 'nav navbar-nav');
 
@@ -59,16 +62,33 @@ class Builder extends ContainerAware {
                 ->setAttribute('icon', 'euro')
     			->setAttribute('divider_append', true);
 
-            $menu['Admin']->addChild('Liste des licenciés', array('route' => 'SLNRegisterBundle_admin_licensee_list',
-                                                                  'routeParameters' => array('saison_id' => 0),))
-                ->setAttribute('icon', 'th-list');
+            $open_saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen();
+            $current_saison = $em->getRepository('SLNRegisterBundle:Saison')->getcurrent();
+            
+            if ($open_saison && $open_saison->getId() != $current_saison->getId()) {
+                $menu['Admin']->addChild("Liste des licenciés - " . $current_saison->getNom(), 
+                                         array('route' => 'SLNRegisterBundle_admin_licensee_list',
+                                               'routeParameters' => array('saison_id' => $current_saison->getId()),))
+                               ->setAttribute('icon', 'th-list');
+                $menu['Admin']->addChild("Liste des licenciés - " . $open_saison->getNom(), 
+                                         array('route' => 'SLNRegisterBundle_admin_licensee_list',
+                                               'routeParameters' => array('saison_id' => $open_saison->getId()),))
+                               ->setAttribute('icon', 'th-list');
+            } else {
+                $menu['Admin']->addChild('Liste des licenciés', array('route' => 'SLNRegisterBundle_admin_licensee_list',
+                                                                      'routeParameters' => array('saison_id' => 0),))
+                    ->setAttribute('icon', 'th-list');
+            }
             $menu['Admin']->addChild('Ajouter un licencié', array('route' => 'SLNRegisterBundle_admin_licensee_create',
                                                                   'routeParameters' => array('saison_id' => 0),))
                 ->setAttribute('icon', 'user')
     			->setAttribute('divider_append', true);
 
             $menu['Admin']->addChild('Liste des groupes', array('route' => 'SLNRegisterBundle_groupe_list'))
-                ->setAttribute('icon', 'th-list')
+                ->setAttribute('icon', 'th-list');
+            $menu['Admin']->addChild('Mettre à jour les groupes', array('route' => 'SLNRegisterBundle_licensee_change_group',
+                                                                        'routeParameters' => array('saison_id' => $current_saison->getId()),))
+                ->setAttribute('icon', 'sort')
     			->setAttribute('divider_append', true);
 
             $menu['Admin']->addChild('Liste des mails', array('route' => 'SLNRegisterBundle_mail_list',
@@ -80,9 +100,6 @@ class Builder extends ContainerAware {
                 ->setAttribute('icon', 'envelope');
 
         }
-
-        // access service from the container
-        $em = $this->container->get('doctrine')->getManager();
 
         return $menu;
     }

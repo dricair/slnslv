@@ -1,0 +1,51 @@
+{% extends 'SLNRegisterBundle::layout.html.twig' %}
+
+{% block title %}Mise à jour des groupes: {{ saison.nom }} pour la prochaine saison{% endblock %}
+
+{% block body %}
+
+<h1>Mise à jour des groupes: saison {{ saison.nom }} pour la suivante</h1>
+
+<p>Pour chacun des licenciés de la liste, vous pouvez mettre à jour son groupe, qui sera utilisé lorsque l'utilisateur 
+   réactivera son inscription pour la prochaine saison.</p>
+
+<div class="alert alert-warning fade in">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <p>Un mail est envoyé automatiquement aux parents à chaque changement d'une liste déroulante.</p>
+</div>
+
+{% if licensees|length > 0 %}
+<table class="table table-striped datatable">
+<thead>
+<tr>
+  <th>Nom</th>
+  <th>Prénom</th>
+  <th>Date de naissance</th>
+  <th>Ancien groupe</th>
+  <th>Nouveau groupe</th>
+</tr>
+</thead>
+<tbody>
+{% for licensee in licensees %}
+<tr>
+  {% set form = forms[licensee.id] %}
+  <td>{{ licensee.nom }}</td>
+  <td>{{ licensee.prenom }}</td>
+  <td>{{ licensee.naissance|date('d/m/Y') }}</td>
+  <td>{{ licensee.getGroupe(saison) | default("Pas de groupe sélectionné") }}</td>
+  <td>
+    <form action='.' method="post" {{ form_enctype(form) }} role='form'>
+      {{ form_widget(form.new_groupe) }} 
+    </form>
+  </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% else %}
+<p>Pas de licencié à afficher</p>
+{% endif %}
+
+{% endblock %}
+
+

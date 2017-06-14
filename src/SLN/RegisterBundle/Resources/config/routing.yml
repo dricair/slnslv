@@ -51,6 +51,13 @@ SLNRegisterBundle_licensee_delete:
     methods:  GET
     id: \d+
 
+SLNRegisterBundle_licensee_change_group:
+  path: /licensee/change_groups/{saison_id}
+  defaults: { _controller: SLNRegisterBundle:Licensee:newGroupe }
+  requirements:
+    method: GET
+    saison_id: \d+
+
 SLNRegisterBundle_member_inscriptions:
   path: /member/inscriptions/{user_id}
   defaults: { _controller: SLNRegisterBundle:Member:inscriptions }

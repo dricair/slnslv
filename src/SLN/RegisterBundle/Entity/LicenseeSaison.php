@@ -63,6 +63,13 @@ class LicenseeSaison {
     protected $groupe;
 
     /**
+     * @var Groupe $new_groupe Groupe for next saison. Can be null.
+     * @ORM\ManyToOne(targetEntity="Groupe")
+     * @ORM\JoinColumn(name="groupe_new_id", referencedColumnName="id", nullable=True)
+     */
+    protected $new_groupe;
+
+    /**
      * @var bool[] $groupe_jours Selected days for the groups
      * @ORM\Column(type="array")
      */
@@ -290,5 +297,28 @@ class LicenseeSaison {
     public function getGroupe()
     {
         return $this->groupe;
+    }
+
+    /**
+     * Set new_groupe
+     *
+     * @param \SLN\RegisterBundle\Entity\Groupe $newGroupe
+     * @return LicenseeSaison
+     */
+    public function setNewGroupe(\SLN\RegisterBundle\Entity\Groupe $newGroupe = null)
+    {
+        $this->new_groupe = $newGroupe;
+
+        return $this;
+    }
+
+    /**
+     * Get new_groupe
+     *
+     * @return \SLN\RegisterBundle\Entity\Groupe 
+     */
+    public function getNewGroupe()
+    {
+        return $this->new_groupe;
     }
 }

@@ -1,8 +1,8 @@
 <form action="{% if admin %}
-                {% if id == 0 %} {{ path('SLNRegisterBundle_admin_licensee_create', {'user_id': user_id}) }}
-                {% else %} {{ path('SLNRegisterBundle_admin_licensee_edit', {'id': id}) }} {% endif %}
+                {% if id == 0 %} {{ path('SLNRegisterBundle_admin_licensee_create', {'user_id': user_id, 'saison_id': saison.id}) }}
+                {% else %} {{ path('SLNRegisterBundle_admin_licensee_edit', {'id': id, 'saison_id': saison.id}) }} {% endif %}
               {% else %}
-                {% if id == 0 %} {{ path('SLNRegisterBundle_licensee_create', {'user_id': user_id}) }}
+                {% if id == 0 %} {{ path('SLNRegisterBundle_licensee_create', {'user_id': user_id, 'saison_id': saison.id}) }}
                 {% else %} {{ path('SLNRegisterBundle_licensee_edit', {'id': id}) }} {% endif %}
               {% endif %}" method="post" {{ form_enctype(form) }} class="form-horizontal" role="form">
   {{ form_errors(form) }}
@@ -73,7 +73,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">Etat de l'inscription</div>
     <div class="panel-body">
-    {{ form_row(form.inscription) }}
+    {{ form_row(form.form_saison_link.inscription) }}
     </div>
   </div>
   {% endif %}

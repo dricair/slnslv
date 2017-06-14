@@ -22,6 +22,7 @@ use SLN\RegisterBundle\Entity\Saison;
 use SLN\RegisterBundle\Entity\Horaire;
 
 use SLN\RegisterBundle\Form\LicenseeType;
+use SLN\RegisterBundle\Form\Type\LicenseeSaisonNewGroupeType;
 
 use SLN\RegisterBundle\Entity\Repository\LicenseeRepository;
 
@@ -103,6 +104,11 @@ class LicenseeController extends Controller
             $form_saison_link->setLicensee($licensee);
             $form_saison_link->setSaison($saison);
             $form_saison_link->setGroupe($previousGroupe);
+            $form_saison_link->setGroupeJours(array());
+
+            $newGroupe = $licensee->getNewGroupe($saison);
+            if ($new_groupe)
+                $form_saison_link->setGroupe($newGroupe);
         }
         $licensee->setFormSaisonLink($form_saison_link);
 
@@ -140,7 +146,7 @@ class LicenseeController extends Controller
 
               return $this->redirect($this->generateUrl('SLNRegisterBundle_admin_licensee_edit', array(
                                      'id' => $licensee->getId(), $user_id => $licensee->getUser()->getId(),
-                                     'saison' => $saison,
+                                     'saison_id' => $saison->getId(),
                                      'admin' => $admin)
                                     ));
             } else {
@@ -213,12 +219,11 @@ class LicenseeController extends Controller
             throw $this->createNotFoundException("Cette saison n'existe pas.");
         }
 
-
         $fonctions = array();
         foreach(Licensee::getFonctionNames() as $fonction)
             $fonctions[$fonction] = array();
 
-        $no_group = $this->getLicenseeRepository()->getAllNoGroups();
+        $no_group = $this->getLicenseeRepository()->getAllNoGroups($saison);
         $total = count($no_group);
 
         foreach ($no_group as $key => $licensee) {
@@ -232,7 +237,7 @@ class LicenseeController extends Controller
                 unset($no_group[$key]);
         }
 
-        $licensees = $this->getLicenseeRepository()->getAllByGroups();
+        $licensees = $this->getLicenseeRepository()->getAllByGroups($saison);
         $total += count($licensees);
 
         foreach($licensees as $licensee) {
@@ -251,6 +256,33 @@ class LicenseeController extends Controller
                                                                                 'saison' => $saison,
                                                                                 'total' => $total, 
                                                                                 'admin' => $admin));
+    }
+
+
+    /**
+     * Update newGroupe field of the licensees in a single page (Using Ajax)
+     * @param int $saison_id Id of the saison to look at
+     *
+     * @return Response Rendered page.
+     */
+    public function newGroupeAction($saison_id) {
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrCurrent($saison_id);
+        if (!$saison) {
+            throw $this->createNotFoundException("Cette saison n'existe pas.");
+        }
+
+        $licensees = $this->getLicenseeRepository()->getAllByGroups($saison);
+
+        $forms = array();
+        foreach ($licensees as &$licensee) {
+            $saison_link = $licensee->getSaisonLink($saison);
+            $forms[$licensee->getId()] = $this->createForm(LicenseeSaisonNewGroupeType::class, $saison_link)->createView();
+        }
+
+        return $this->render('SLNRegisterBundle:Licensee:list_group.html.twig', array('saison' => $saison,
+                                                                                      'forms' => $forms,
+                                                                                      'licensees' => $licensees));
     }
 
     /**

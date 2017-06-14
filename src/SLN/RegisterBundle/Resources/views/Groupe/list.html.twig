@@ -20,7 +20,7 @@
 </thead>
   {% for groupe in groupes %}
 <tr>
-  <td><a href="{{ path('SLNRegisterBundle_groupe_show', {id: groupe.getId}) }}">{{ groupe.nom }}</a></td>
+  <td><a href="{{ path('SLNRegisterBundle_groupe_show', {id: groupe.getId, saison_id: 0}) }}">{{ groupe.nom }}</a></td>
   <td>{{ groupe.description | nl2br }}</td>
   <td>
     <p>

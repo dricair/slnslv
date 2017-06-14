@@ -498,6 +498,18 @@ Site: http://stadelaurentinnatation.fr</p>');
     }
 
     /**
+     * Get groupe for one saison to be used for the next one
+     * @param Saison $saison Saison to use (Previous saison)
+     *
+     * @return Groupe|NULL 
+     */
+    public function getNewGroupe(Saison $saison)
+    {
+        $saison_link = $this->getSaisonLink($saison);
+        return $saison_link ? $saison_link->getNewGroupe() : NULL;
+    }
+
+    /**
      * Get groupe_jours for the saison
      * @param Saison $saison Saison to use
      *

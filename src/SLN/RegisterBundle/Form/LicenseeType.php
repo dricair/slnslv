@@ -44,7 +44,7 @@ class LicenseeType extends AbstractType
                   'choices' => Licensee::getGenders(),))
             ->add('iuf', null, array("attr" => array("placeholder" => "01234567")))
             ->add('autorisation_photos', 'checkbox', array('required'=>false))
-            ->add('form_saison_link', LicenseeSaisonType::class);
+            ->add('form_saison_link', LicenseeSaisonType::class, array('admin' => $admin));
 
 
         if ($options["admin"])

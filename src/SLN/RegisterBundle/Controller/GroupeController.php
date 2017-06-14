@@ -81,11 +81,12 @@ class GroupeController extends Controller {
      * Show the groupe detail as well as the licensees that are in this groupe.
      *
      * @param int  $id     Id of the group to show
+     * @param int  $saison_id Id of the saison to look at
      * @param bool $admin  True if the page is accessed with admin rights
      *
      * @return Response Rendered page
      */
-    public function showAction($id, $admin=false) {
+    public function showAction($id, $saison_id, $admin=false) {
         $em = $this->getDoctrine()->getManager();
         $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
 
@@ -93,8 +94,13 @@ class GroupeController extends Controller {
             throw $this->createNotFoundException('Ce groupe n\'existe pas dans la base de données.');
         }
 
-        $licensees =  $em->getRepository('SLNRegisterBundle:Licensee')->getAllForGroupe($groupe);
-        $groupes = Licensee::sortByGroups($licensees);
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrCurrent($saison_id);
+        if (!$saison) {
+            throw $this->createNotFoundException("Cette saison n'existe pas.");
+        }
+
+        $licensees =  $em->getRepository('SLNRegisterBundle:Licensee')->getAllForGroupe($saison, $groupe);
+        $groupes = Licensee::sortByGroups($licensees, $saison);
 
         if (!array_key_exists($groupe->getNom(), $groupes)) {
             $groupes[$groupe->getNom()] = array("num" => 0, "licensees" => array(), "multiple" => false);
@@ -103,6 +109,7 @@ class GroupeController extends Controller {
         return $this->render('SLNRegisterBundle:Groupe:show.html.twig', array(
           'groupe' => $groupe,
           'licensees' => $groupes[$groupe->getNom()],
+          'saison' => $saison,
           'admin' => $admin));
     }
 
