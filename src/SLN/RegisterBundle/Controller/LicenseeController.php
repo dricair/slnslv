@@ -133,13 +133,19 @@ class LicenseeController extends Controller
               if ($id != 0 and $groupe and ($previousGroupe != null and
                                             $groupe->getId() != $previousGroupe->getId())) {
                 
+                $to = array($user->getEmail());
+                if ($user->getSecondaryEmail())
+                    $to[] = $licensee->getUser()->getSecondaryEmail();
+
                 $message = \Swift_Message::newInstance()
                  ->setSubject("Changement de groupe pour {$licensee->getPrenom()} {$licensee->getNom()}")
-                 ->setFrom('slnslv@free.fr')
-                 ->setTo($user->getEmail())
-                 ->setCc('cairaud@gmail.com')
-                 ->setBody($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.txt.twig', array('licensee' => $licensee)), "text/plain")
-                 ->addPart($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.html.twig', array('licensee' => $licensee)), "text/html");
+                 ->setFrom(array('slnslv@free.fr', "Stade Laurentin Natation"))
+                 ->setTo($to)
+                 ->setCc(array('slnslv@free.fr' => "Stade Laurentin Natation"))
+                 ->setBody($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.txt.twig', 
+                                             array('licensee' => $licensee, 'groupe' => $groupe)), "text/plain")
+                 ->addPart($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.html.twig', 
+                                             array('licensee' => $licensee, 'groupe' => $groupe)), "text/html");
 
                 $this->get('mailer')->send($message);
               }
@@ -275,13 +281,19 @@ class LicenseeController extends Controller
         $licensees = $this->getLicenseeRepository()->getAllByGroups($saison);
 
         $forms = array();
+        $saison_links = array();
         foreach ($licensees as &$licensee) {
             $saison_link = $licensee->getSaisonLink($saison);
+            if (!$saison_link->getNewGroupe())
+                $saison_link->setNewGroupe($saison_link->getGroupe());
+
             $forms[$licensee->getId()] = $this->createForm(LicenseeSaisonNewGroupeType::class, $saison_link)->createView();
+            $saison_links[$licensee->getId()] = $saison_link;
         }
 
         return $this->render('SLNRegisterBundle:Licensee:list_group.html.twig', array('saison' => $saison,
                                                                                       'forms' => $forms,
+                                                                                      'saison_links' => $saison_links,
                                                                                       'licensees' => $licensees));
     }
 

@@ -18,4 +18,8 @@ payments:
     resource: "SLNRegisterBundle:PaymentRest"
     name_prefix: api_
 
-
+new_group:
+    type: rest
+    resource: "SLNRegisterBundle:LicenseeSaisonRest"
+    name_prefix: api_
+    
