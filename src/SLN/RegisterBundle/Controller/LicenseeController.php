@@ -73,6 +73,7 @@ class LicenseeController extends Controller
         }
 
         $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrOpen($saison_id);
+        $current_saison = $em->getRepository('SLNRegisterBundle:Saison')->getCurrent();
 
         if (!$saison) 
               throw $this->createNotFoundException("Cette saison n'existe pas.");
@@ -96,7 +97,7 @@ class LicenseeController extends Controller
           }
         }
             
-        $previousGroupe = $licensee->getGroupe($saison);
+        $previousGroupe = $licensee->getGroupe($current_saison);
 
         $form_saison_link = $licensee->getSaisonLink($saison);
         if (!$form_saison_link) {
@@ -107,13 +108,13 @@ class LicenseeController extends Controller
             $form_saison_link->setGroupeJours(array());
 
             $newGroupe = $licensee->getNewGroupe($saison);
-            if ($new_groupe)
+            if ($newGroupe)
                 $form_saison_link->setGroupe($newGroupe);
         }
         $licensee->setFormSaisonLink($form_saison_link);
 
         $request     = $this->getRequest();
-        $form        = $this->createForm(LicenseeType::class, $licensee, array("admin" => $admin));
+        $form        = $this->createForm(LicenseeType::class, $licensee, array("admin" => $admin, "defaultGroupe" => $form_saison_link->getGroupe()));
         $form->handleRequest($request);
 
         if ($form->isValid()) {

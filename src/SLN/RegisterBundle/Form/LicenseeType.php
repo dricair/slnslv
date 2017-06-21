@@ -34,6 +34,7 @@ class LicenseeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $admin = $options["admin"];
+        $defaultGroupe = $options["defaultGroupe"];
 
         $builder
             ->add('nom', null, array("attr" => array("placeholder" => "Nom")))
@@ -44,7 +45,7 @@ class LicenseeType extends AbstractType
                   'choices' => Licensee::getGenders(),))
             ->add('iuf', null, array("attr" => array("placeholder" => "01234567")))
             ->add('autorisation_photos', 'checkbox', array('required'=>false))
-            ->add('form_saison_link', LicenseeSaisonType::class, array('admin' => $admin));
+            ->add('form_saison_link', LicenseeSaisonType::class, array('admin' => $admin, 'defaultGroupe' => $defaultGroupe));
 
 
         if ($options["admin"])
@@ -68,7 +69,8 @@ class LicenseeType extends AbstractType
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
-        $resolver->setDefaults(array("admin" => false));
+        $resolver->setDefaults(array("admin" => false,
+                                     "defaultGroupe" => null));
     }
 
     /** @ignore */

@@ -55,18 +55,16 @@ class GroupeRepository extends EntityRepository
      * Return the groups, sorted by category and order, which can be publicly visible
      * If the given licensee is already in a group, this group is proposed as well
      *
-     * @param LicenseeSaison $saison_link: Link between a Licensee and a Saison, containing
-     *                                     the group
+     * @param Groupe $defaultGroupe: default Groupe to use if not null
      * @param bool $query: if true, return a query instead of results
      * @return QueryBuilder|Groupe[] list of groups
      */
-    public function findLicenseePublic(LicenseeSaison $saison_link, $query=FALSE) {
+    public function findLicenseePublic($defaultGroupe, $query=FALSE) {
         $qb = $this->findPublic(true);
 
-        $groupe = $saison_link->getGroupe();
-        if ($groupe) {
+        if ($defaultGroupe) {
             $qb->orWhere('g=:groupe_id')
-               ->setParameter('groupe_id', $groupe->getId());
+               ->setParameter('groupe_id', $defaultGroupe->getId());
         }
 
         return $query ? $qb : $qb->getQuery()

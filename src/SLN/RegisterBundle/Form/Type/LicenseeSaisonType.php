@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
 use SLN\RegisterBundle\Entity\Horaire;
+use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Entity\Saison;
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Entity\LicenseeSaison;
@@ -32,6 +33,8 @@ class LicenseeSaisonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $admin = $options["admin"];
+        $defaultGroupe = $options["defaultGroupe"];
+        dump($defaultGroupe);
 
         $builder->add('groupe_jours', 'choice', array(
                       'label' => 'Choix des jours',
@@ -48,20 +51,12 @@ class LicenseeSaisonType extends AbstractType
                           'multiple' => true,
                           'expanded' => true));
         else {
-            // Only add the group when the data is available so that the current group is known
-            // and can be added to the list (findLicenseePublic)
-            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($builder, $options) { 
-              $currentData = $event->getData(); 
-              $form = $event->getForm();
-
-              $form->add('groupe', 'entity', array("class" => "SLNRegisterBundle:Groupe",
-                                                   "group_by" => 'categorieName',
-                                                   "empty_data" => null,
-                                                   "query_builder" => function (GroupeRepository $er) use ($currentData) {
-                                                        return $er->findLicenseePublic($currentData, TRUE);
-                                                   }
-                                                   ));
-            });
+            $builder->add('groupe', 'entity', array("class" => "SLNRegisterBundle:Groupe",
+                                                    "group_by" => 'categorieName',
+                                                    "empty_data" => null,
+                                                    "query_builder" => function (GroupeRepository $er) use ($defaultGroupe) {
+                                                       return $er->findLicenseePublic($defaultGroupe, TRUE);
+                                                 }));
         }
     }
 
@@ -74,6 +69,7 @@ class LicenseeSaisonType extends AbstractType
     {
         $resolver->setDefaults(array(
             'admin' => false,
+            'defaultGroupe' => null,
             'data_class' => LicenseeSaison::class,
         ));
     }
