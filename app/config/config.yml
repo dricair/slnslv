@@ -34,7 +34,7 @@ twig:
     form_themes:
         - 'SLNRegisterBundle:Form:fields.html.twig'
     globals:
-        version: 0.7.0
+        version: 0.7.1
 
 # Assetic Configuration
 assetic:
@@ -99,8 +99,8 @@ fos_user:
         form:
             type: sln_user_profile
     from_email:
-        address: "%mailer_user%"
-        sender_name: "%mailer_user%"
+        address: "slnslv@free.fr"
+        sender_name: "slnslv"
         
 
 sensio_framework_extra:
@@ -112,6 +112,7 @@ fos_rest:
     param_fetcher_listener: true
     body_listener: true
     format_listener: true
+    disable_csrf_role: IS_AUTHENTICATED_FULLY
     view:
         view_response_listener: 'force'
         force_redirects:
