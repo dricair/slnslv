@@ -107,7 +107,7 @@ class LicenseeController extends Controller
             $form_saison_link->setGroupe($previousGroupe);
             $form_saison_link->setGroupeJours(array());
 
-            $newGroupe = $licensee->getNewGroupe($saison);
+            $newGroupe = $licensee->getNewGroupe($current_saison);
             if ($newGroupe)
                 $form_saison_link->setGroupe($newGroupe);
         }

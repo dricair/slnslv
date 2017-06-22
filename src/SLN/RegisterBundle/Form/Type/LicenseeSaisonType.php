@@ -34,7 +34,6 @@ class LicenseeSaisonType extends AbstractType
     {
         $admin = $options["admin"];
         $defaultGroupe = $options["defaultGroupe"];
-        dump($defaultGroupe);
 
         $builder->add('groupe_jours', 'choice', array(
                       'label' => 'Choix des jours',
