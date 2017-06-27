@@ -22,7 +22,7 @@
   <td>
     <a href="{{ path('SLNRegisterBundle_member_edit', { id: member.id }) }}" title='Modifier ce membre'>
       <span class="glyphicon glyphicon-pencil"></span></a>
-    <a href="{{ path('SLNRegisterBundle_payment_user', { user_id: member.id }) }}" title='Suivi des inscriptions'>
+    <a href="{{ path('SLNRegisterBundle_payment_user', { saison_id: saison.id, user_id: member.id }) }}" title='Suivi des inscriptions'>
       <span class="glyphicon glyphicon-euro"></span></a>
     {% if member.hasRole('ROLE_ADMIN') %}
     <span class="glyphicon glyphicon-wrench" title="Administrateur"></span>

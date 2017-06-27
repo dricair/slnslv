@@ -865,6 +865,13 @@ Site: http://stadelaurentinnatation.fr</p>');
 
 
     /**
+     * Add a tarif to the tarifs list
+     */
+    public function addTarif($tarif) {
+        $this->tarifs[] = $tarif;
+    }
+
+    /**
      * Set fonctions
      *
      * @param array $fonctions
@@ -886,14 +893,6 @@ Site: http://stadelaurentinnatation.fr</p>');
     {
         return $this->fonctions;
     }
-
-    /**
-     * Add a tarif to the tarifs list
-     */
-    public function addTarif($tarif) {
-        $this->tarifs[] = $tarif;
-    }
-
     /**
      * Add saison_links
      *
@@ -991,45 +990,4 @@ Site: http://stadelaurentinnatation.fr</p>');
         return $this->inscription;
     }
 
-
-
-
-    /**
-     * Set inscription
-     *
-     * @param array $inscription
-     * @return Licensee
-     */
-    public function setInscription($inscription)
-    {
-        $this->inscription = $inscription;
-
-        return $this;
-    }
-
-    /**
-     * Set groupe_jours
-     *
-     * @param array $groupeJours
-     * @return Licensee
-     */
-    public function setGroupeJours($groupeJours)
-    {
-        $this->groupe_jours = $groupeJours;
-
-        return $this;
-    }
-
-    /**
-     * Set groupe
-     *
-     * @param \SLN\RegisterBundle\Entity\Groupe $groupe
-     * @return Licensee
-     */
-    public function setGroupe(\SLN\RegisterBundle\Entity\Groupe $groupe = null)
-    {
-        $this->groupe = $groupe;
-
-        return $this;
-    }
 }

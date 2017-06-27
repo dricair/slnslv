@@ -45,6 +45,14 @@
          onclick="return confirm('Etes-vous sûr de vouloir effacer le licencié {{ licensee.prenom }} {{ licensee.nom }} ?');">
       <span class="glyphicon glyphicon-trash"></span></a>
     {% endif %}
+    {% if admin and open_saison|default(FALSE) and open_saison.id != saison.id %}
+    <a href="{{ path('SLNRegisterBundle_admin_licensee_edit', { 'id': licensee.getId, 'saison_id': open_saison.id }) }}" 
+       title='Réactiver ce licencié pour la saison {{open_saison.nom}}'>
+      <span class="glyphicon glyphicon-flash text-warning"></span></a>
+    <a href="{{ path('SLNRegisterBundle_licensee_delete', { id: licensee.getId }) }}" title='Supprimer ce licencié'
+         onclick="return confirm('Etes-vous sûr de vouloir effacer le licencié {{ licensee.prenom }} {{ licensee.nom }} ?');">
+      <span class="glyphicon glyphicon-trash"></span></a>
+    {% endif %}
   {% if admin %}
     {% if member_link | default(true) %}
     <a href="{{ path('SLNRegisterBundle_member_edit', { id: licensee.user.id }) }}" title="Fiche du membre">
@@ -56,7 +64,7 @@
     {% endif %}
     <a href="{{ path('SLNRegisterBundle_mail_licensee_select', { 'defaultLicensee': licensee.getId, 'saison_id': saison.id }) }}" title="Envoyer un mail à ce licencié">
       <span class="glyphicon glyphicon-envelope"></span></a>
-    <a href="{{ path('SLNRegisterBundle_payment_user', { user_id: licensee.user.id }) }}" title="Paiements pour ce licencié">
+    <a href="{{ path('SLNRegisterBundle_payment_user', { saison_id: saison.id, user_id: licensee.user.id }) }}" title="Paiements pour ce licencié">
       <span class="glyphicon glyphicon-euro"></span></a>
   {% endif %}
   </td>

@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 
 use SLN\RegisterBundle\Entity\Licensee;
+use SLN\RegisterBundle\Entity\LicenseeSaison;
 use SLN\RegisterBundle\Entity\User;
 
 /**
@@ -25,6 +26,7 @@ class PaymentRestController extends Controller {
     /**
      * Change the value of a missing inscription item to a licensee
      *
+     * @param int $saison_id Id of the saison
      * @param int $id Id of the licensee
      * @param int $inscription Inscription item index
      * @param int $missing New missing value
@@ -36,15 +38,24 @@ class PaymentRestController extends Controller {
             throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
         }
 
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen();
+        if (!$saison) 
+              throw $this->createNotFoundException("Il n'y a pas de saison ouverte.");
+
         $licensee = $this->getLicenseeRepository()->find($id);
         if (!$licensee) {
             throw $this->createNotFoundException("Ce licencié n'existe pas.");
         }
 
-        $missing = $licensee->setInscriptionMissing($inscription, $missing);
+        $saison_link = $licensee->getSaisonLink($saison);
+        if (!$saison_link)
+            throw $this->createNotFoundException("Cette saison n'existe pas pour ce licencié.");
+
+        $missing = $saison_link->setInscriptionMissing($inscription, $missing);
         
         $em = $this->getDoctrine()->getManager();
-        $em->persist($licensee);
+        $em->persist($saison_link);
         $em->flush();
 
         return $missing;
@@ -63,6 +74,11 @@ class PaymentRestController extends Controller {
             throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
         }
 
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen();
+        if (!$saison) 
+              throw $this->createNotFoundException("Il n'y a pas de saison ouverte.");
+
         $user = $this->getUserRepository()->find($id);
         if (!$user) {
             throw $this->createNotFoundException("Cet utilisateur n'existe pas.");
@@ -72,9 +88,12 @@ class PaymentRestController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $licensees = $user->getLicensees();
         foreach ($licensees as &$licensee) {
-            $new_missing = $new_missing or $licensee->setInscriptionMissing(Licensee::PAIEMENT, $missing);
-            $em->persist($licensee);
-            $em->flush();
+            $saison_link = $licensee->getSaisonLink($saison);
+            if ($saison_link) {
+                $new_missing = $new_missing or $saison_link->setInscriptionMissing(LicenseeSaison::PAIEMENT, $missing);
+                $em->persist($saison_link);
+                $em->flush();
+            }
         }
 
         return $new_missing;

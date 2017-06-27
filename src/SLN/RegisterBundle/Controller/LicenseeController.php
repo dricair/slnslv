@@ -226,6 +226,8 @@ class LicenseeController extends Controller
             throw $this->createNotFoundException("Cette saison n'existe pas.");
         }
 
+        $open_saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen();
+
         $fonctions = array();
         foreach(Licensee::getFonctionNames() as $fonction)
             $fonctions[$fonction] = array();
@@ -250,7 +252,8 @@ class LicenseeController extends Controller
         foreach($licensees as $licensee) {
             $licensee_fonctions = $licensee->getFonctions();
             foreach(Licensee::getFonctionNames() as $index => $fonction) {
-                if ($licensee_fonctions and in_array($index, $licensee_fonctions))
+                if ($licensee_fonctions and in_array($index, $licensee_fonctions) 
+                    and !in_array($licensee, $fonctions[$fonction]))
                     $fonctions[$fonction][] = $licensee;
             }
         }
@@ -261,6 +264,7 @@ class LicenseeController extends Controller
                                                                                 'groupes' => $groupes, 
                                                                                 'fonctions' => $fonctions,
                                                                                 'saison' => $saison,
+                                                                                'open_saison' => $open_saison,
                                                                                 'total' => $total, 
                                                                                 'admin' => $admin));
     }

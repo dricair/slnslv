@@ -36,8 +36,11 @@ class MemberController extends Controller
     public function listAction($admin=False)
     {
         $members = $this->getUserRepository()->getAll();
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->getCurrent();
 
-        return $this->render('SLNRegisterBundle:Member:list.html.twig', array('members' => $members));
+        return $this->render('SLNRegisterBundle:Member:list.html.twig', array('members' => $members,
+                                                                              'saison' => $saison));
     }
 
     /**

@@ -14,6 +14,7 @@ use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Entity\Licensee;
 use SLN\RegisterBundle\Entity\User;
 use SLN\RegisterBundle\Entity\Saison;
+use SLN\RegisterBundle\Entity\LicenseeSaison;
 
 /**
  * Licensee Repository
@@ -110,10 +111,12 @@ class LicenseeRepository extends EntityRepository {
         $qb = $this->createQueryBuilder('l')
                    ->select('l')
                    ->addOrderBy('l.nom',  'ASC')
-                   ->addOrderBy('l.prenom', 'ASC');
-
-        $this->addSaison($qb, $saison, false);
-        $qb->andWhere('s.groupe IS NOT NULL');
+                   ->addOrderBy('l.prenom', 'ASC')
+                   ->leftjoin('l.saison_links', 's')
+                   ->where('s.licensee=l.id')
+                   ->andWhere('s.saison=:saison_id')
+                   ->andWhere('l.groupe IS NULL')
+                   ->setParameter('saison_id', $saison->getId());
 
         if ($builder) return $qb;
         return $qb->getQuery()
@@ -150,13 +153,15 @@ class LicenseeRepository extends EntityRepository {
      *
      * @return Licensee[] List of Licensee
      */
-    public function getAllForFonction($fonction) {
+    public function getAllForFonction(Saison $saison, $fonction) {
         $qb = $this->createQueryBuilder('l');
         $qb->select('l')
            ->where($qb->expr()->like('l.fonctions', ':fonction'))
            ->addOrderBy('l.nom',  'ASC')
            ->addOrderBy('l.prenom', 'ASC')
            ->setParameter('fonction', "%i:$fonction;%");
+
+        $this->addSaison($qb, $saison, false);
 
         // Search is approximative (Index or value ?)
         $licensees = [];
@@ -245,19 +250,19 @@ class LicenseeRepository extends EntityRepository {
      * Return a list of all licensees which have incomplete inscription
      */
     public function getAllIncomplete(Saison $saison) {
-        $inscriptions = Licensee::getInscriptionNames();
+        $inscriptions = LicenseeSaison::getInscriptionNames();
 
         $full_str = sprintf("a:%d:", count($inscriptions));
 
         $qb = $this->createQueryBuilder('l');
         $qb->select('l')
-           ->andWhere($qb->expr()->notLike('l.inscription', ':full_str'))
+           ->where($qb->expr()->notLike('l.inscription', ':full_str'))
            ->addOrderBy('l.nom',  'ASC')
            ->addOrderBy('l.prenom', 'ASC')
            ->setParameter('full_str', $full_str . "%");
 
         $this->addSaison($qb, $saison);
-        $qd->andWhere('s.groupe IS NOT NULL');
+        $qb->andWhere('s.groupe IS NOT NULL');
 
         return $qb->getQuery()
                   ->getResult();
@@ -266,7 +271,7 @@ class LicenseeRepository extends EntityRepository {
     /**
      * Search licensees
      */
-    public function searchLicensees($search) {
+    public function searchLicensees($saison, $search) {
         $qb = $this->createQueryBuilder('l');
         $qb->select('l')
            ->where('l.nom LIKE :search')
@@ -274,6 +279,8 @@ class LicenseeRepository extends EntityRepository {
            ->addOrderBy('l.nom',  'ASC')
            ->addOrderBy('l.prenom', 'ASC')
            ->setParameter('search', "%$search%");
+
+        $this->addSaison($qb, $saison);
 
         return $qb->getQuery()
                   ->getResult();

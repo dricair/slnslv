@@ -59,7 +59,7 @@ class LicenseeRestController extends Controller {
                 throw $this->createNotFoundException("La fonction $id n'existe pas");
 
             $licensees = [];
-            foreach($licenseeRepository->getAllForFonction($id) as &$licensee) {
+            foreach($licenseeRepository->getAllForFonction($saison, $id) as &$licensee) {
                 if ($id != Licensee::OFFICIEL or $extra == -1 or $licenseeRepository->userHasInGroup($licensee, $saison, $extra))
                     $licensees[] = $licensee;
             }

@@ -120,12 +120,29 @@ class SaisonController extends Controller {
     public function updateAction() {
         $em = $this->getDoctrine()->getManager();
 
-        $saison = $em->getRepository('SLNRegisterBundle:Saison')->find(1);
-        $mails = $em->getRepository('SLNRegisterBundle:LicenseeMail')->findAll();
+        $saison1 = $em->getRepository('SLNRegisterBundle:Saison')->find(1);
+        $saison2 = $em->getRepository('SLNRegisterBundle:Saison')->find(2);
+        $licensees = $em->getRepository('SLNRegisterBundle:Licensee')->findAll();
         
-        foreach ($mails as &$mail) {
-            $mail->setSaison($saison);
-            $em->persist($mail);
+        foreach ($licensees as &$licensee) {
+            if ($licensee->getGroupeOld()) continue;
+            $saison_links = $licensee->getSaisonLinks();
+            if (count($saison_links) > 0) continue;
+            $fonctions = $licensee->getFonctions();
+            if (count($fonctions) == 0) continue;
+            
+            dump($licensee);
+
+            $saison_link = new LicenseeSaison();
+            $saison_link->setLicensee($licensee);
+            $saison_link->setSaison($saison1);
+            $em->persist($saison_link);
+
+            $saison_link = new LicenseeSaison();
+            $saison_link->setLicensee($licensee);
+            $saison_link->setSaison($saison2);
+            $em->persist($saison_link);
+
         }
 
         $em->flush();

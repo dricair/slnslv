@@ -43,7 +43,10 @@ class LicenseeSaisonType extends AbstractType
 
         if ($options["admin"])
             $builder->add('groupe', 'entity', array("class" => "SLNRegisterBundle:Groupe",
-                                                    "group_by" => 'categorieName'))
+                                                    "group_by" => 'categorieName',
+                                                    "required" => False,
+                                                    "empty_data" => null,
+                                                    "empty_value" => "Pas de groupe (Officiel, Bureau)"))
                     ->add('inscription', 'choice', array(
                           'label' => 'Etat de l\'inscription',
                           'choices' => LicenseeSaison::getInscriptionNames(),
@@ -52,7 +55,6 @@ class LicenseeSaisonType extends AbstractType
         else {
             $builder->add('groupe', 'entity', array("class" => "SLNRegisterBundle:Groupe",
                                                     "group_by" => 'categorieName',
-                                                    "empty_data" => null,
                                                     "query_builder" => function (GroupeRepository $er) use ($defaultGroupe) {
                                                        return $er->findLicenseePublic($defaultGroupe, TRUE);
                                                  }));

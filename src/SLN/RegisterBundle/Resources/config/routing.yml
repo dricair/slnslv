@@ -268,15 +268,16 @@ SLNRegisterBundle_payment_search:
     methods: GET
 
 SLNRegisterBundle_payment_user:
-  path: /admin/payment/edit/{user_id}
+  path: /admin/payment/edit/{saison_id}/{user_id}
   defaults: { _controller: SLNRegisterBundle:Payment:edit }
   requirements:
     methods: GET|POST
+    saison_id: \d+
     user_id: \d+
 
 SLNRegisterBundle_payment_edit:
   path: /admin/payment/edit/{user_id}/{id}
-  defaults: { _controller: SLNRegisterBundle:Payment:edit }
+  defaults: { _controller: SLNRegisterBundle:Payment:edit, saison_id: 0 }
   requirements:
     methods: GET|POST
     user_id: \d+

@@ -26,7 +26,7 @@
       {% set licensee_missing = licensee.inscriptionMissingList(saison, TRUE) %}
       {{ licensee.prenom }} {{ licensee.nom }}
       {% if admin or licensee_missing|length > 0 %}
-      <a href="{% if admin %}{{ path('SLNRegisterBundle_admin_licensee_edit', { id: licensee.id }) }}
+      <a href="{% if admin %}{{ path('SLNRegisterBundle_admin_licensee_edit', { id: licensee.id, saison_id: saison.id }) }}
                {% else %}{{ path('SLNRegisterBundle_licensee_edit', { id: licensee.id }) }}{% endif %}" title='Modifier ce licencié'>
         <span class="glyphicon glyphicon-pencil"></span></a>
       <a href="{{ path('SLNRegisterBundle_licensee_delete', { id: licensee.id }) }}" title='Supprimer ce licencié pour la saison {{ saison.nom }}'
@@ -95,7 +95,7 @@
         <br/>
         {% endfor %}
         {% if admin and info.diff_value != 0 %}
-      <a href="{{ path('SLNRegisterBundle_payment_user', { user_id: user.id }) }}">
+      <a href="{{ path('SLNRegisterBundle_payment_user', { saison_id: saison.id, user_id: user.id }) }}">
         Ajouter un paiement</a>
         {% endif %}
       {% else %}

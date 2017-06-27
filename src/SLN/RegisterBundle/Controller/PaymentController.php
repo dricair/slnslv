@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use SLN\RegisterBundle\Entity\User;
 use SLN\RegisterBundle\Entity\Groupe;
 use SLN\RegisterBundle\Entity\Licensee;
+use SLN\RegisterBundle\Entity\LicenseeSaison;
 use SLN\RegisterBundle\Entity\UserPayment;
 use SLN\RegisterBundle\Entity\Tarif;
 use SLN\RegisterBundle\Form\Type\UserPaymentType;
@@ -34,16 +35,24 @@ class PaymentController extends Controller {
     /**
      * Edit payments for a specific user. Contains form to create payments
      *
+     * @param int $saison_id Id of the saison
      * @param int $user_id  Id of the User
      * @param int $id       Id of the payment to edit. If 0, a new payment is created
      */
-    public function editAction(Request $request, $user_id, $id=0) {
+    public function editAction(Request $request, $saison_id, $user_id, $id=0) {
         $user = $this->getUserFromID($user_id);
-        $user->addExtraTarif();
+
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrOpen($saison_id);
+        if (!$saison) 
+              throw $this->createNotFoundException("Cette saison n'existe pas.");
+
+        $user->addExtraTarif($saison);
 
         if ($id == 0) {
             $payment = new UserPayment();
             $payment->setUser($user);
+            $payment->setSaison($saison);
         } else  {
             $em = $this->getDoctrine()->getManager();
             $payment = $this->getPaymentsRepository()->find($id);
@@ -67,7 +76,7 @@ class PaymentController extends Controller {
             );
 
             return $this->redirect($this->generateUrl('SLNRegisterBundle_payment_user', array(
-                                     'user_id' => $user_id)
+                                     'saison_id' => $saison.id, 'user_id' => $user_id)
                                     ));
         }
 
@@ -75,15 +84,16 @@ class PaymentController extends Controller {
             $this->get('session')->getFlashBag()->add('error', "Des erreurs sont présentes dans le formulaire");
         }
 
-        $payments = $this->getPaymentsRepository()->getPaymentsForUSer($user_id);
-        $inscription_names = Licensee::getInscriptionNames();
+        $payments = $this->getPaymentsRepository()->getPaymentsForUSer($saison, $user_id);
+        $inscription_names = LicenseeSaison::getInscriptionNames();
 
         return $this->render('SLNRegisterBundle:Payments:edit.html.twig', array(
             'title' => sprintf("Paiements pour %s %s", $user->getPrenom(), $user->getNom()),
             'user' => $user,
             'id' => $id,
+            'saison' => $saison,
             'inscription_names' => $inscription_names, 
-            'payment_val' => Licensee::PAIEMENT,
+            'payment_val' => LicenseeSaison::PAIEMENT,
             'payments' => $payments,
             'form' => $form->createView(),
             'admin' => TRUE
@@ -99,15 +109,21 @@ class PaymentController extends Controller {
         $users = array();
         $search = $request->query->get('search', "");
 
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen();
+
+        if (!$saison) 
+              throw $this->createNotFoundException("Il n'y a pas de saison ouverte.");
+
         if ($search !== "") {
             foreach($this->getUserRepository()->searchUsers($search) as &$user) {
               $users[$user->getId()] = $user;
             }
-            $licensees = $this->getLicenseeRepository()->searchLicensees($search);
+            $licensees = $this->getLicenseeRepository()->searchLicensees($saison, $search);
         }
 
         else {
-            $licensees = $this->getLicenseeRepository()->getAllIncomplete();
+            $licensees = $this->getLicenseeRepository()->getAllIncomplete($saison);
         }
 
         foreach($licensees as &$licensee) {
@@ -117,14 +133,15 @@ class PaymentController extends Controller {
         }
 
         foreach($users as $user_id => &$user) {
-            $user->addExtraTarif();
+            $user->addExtraTarif($saison);
         }
 
-        $inscription_names = Licensee::getInscriptionNames();
+        $inscription_names = LicenseeSaison::getInscriptionNames();
 
         return $this->render('SLNRegisterBundle:Payments:search.html.twig',
                              array('search' => $search,
-                                   'payment_val' => Licensee::PAIEMENT,
+                                   'saison' => $saison,
+                                   'payment_val' => LicenseeSaison::PAIEMENT,
                                    'users' => array_values($users),
                                    'inscription_names' => $inscription_names));
     }
@@ -142,6 +159,9 @@ class PaymentController extends Controller {
             throw $this->createNotFoundException('Ce paiement n\'existe pas dans la base de données.');
         }
 
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen($saison_id);
+
         $user = $this->getUserFromID($payment->getUser()->getId());
         $user->removePayment($payment);
 
@@ -150,7 +170,7 @@ class PaymentController extends Controller {
         $em->persist($user);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('SLNRegisterBundle_payment_user', array('user_id' => $user->getId())));
+        return $this->redirect($this->generateUrl('SLNRegisterBundle_payment_user', array('saison_id' => saison.id, 'user_id' => $user->getId())));
     }
 
     /**

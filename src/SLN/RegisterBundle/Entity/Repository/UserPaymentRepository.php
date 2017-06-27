@@ -23,11 +23,13 @@ class UserPaymentRepository extends EntityRepository {
      *
      * @return Payment[] List of payments
      */
-     public function getPaymentsForUSer($userId) {
+     public function getPaymentsForUSer($saison, $userId) {
          $qb = $this->createQueryBuilder('p')
                     ->select('p')
                     ->where('p.user = :user_id')
-                    ->setParameter('user_id', $userId);
+                    ->andWhere('p.saison = :saison_id')
+                    ->setParameter('user_id', $userId)
+                    ->setParameter('saison_id', $saison->getId());
 
          return $qb->getQuery()
                    ->getResult();

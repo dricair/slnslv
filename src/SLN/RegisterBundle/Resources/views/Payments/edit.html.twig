@@ -22,7 +22,7 @@
 {% endif %}
 
 {% include 'SLNRegisterBundle:Payments:form.html.twig' with { 'title': title, 'form': form, 'admin': admin, 'user': user,
-                                                              'cancel_addr': path('SLNRegisterBundle_payment_user', { user_id: user.id }) } %}
+                                                              'cancel_addr': path('SLNRegisterBundle_payment_user', { saison_id: saison.id, user_id: user.id }) } %}
   
 {% endblock %}
 
