@@ -5,19 +5,19 @@
 
 <ul class="pagination">
   {% if first > 1 %} 
-    <li><a href="{{ path('SLNRegisterBundle_mail_list', { id: id, page: 1, admin: admin }) }}">1</a></li>
+    <li><a href="{{ path('SLNRegisterBundle_mail_list', { id: id, saison_id: saison.id, page: 1, admin: admin }) }}">1</a></li>
     <li class="disabled"><a href="#">...</a></li>
   {% endif %}
 
   {% for p in first .. last %}
     <li{% if p == page %} class="active"{% endif %}>
-      <a href="{{ path('SLNRegisterBundle_mail_list', { id: id, page: p, admin: admin }) }}">{{ p }}</a>
+      <a href="{{ path('SLNRegisterBundle_mail_list', { id: id, saison_id: saison.id, page: p, admin: admin }) }}">{{ p }}</a>
     </li>
   {% endfor %}
 
   {% if last < num_pages %}
     <li class="disabled"><a href="#">...</a></li>
-    <li><a href="{{ path('SLNRegisterBundle_mail_list', { id: id, page: num_pages, admin: admin }) }}">{{ num_pages }}</a></li>
+    <li><a href="{{ path('SLNRegisterBundle_mail_list', { id: id, saison_id: saison.id, page: num_pages, admin: admin }) }}">{{ num_pages }}</a></li>
   {% endif %}
 </ul>
 {% endif %}
@@ -43,7 +43,7 @@
       <summary>{{ mail.licensees|length }}&nbsp;destinataires.</summary>
       <p>
       {% for licensee in mail.licensees %}
-        <a href="{{ path('SLNRegisterBundle_admin_licensee_edit', { id: licensee.getId }) }}" title="Fiche d'inscription pour ce licencié">
+        <a href="{{ path('SLNRegisterBundle_admin_licensee_edit', { saison_id: saison.id, id: licensee.getId }) }}" title="Fiche d'inscription pour ce licencié">
           {{ licensee.prenom }}&nbsp;{{ licensee.nom}}{% if not loop.last %}, {% endif %}
         </a>
       {% endfor %}

@@ -4,12 +4,12 @@
 
 {% block body %}
 <div class="btn-group btn-group-justified">
-  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_mail_licensee') }}">Envoyer un nouveau mail</a>
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_mail_licensee', {'saison_id': saison.id}) }}">Envoyer un nouveau mail</a>
 </div>
 
 <h1>Liste des mails</h1>
 
-{% include 'SLNRegisterBundle:Mail:list_content.html.twig' with { 'mails': mails, 'admin': admin } %}
+{% include 'SLNRegisterBundle:Mail:list_content.html.twig' with { 'mails': mails, 'saison': saison, 'admin': admin } %}
 
 {% endblock %}
 

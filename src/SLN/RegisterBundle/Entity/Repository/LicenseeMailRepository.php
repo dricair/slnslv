@@ -4,6 +4,7 @@ namespace SLN\RegisterBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use SLN\RegisterBundle\Entity\Saison;
 
 /**
  * LicenseeMailRepository
@@ -19,15 +20,16 @@ class LicenseeMailRepository extends EntityRepository {
      *
      * @return Paginator List of mails
      */
-     public function paginateMails($id=0, $page=1, $maxperpage=10) {
+     public function paginateMails(Saison $saison, $id=0, $page=1, $maxperpage=10) {
          if ($page < 1) {
             throw new \InvalidArgumentException("L'argument \$page ne peut être inférieur à 1 (valeur : '$page')");
          }
 
          $qb = $this->createQueryBuilder('l')
                     ->select('l')
-                    // TODO Check ID
-                    ->addOrderBy('l.updated', 'DESC');
+                    ->where('l.saison=:saison_id')
+                    ->addOrderBy('l.updated', 'DESC')
+                    ->setParameter('saison_id', $saison->getId());
 
          $qb->setFirstResult(($page-1) * $maxperpage)
             ->setMaxResults($maxperpage);

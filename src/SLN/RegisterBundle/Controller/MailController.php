@@ -137,18 +137,22 @@ class MailController extends Controller {
 
     /**
      * Get list of mails, all or for a specific user
+     * @param int  $saison_id    Id of the saison to edit. If 0, current current saison.
      */
-    public function listAction(Request $request, $id=0, $page=1, $admin=FALSE) {
+    public function listAction(Request $request, $saison_id, $id=0, $page=1, $admin=FALSE) {
         $max_per_page = 10;
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrCurrent($saison_id);
 
         if ($admin) {
-            $mails = $this->getLicenseeMailRepository()->paginateMails($id, $page, $max_per_page);
+            $mails = $this->getLicenseeMailRepository()->paginateMails($saison, $id, $page, $max_per_page);
         }
 
         $num_pages = intval((count($mails) + $max_per_page - 1) / $max_per_page);
         return $this->render('SLNRegisterBundle:Mail:list.html.twig', array('mails' => $mails,
                                                                             'id' => $id,
                                                                             'page' => $page,
+                                                                            'saison' => $saison,
                                                                             'num_pages' => $num_pages,
                                                                             'admin' => $admin));
     }

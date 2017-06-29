@@ -92,7 +92,7 @@ class Builder extends ContainerAware {
     			->setAttribute('divider_append', true);
 
             $menu['Admin']->addChild('Liste des mails', array('route' => 'SLNRegisterBundle_mail_list',
-                                                              'routeParameters' => array('page' => 1, 'admin' => TRUE),))
+                                                              'routeParameters' => array('saison_id' => $current_saison->getId(), 'page' => 1, 'admin' => TRUE),))
                 ->setAttribute('icon', 'th-list');
 
             $menu['Admin']->addChild('Envoyer un email', array('route' => 'SLNRegisterBundle_mail_licensee',

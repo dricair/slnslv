@@ -104,6 +104,7 @@ SLNRegisterBundle_groupe_show:
   requirements:
     methods:  GET|POST
     id: \d+
+    saison_id: \d+
 
 SLNRegisterBundle_groupe_list:
   path: /admin/groupe/list
@@ -185,6 +186,7 @@ SLNRegisterBundle_admin_licensee_create:
   defaults: { _controller: SLNRegisterBundle:Licensee:edit, id:0, admin: true }
   requirements:
     methods:  GET|POST
+    saison_id: \d+
 
 SLNRegisterBundle_admin_licensee_create_for_user:
   path: /admin/licensee/{saison_id}/create/{user_id}
@@ -192,6 +194,7 @@ SLNRegisterBundle_admin_licensee_create_for_user:
   requirements:
     methods:  GET|POST
     user_id: \d+
+    saison_id: \d+
 
 SLNRegisterBundle_admin_licensee_edit:
   path: /admin/licensee/{saison_id}/edit/{id}
@@ -199,12 +202,14 @@ SLNRegisterBundle_admin_licensee_edit:
   requirements:
     methods:  GET|POST
     id: \d+
+    saison_id: \d+
 
 SLNRegisterBundle_admin_licensee_list:
   path: /admin/licensee/{saison_id}/list
   defaults: { _controller: SLNRegisterBundle:Licensee:list, admin: true }
   requirements:
     methods:  GET
+    saison_id: \d+
 
 SLNRegisterBundle_admin_licensee_inscription:
   path: /admin/licensee/{saison_id}/inscription/{id}
@@ -212,12 +217,14 @@ SLNRegisterBundle_admin_licensee_inscription:
   requirements:
     methods:  GET|POST
     id: \d+
+    saison_id: \d+
 
 SLNRegisterBundle_admin_licensee_export:
   path: /admin/licensee/{saison_id}/export.xlsx
   defaults: { _controller: SLNRegisterBundle:Licensee:export}
   requirements:
     methods:  GET
+    saison_id: \d+
 
 
 #
@@ -228,6 +235,7 @@ SLNRegisterBundle_mail_licensee:
   defaults: { _controller: SLNRegisterBundle:Mail:mail, id:0, defaultGroup:0, defaultLicensee: 0 }
   requirements:
     methods: GET|POST
+    saison_id: \d+
 
 SLNRegisterBundle_mail_edit:
   path: /admin/mail/{saison_id}/edit/{id}
@@ -235,6 +243,7 @@ SLNRegisterBundle_mail_edit:
   requirements:
     methods: GET|POST
     id: \d+
+    saison_id: \d+
 
 SLNRegisterBundle_mail_licensee_select:
   path: /admin/mail/{saison_id}/licensee/{defaultLicensee}
@@ -242,6 +251,7 @@ SLNRegisterBundle_mail_licensee_select:
   requirements:
     methods: GET|POST
     defaultLicensee: \d+
+    saison_id: \d+
 
 SLNRegisterBundle_mail_confirm:
   path: /admin/mail/confirm/{id}
@@ -251,11 +261,12 @@ SLNRegisterBundle_mail_confirm:
     id: \d+
 
 SLNRegisterBundle_mail_list:
-  path: /admin/mail/list/{page}
+  path: /admin/mail/list/{saison_id}/{page}
   defaults: { _controller: SLNRegisterBundle:Mail:list, id: 0, admin: true }
   requirements:
     methods: GET
     page: \d+
+    saison_id: \d+
 
 
 #
