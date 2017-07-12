@@ -279,7 +279,7 @@ SLNRegisterBundle_payment_search:
     methods: GET
 
 SLNRegisterBundle_payment_user:
-  path: /admin/payment/edit/{saison_id}/{user_id}
+  path: /admin/payment/edit/s{saison_id}/{user_id}
   defaults: { _controller: SLNRegisterBundle:Payment:edit }
   requirements:
     methods: GET|POST
