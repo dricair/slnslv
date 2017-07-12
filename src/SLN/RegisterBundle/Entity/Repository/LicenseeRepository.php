@@ -33,7 +33,6 @@ class LicenseeRepository extends EntityRepository {
         $qb->where('s.licensee=l.id');
 
       $qb->andWhere('s.saison=:saison_id')
-         ->join('s.groupe', 'g')
          ->setParameter('saison_id', $saison->getId());
     }
 
@@ -93,6 +92,7 @@ class LicenseeRepository extends EntityRepository {
 
         $this->addSaison($qb, $saison, false);
         $qb->andWhere('s.groupe IS NOT NULL')
+           ->join('s.groupe', 'g')
            ->addOrderBy('g.categorie',  'ASC')
            ->addOrderBy('g.groupe_order',  'ASC');
 
@@ -112,11 +112,9 @@ class LicenseeRepository extends EntityRepository {
                    ->select('l')
                    ->addOrderBy('l.nom',  'ASC')
                    ->addOrderBy('l.prenom', 'ASC')
-                   ->leftjoin('l.saison_links', 's')
-                   ->where('s.licensee=l.id')
-                   ->andWhere('s.saison=:saison_id')
-                   ->andWhere('l.groupe IS NULL')
-                   ->setParameter('saison_id', $saison->getId());
+                   ->andWhere('l.groupe IS NULL');
+
+        $this->addSaison($qb, $saison);
 
         if ($builder) return $qb;
         return $qb->getQuery()
@@ -161,7 +159,7 @@ class LicenseeRepository extends EntityRepository {
            ->addOrderBy('l.prenom', 'ASC')
            ->setParameter('fonction', "%i:$fonction;%");
 
-        $this->addSaison($qb, $saison, false);
+        $this->addSaison($qb, $saison);
 
         // Search is approximative (Index or value ?)
         $licensees = [];
@@ -199,6 +197,7 @@ class LicenseeRepository extends EntityRepository {
              )
            )
            ->andWhere('s.groupe IS NOT NULL')
+           ->join('s.groupe', 'g')
            ->andWhere('g.categorie = :competition_group')
            ->addOrderBy('l.nom',  'ASC')
            ->addOrderBy('l.prenom', 'ASC')

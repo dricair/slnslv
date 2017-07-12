@@ -63,7 +63,7 @@ $( document ).ready(function() {
 
 {% block body %}
 <div class="btn-group btn-group-justified">
-  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_mail_list', { page: 1 }) }}">Liste des mails envoyés</a>
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_mail_list', { saison_id: saison.id, page: 1 }) }}">Liste des mails envoyés</a>
 </div>
 
 <h1>{{ title }}</h1>
