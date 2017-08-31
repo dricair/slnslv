@@ -314,6 +314,12 @@ class LicenseeController extends Controller
      * @return Response Rendered page
      */
     public function inscriptionAction($id, $admin=False) {
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen();
+        if (!$saison) {
+            throw $this->createNotFoundException("Pas de saison ouverte pour les inscriptions.");
+        }
+
         $licensee = $this->getLicenseeRepository()->find($id);
         if (!$licensee instanceof Licensee) {
             throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
@@ -327,14 +333,14 @@ class LicenseeController extends Controller
         $title = "Feuilles d'inscriptions - {$licensee->getPrenom()} {$licensee->getNom()}";
 
         // For your people and no groupe selected, attach a default group (Not saved)
-        if ($licensee->getGroupe() == Null and $licensee->getAge() < 12) {
+        if ($licensee->getGroupe($saison) == Null and $licensee->getAge() < 12) {
             $groupe = new Groupe();
             $groupe->setNom("<Inconnu>");
             $licensee->setGroupe(new Groupe());
         }
 
-        if ($licensee->getGroupe() != Null)
-            $licensee->inscriptionSheet($pdf, $assets, $title);
+        if ($licensee->getGroupe($saison) != Null)
+            $licensee->inscriptionSheet($pdf, $assets, $saison, $title);
 
         $response = new Response($pdf->Output('inscriptions.pdf', 'I'));
         $response->headers->set('Content-Type', 'application/pdf');
