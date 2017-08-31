@@ -76,7 +76,7 @@ class PaymentController extends Controller {
             );
 
             return $this->redirect($this->generateUrl('SLNRegisterBundle_payment_user', array(
-                                     'saison_id' => $saison.id, 'user_id' => $user_id)
+                                     'saison_id' => $saison->getId(), 'user_id' => $user_id)
                                     ));
         }
 
