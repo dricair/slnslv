@@ -302,10 +302,11 @@ SLNRegisterBundle_payment_delete:
     id: \d+
 
 SLNRegisterBundle_payment_export:
-  path: /admin/payment/export.xlsx
+  path: /admin/payment/{saison_id}/export.xlsx
   defaults: { _controller: SLNRegisterBundle:Payment:export }
   requirements:
     methods: GET
+    saison_id: \d+
 
 #
 # Others

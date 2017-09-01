@@ -6,7 +6,7 @@
 
 {% embed 'SLNRegisterBundle:Payments:search_content.html.twig' with { 'search': search } %}
   {% block buttons %}
-  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_payment_export') }}">Exporter les paiements</a>
+  <a class="btn btn-primary" href="{{ path('SLNRegisterBundle_payment_export', {saison_id: 0}) }}">Exporter les paiements</a>
   {% endblock %}
 {% endembed %}
 

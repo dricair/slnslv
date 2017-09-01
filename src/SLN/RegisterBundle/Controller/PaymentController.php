@@ -176,9 +176,15 @@ class PaymentController extends Controller {
     /**
      * Export list of payments into Excel
      */
-    public function exportAction(Request $request) {
+    public function exportAction(Request $request, $saison_id) {
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrOpen($saison_id);
+
+        if (!$saison) 
+              throw $this->createNotFoundException("Cette saison n'existe pas.");
+
         $users = array();
-        $licensees = $this->getLicenseeRepository()->getAllByGroups();
+        $licensees = $this->getLicenseeRepository()->getAllByGroups($saison);
 
         foreach($licensees as &$licensee) {
             $user_id = $licensee->getUser()->getId();
@@ -187,7 +193,7 @@ class PaymentController extends Controller {
         }
 
         foreach($users as $user_id => &$user) {
-            $user->addExtraTarif();
+            $user->addExtraTarif($saison);
         }
 
         $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
@@ -196,25 +202,23 @@ class PaymentController extends Controller {
            ->setTitle("Suivi des inscriptions")
            ->setSubject("Liste des cotisations et paiements");
 
-        $data_licensees = array(array("Id", "Nom", "Prénom", "Groupe", "Cotisation", "Equipement", "Autres"));
+        $data_licensees = array(array("Id", "Nom", "Prénom", "Groupe", "Cotisation", "Autres"));
 
         foreach ($licensees as &$licensee) {
             $total_cotisation = 0;
-            $total_equipment = 0;
             $total_other = 0;
             $has_cotisation = FALSE;
 
-            $tarifs = $licensee->getTarifList();
+            $tarifs = $licensee->getTarifList($saison);
             foreach ($tarifs as &$tarif) {
                 if ($tarif->type == Tarif::TYPE_GLOBAL or $tarif->type == Tarif::TYPE_1DAY) $has_cotisation = TRUE;
-                if ($tarif->type == Tarif::TYPE_EQUIPMENT) $total_equipment += $tarif->value;
-                else $total_cotisation += $tarif->value; 
+                $total_cotisation += $tarif->value; 
             }
 
             if ($has_cotisation) {
                 $data_licensees[] = array($licensee->getId(), $licensee->getNom(), $licensee->getPrenom(),
-                                          $licensee->getGroupe()->getNom(), 
-                                          $total_cotisation / 100, $total_equipment / 100, $total_other / 100);
+                                          $licensee->getGroupe($saison)->getNom(), 
+                                          $total_cotisation / 100, $total_other / 100);
             }
         }
 
