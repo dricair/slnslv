@@ -33,7 +33,7 @@ twig:
     form_themes:
         - 'SLNRegisterBundle:Form:fields.html.twig'
     globals:
-        version: 0.7.4
+        version: 0.7.5
 
 # Assetic Configuration
 assetic:
