@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Bundle\TwigBundle\Extension;
+use Symfony\Component\HttpFoundation\Request;
 
 use SLN\RegisterBundle\Entity\User;
 use SLN\RegisterBundle\Entity\Groupe;
@@ -361,9 +362,15 @@ class LicenseeController extends Controller
      *
      * Return an excel file to download.
      */
-    public function exportAction() {
-        $licensees = array_merge($this->getLicenseeRepository()->getAllByGroups(),
-                                 $this->getLicenseeRepository()->getAllNoGroups());
+    public function exportAction(Request $request, $saison_id) {
+        $em = $this->getDoctrine()->getManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrOpen($saison_id);
+
+        if (!$saison) 
+              throw $this->createNotFoundException("Cette saison n'existe pas.");
+        
+        $licensees = array_merge($this->getLicenseeRepository()->getAllByGroups($saison),
+                                 $this->getLicenseeRepository()->getAllNoGroups($saison));
         $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
 
         $phpExcelObject->getProperties()->setCreator("Cédric Airaud")
@@ -377,7 +384,7 @@ class LicenseeController extends Controller
 
         foreach($licensees as &$licensee) {
           $user = $licensee->getUser();
-          $groupe = $licensee->getGroupe();
+          $groupe = $licensee->getGroupe($saison);
           if ($groupe == NULL) continue;
 
           $days = array(-1);
@@ -403,8 +410,8 @@ class LicenseeController extends Controller
                           $user->getEmail());
 
           $missing = "Complet";
-          if ($licensee->inscriptionMissingNum() > 0)
-              $missing = $licensee->inscriptionMissingString();
+          if ($licensee->inscriptionMissingNum($saison) > 0)
+              $missing = $licensee->inscriptionMissingString($saison);
           $gdata[1] = array($licensee->getNom(), 
                             $licensee->getPrenom(),
                             $licensee->getSexeName(),
@@ -412,7 +419,7 @@ class LicenseeController extends Controller
                             $missing);
 
           $days = array(-1);
-          if ($groupe->getMultiple()) $days = $licensee->getGroupeJours();
+          if ($groupe->getMultiple()) $days = $licensee->getGroupeJours($saison);
           foreach ($days as $day) {
             $group_data[$this->groupeNom($groupe, $day)][] = $gdata[1];
           }
