@@ -42,8 +42,8 @@ localdir = os.path.abspath(os.path.dirname(__file__))
 localsql = os.path.join(localdir, sqlfile)
 remotesite = "www.stadelaurentinnatation.fr"
 remotedir = "/www/register" # Beware not ending with /
-excludes = [".git/", ".gitignore", "TODO", "README", os.path.basename(__file__), "mail.log",  "composer.*", 
-            "app/config/parameters.yml", "app/cache/", "app/logs/", "*.swp", "*~"]
+excludes = [".git/", ".gitignore", "TODO", "README", os.path.basename(__file__), "mail.log",  "composer.*",
+            "app/config/parameters.yml", "app/cache/", "app/logs/"]
 lftp = "/usr/bin/lftp"
 ftp = "ftp://%s:%s@%s" % (username, password, server)
 
