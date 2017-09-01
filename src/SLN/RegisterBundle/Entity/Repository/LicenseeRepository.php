@@ -86,15 +86,16 @@ class LicenseeRepository extends EntityRepository {
      */
     public function getAllByGroups(Saison $saison) {
         $qb = $this->createQueryBuilder('l')
-                   ->select('l')
-                   ->addOrderBy('l.nom',  'ASC')
-                   ->addOrderBy('l.prenom', 'ASC');
+                   ->select('l');
 
         $this->addSaison($qb, $saison, false);
         $qb->andWhere('s.groupe IS NOT NULL')
-           ->join('s.groupe', 'g')
-           ->addOrderBy('g.categorie',  'ASC')
-           ->addOrderBy('g.groupe_order',  'ASC');
+           ->join('s.groupe', 'g');
+
+        $qb->addOrderBy('g.categorie',  'ASC')
+           ->addOrderBy('g.groupe_order',  'ASC')
+           ->addOrderBy('l.nom',  'ASC')
+           ->addOrderBy('l.prenom', 'ASC');
 
         return $qb->getQuery()
                   ->getResult();
