@@ -141,7 +141,7 @@ class LicenseeController extends Controller
 
                 $message = \Swift_Message::newInstance()
                  ->setSubject("Changement de groupe pour {$licensee->getPrenom()} {$licensee->getNom()}")
-                 ->setFrom(array('slnslv@free.fr', "Stade Laurentin Natation"))
+                 ->setFrom(array('slnslv@free.fr' => "Stade Laurentin Natation"))
                  ->setTo($to)
                  ->setCc(array('slnslv@free.fr' => "Stade Laurentin Natation"))
                  ->setBody($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.txt.twig', 
