@@ -246,6 +246,8 @@ class PaymentController extends Controller {
 
         foreach ($users as &$user) {
             foreach ($user->getPayments() as &$payment) {
+                if ($payment->getSaison()->getId() != $saison->getId())
+                    continue;
                 $data_payments[] = array($user->getId(), $user->getNom(), $user->getPrenom(),
                                          $payment->getPtypeStr(), $payment->getValue() / 100, $payment->getDescription());
             }
