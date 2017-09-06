@@ -33,7 +33,7 @@ class HomeController extends Controller
         $details = array();
 
         if (!$this->isLoggedIn()) {
-            throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
+            return $this->render('SLNRegisterBundle:Home:index_login.html.twig');
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -67,14 +67,14 @@ class HomeController extends Controller
             $details = $currentUser->paymentInfo($open_saison);
         }
 
-        return $this->render('SLNRegisterBundle:Home:index.html.twig', array('available_licensees' => $available_licensees,
-                                                                             'active_licensees' => $active_licensees,
-                                                                             'no_licensee' => $no_licensee,
-                                                                             'all_ok' => $all_ok,
-                                                                             'open_saison' => $open_saison,
-                                                                             'inscription_names' => LicenseeSaison::getInscriptionNames(),
-                                                                             'payment_val' => LicenseeSaison::PAIEMENT,
-                                                                             'payments_detail' => $details));
+        return $this->render('SLNRegisterBundle:Home:index_show.html.twig', array('available_licensees' => $available_licensees,
+                                                                                  'active_licensees' => $active_licensees,
+                                                                                  'no_licensee' => $no_licensee,
+                                                                                  'all_ok' => $all_ok,
+                                                                                  'open_saison' => $open_saison,
+                                                                                  'inscription_names' => LicenseeSaison::getInscriptionNames(),
+                                                                                  'payment_val' => LicenseeSaison::PAIEMENT,
+                                                                                  'payments_detail' => $details));
     }
 
 
