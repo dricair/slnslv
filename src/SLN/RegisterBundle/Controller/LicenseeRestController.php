@@ -84,7 +84,7 @@ class LicenseeRestController extends Controller {
 
             $licensees = [];
             foreach($licenseeRepository->getAllForGroupe($saison, $groupe) as $licensee) {
-                if ($extra == -1 or !$groupe->getMultiple() or in_array($extra, $licensee->getGroupeJours()))
+                if ($extra == -1 or !$groupe->getMultiple() or in_array($extra, $licensee->getGroupeJours($saison)))
                     $licensees[] = $licensee;
             }
             
