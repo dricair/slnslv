@@ -314,7 +314,7 @@ class LicenseeController extends Controller
      *
      * @return Response Rendered page
      */
-    public function inscriptionAction($id, $admin=False) {
+    public function inscriptionAction($id) {
         $em = $this->getDoctrine()->getManager();
         $saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen();
         if (!$saison) {

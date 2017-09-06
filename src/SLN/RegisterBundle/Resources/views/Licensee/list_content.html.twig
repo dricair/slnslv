@@ -59,7 +59,7 @@
       <span class="glyphicon glyphicon-user"></span></a>
     {% endif %}
     {% if saison.activated %}
-    <a href="{{ path('SLNRegisterBundle_admin_licensee_inscription', { 'id': licensee.getId, 'saison_id': saison.id }) }}" title="Fiche d'inscription pour ce licencié" target="_blank">
+    <a href="{{ path('SLNRegisterBundle_licensee_inscription', { 'id': licensee.getId, 'saison_id': saison.id }) }}" title="Fiche d'inscription pour ce licencié" target="_blank">
       <span class="glyphicon glyphicon-print"></span></a>
     {% endif %}
     <a href="{{ path('SLNRegisterBundle_mail_licensee_select', { 'defaultLicensee': licensee.getId, 'saison_id': saison.id }) }}" title="Envoyer un mail à ce licencié">

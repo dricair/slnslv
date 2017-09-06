@@ -58,6 +58,14 @@ SLNRegisterBundle_licensee_change_group:
     method: GET
     saison_id: \d+
 
+SLNRegisterBundle_licensee_inscription:
+  path: licensee/{saison_id}/inscription/{id}
+  defaults: { _controller: SLNRegisterBundle:Licensee:inscription}
+  requirements:
+    methods:  GET|POST
+    id: \d+
+    saison_id: \d+
+
 SLNRegisterBundle_member_inscriptions:
   path: /member/inscriptions/{user_id}
   defaults: { _controller: SLNRegisterBundle:Member:inscriptions }
@@ -209,14 +217,6 @@ SLNRegisterBundle_admin_licensee_list:
   defaults: { _controller: SLNRegisterBundle:Licensee:list, admin: true }
   requirements:
     methods:  GET
-    saison_id: \d+
-
-SLNRegisterBundle_admin_licensee_inscription:
-  path: /admin/licensee/{saison_id}/inscription/{id}
-  defaults: { _controller: SLNRegisterBundle:Licensee:inscription, admin: true}
-  requirements:
-    methods:  GET|POST
-    id: \d+
     saison_id: \d+
 
 SLNRegisterBundle_admin_licensee_export:
