@@ -70,4 +70,21 @@ class SaisonRepository extends EntityRepository
         $results =  $qb->getQuery()->getResult();
         return count($results) > 0 ? $results[0] : NULL;
     }
+
+    /*
+     * Return previous saisons
+     */
+    public function getOldSaisons() {
+      $qb = $this->createQueryBuilder('s')
+                 ->select('s')
+                 ->where('s.activated=0');
+
+      $current = $this->getCurrent();
+      if ($current) {
+        $qb->andWhere('s.id != :id')
+           ->setParameter('id', $current->getId());
+      }
+
+      return $qb->getQuery()->getResult();
+    }
 }

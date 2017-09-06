@@ -79,6 +79,17 @@ class Builder extends ContainerAware {
                                                                       'routeParameters' => array('saison_id' => 0),))
                     ->setAttribute('icon', 'th-list');
             }
+
+            $old_saisons = $em->getRepository('SLNRegisterBundle:Saison')->getOldSaisons();
+            if (count($old_saisons) > 0) {
+                foreach($old_saisons as $saison) {
+                    $menu['Admin']->addChild("Archive: saison " . $saison->getNom(), 
+                                             array('route' => 'SLNRegisterBundle_admin_licensee_list',
+                                             'routeParameters' => array('saison_id' => $saison->getId()),))
+                                  ->setAttribute('icon', 'floppy-disk');
+                }
+            }
+
             $menu['Admin']->addChild('Ajouter un licencié', array('route' => 'SLNRegisterBundle_admin_licensee_create',
                                                                   'routeParameters' => array('saison_id' => 0),))
                 ->setAttribute('icon', 'user')
