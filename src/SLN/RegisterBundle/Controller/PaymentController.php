@@ -159,8 +159,7 @@ class PaymentController extends Controller {
             throw $this->createNotFoundException('Ce paiement n\'existe pas dans la base de données.');
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $saison = $em->getRepository('SLNRegisterBundle:Saison')->getOpen($saison_id);
+        $saison = $payment->getSaison();
 
         $user = $this->getUserFromID($payment->getUser()->getId());
         $user->removePayment($payment);
@@ -170,7 +169,7 @@ class PaymentController extends Controller {
         $em->persist($user);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('SLNRegisterBundle_payment_user', array('saison_id' => saison.id, 'user_id' => $user->getId())));
+        return $this->redirect($this->generateUrl('SLNRegisterBundle_payment_user', array('saison_id' => $saison->getId(), 'user_id' => $user->getId())));
     }
 
     /**
