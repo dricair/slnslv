@@ -58,6 +58,7 @@ class SaisonRepository extends EntityRepository
         return count($results) > 0 ? $results[0] : NULL;
     }
 
+
     /* 
      * Return the last open saison for inscription
      */
@@ -69,6 +70,23 @@ class SaisonRepository extends EntityRepository
 
         $results =  $qb->getQuery()->getResult();
         return count($results) > 0 ? $results[0] : NULL;
+    }
+
+    /**
+     * Return saison before the open saison, NULL if no open saison
+     */
+    public function getBeforeOpen() {
+        $qb = $this->createQueryBuilder('s')
+                   ->select('s')
+                   ->addOrderBy('s.start', 'DESC');
+
+        $results =  $qb->getQuery()->getResult();
+        $to_return = FALSE;
+        foreach ($results as $result) {
+            if ($to_return) return $result;
+            else $to_return = $result->getActivated();
+        }
+        return NULL;
     }
 
     /*

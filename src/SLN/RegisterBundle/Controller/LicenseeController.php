@@ -98,19 +98,20 @@ class LicenseeController extends Controller
           }
         }
             
-        $previousGroupe = $licensee->getGroupe($current_saison);
+        $previous_saison = $em->getRepository('SLNRegisterBundle:Saison')->getBeforeOpen($saison_id);
+        $previous_groupe = $previous_saison ? $licensee->getGroupe($previous_saison) : NULL;
 
         $form_saison_link = $licensee->getSaisonLink($saison);
         if (!$form_saison_link) {
             $form_saison_link = new LicenseeSaison();
             $form_saison_link->setLicensee($licensee);
             $form_saison_link->setSaison($saison);
-            $form_saison_link->setGroupe($previousGroupe);
+            $form_saison_link->setGroupe($previous_groupe);
             $form_saison_link->setGroupeJours(array());
 
-            $newGroupe = $licensee->getNewGroupe($current_saison);
-            if ($newGroupe)
-                $form_saison_link->setGroupe($newGroupe);
+            $new_groupe = $licensee->getNewGroupe($previous_saison);
+            if ($new_groupe)
+                $form_saison_link->setGroupe($new_groupe);
         }
         $licensee->setFormSaisonLink($form_saison_link);
 
