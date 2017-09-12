@@ -337,7 +337,14 @@ class LicenseeController extends Controller
         if ($licensee->getGroupe($saison) == Null and $licensee->getAge() < 12) {
             $groupe = new Groupe();
             $groupe->setNom("<Inconnu>");
-            $licensee->setGroupe(new Groupe());
+            $saison_link = $licensee->getSaisonLink($saison);
+            if (!$saison_link) {
+              $saison_link = new LicenseeSaison();
+              $saison_link->setLicensee($licensee);
+              $saison_link->setSaison($saison);
+              $licensee->addSaisonLink($saison_link);
+            }
+            $saison_link->setGroupe(new Groupe());
         }
 
         if ($licensee->getGroupe($saison) != Null)
