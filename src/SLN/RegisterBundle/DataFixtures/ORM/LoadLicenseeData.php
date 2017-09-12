@@ -11,6 +11,8 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use SLN\RegisterBundle\Entity\Licensee;
+use SLN\RegisterBundle\Entity\Saison;
+use SLN\RegisterBundle\Entity\LicenseeSaison;
 
 
 /**
@@ -18,6 +20,15 @@ use SLN\RegisterBundle\Entity\Licensee;
  */
 class LoadLicenseeData extends AbstractFixture implements OrderedFixtureInterface
 {
+    private function addSaisonToLicensee(ObjectManager $manager, Licensee $licensee, Saison $saison) {
+        $saison_link = new LicenseeSaison();
+        $saison_link->setLicensee($licensee);
+        $saison_link->setSaison($saison);
+        $licensee->addSaisonLink($saison_link);
+
+        return $saison_link;
+    }
+
     /**
      * Load Licensee class data
      *
@@ -34,9 +45,13 @@ class LoadLicenseeData extends AbstractFixture implements OrderedFixtureInterfac
         $licensee->setNaissance(new \Datetime("2001-01-01"));
         $licensee->setIuf("11111111");
         $licensee->setUser($this->getReference('user-standard'));
-        $licensee->setGroupe($this->getReference('groupe-ecole'));
-
         $manager->persist($licensee);
+
+        $saison_link = $this->addSaisonToLicensee($manager, $licensee, $this->getReference("saison-current"));
+        $saison_link->setGroupe($this->getReference('groupe-ecole'));
+        $saison_link->setNewGroupe($this->getReference('groupe-competition'));
+        $manager->persist($saison_link);
+
         $manager->flush();
 
         // id=2
@@ -47,10 +62,14 @@ class LoadLicenseeData extends AbstractFixture implements OrderedFixtureInterfac
         $licensee->setNaissance(new \Datetime("2002-07-25"));
         $licensee->setIuf("22222222");
         $licensee->setUser($this->getReference('user-standard'));
-        $licensee->setGroupe($this->getReference('groupe-competition'));
         $licensee->setAutorisationPhotos(False);
-
         $manager->persist($licensee);
+
+        $saison_link = $this->addSaisonToLicensee($manager, $licensee, $this->getReference("saison-current"));
+        $saison_link->setGroupe($this->getReference('groupe-competition'));
+        $saison_link->setNewGroupe($this->getReference('groupe-loisirs'));
+        $manager->persist($saison_link);
+
         $manager->flush();
 
         // id=3
@@ -61,9 +80,12 @@ class LoadLicenseeData extends AbstractFixture implements OrderedFixtureInterfac
         $licensee->setNaissance(new \Datetime("2003-12-31"));
         $licensee->setIuf("33333333");
         $licensee->setUser($this->getReference('user-standard'));
-        $licensee->setGroupe($this->getReference('groupe-loisirs'));
-
         $manager->persist($licensee);
+
+        $saison_link = $this->addSaisonToLicensee($manager, $licensee, $this->getReference("saison-current"));
+        $saison_link->setGroupe($this->getReference('groupe-loisirs'));
+        $manager->persist($saison_link);
+
         $manager->flush();
 
 
@@ -76,10 +98,13 @@ class LoadLicenseeData extends AbstractFixture implements OrderedFixtureInterfac
         $licensee->setNaissance(new \Datetime("1980-03-31"));
         $licensee->setIuf("44444444");
         $licensee->setUser($this->getReference('user-admin'));
-        $licensee->setGroupe($this->getReference('groupe-loisirs'));
         $licensee->setFonctions(array(Licensee::OFFICIEL));
-
         $manager->persist($licensee);
+
+        $saison_link = $this->addSaisonToLicensee($manager, $licensee, $this->getReference("saison-current"));
+        $saison_link->setGroupe($this->getReference('groupe-loisirs'));
+        $manager->persist($saison_link);
+
         $manager->flush();
 
         // id=5
@@ -100,7 +125,7 @@ class LoadLicenseeData extends AbstractFixture implements OrderedFixtureInterfac
      * Order when loading the fixtures
      */
     public function getOrder() {
-        return 3;
+        return 4;
     }
 }
     

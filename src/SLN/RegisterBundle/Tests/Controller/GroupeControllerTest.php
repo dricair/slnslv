@@ -75,7 +75,7 @@ class GroupeControllerTest extends SLNTestCase
      * 
      */
     public function testGroupeShow() {
-        $url = '/admin/groupe/show/1';
+        $url = '/admin/groupe/2/show/1';
         $this->assertAdminOnly($url);
 
         $this->adminLogin();

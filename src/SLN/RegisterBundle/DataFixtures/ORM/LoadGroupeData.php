@@ -15,7 +15,7 @@ use SLN\RegisterBundle\Entity\Horaire;
 
 
 /**
- * Load user data to database
+ * Load group data to database
  */
 class LoadGroupeData extends AbstractFixture implements OrderedFixtureInterface
 {

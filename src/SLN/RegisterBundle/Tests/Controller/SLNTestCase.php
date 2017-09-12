@@ -36,6 +36,7 @@ class SLNTestCase extends WebTestCase {
         $this->loadFixtures(array(
             'SLN\RegisterBundle\DataFixtures\ORM\LoadUserData',
             'SLN\RegisterBundle\DataFixtures\ORM\LoadGroupeData',
+            'SLN\RegisterBundle\DataFixtures\ORM\LoadSaisonData',
             'SLN\RegisterBundle\DataFixtures\ORM\LoadLicenseeData',
         ));
     }
