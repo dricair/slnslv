@@ -25,6 +25,7 @@ class LoadSaisonData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
+        // Id=1
         $date = new \DateTime();
         $date->modify("-1 year");
         $saison = new Saison();
@@ -36,6 +37,7 @@ class LoadSaisonData extends AbstractFixture implements OrderedFixtureInterface
         $manager->flush();
         $this->addReference("saison-old", $saison);
 
+        // Id=2
         $date = new \DateTime();
         $date->modify("-6 months");
         $saison = new Saison();
@@ -47,6 +49,7 @@ class LoadSaisonData extends AbstractFixture implements OrderedFixtureInterface
         $manager->flush();
         $this->addReference("saison-current", $saison);
 
+        // Id=3
         $date = new \DateTime();
         $date->modify("+6 months");
         $saison = new Saison();

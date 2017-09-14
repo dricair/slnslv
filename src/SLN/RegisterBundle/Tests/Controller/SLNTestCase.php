@@ -25,6 +25,13 @@ class SLNTestCase extends WebTestCase {
     /** Id for normal user */
     const TEST_ADMIN_ID = 1;
 
+    /** Previous saison */
+    const TEST_SAISON_PREV = 1;
+    /** Current saison */
+    const TEST_SAISON_CURRENT = 2;
+    /** Next saison */
+    const TEST_SAISON_NEXT = 3;
+
     /**
      * Set-up: enable profiler
      */

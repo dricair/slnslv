@@ -18,13 +18,16 @@ class LicenseeControllerTest extends SLNTestCase
      * Check list of licensees
      */
     public function testLicenseeList() {
-        $url = "/admin/licensee/list";
+        $em = $this->getDoctrineManager();
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->find(self::TEST_SAISON_CURRENT);
+        $url = "/admin/licensee/" . $saison->getId() . "/list";
         $this->assertAdminOnly($url);
         
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
 
-        $this->assertTrue($crawler->filter('h1:contains("Liste des licenciés")')->count() > 0);
+        $title = "Liste des licenciés pour la saison " . $saison->getNom();
+        $this->assertTrue($crawler->filter("h1:contains($title)")->count() > 0);
         //$this->assertTrue($crawler->filter('h2:contains("Pas de groupe sélectionné")')->count() > 0);
         $this->assertTrue($crawler->filter('h2:contains("Otaries")')->count() > 0);
         $this->assertTrue($crawler->filter('h2:contains("Compétition")')->count() > 0);
@@ -34,7 +37,8 @@ class LicenseeControllerTest extends SLNTestCase
         $this->assertTrue($crawler->filter('h2:contains("Officiel")')->count() > 0);
         $this->assertTrue($crawler->filter('h2:contains("Membre du bureau")')->count() > 0);
         $this->assertTrue($crawler->filter('h2:contains("Entraineur")')->count() > 0);
-        
+
+        // @todo Register again through list
     }
 
     /**
@@ -59,9 +63,9 @@ class LicenseeControllerTest extends SLNTestCase
 
         $this->doLogout();
 
-        $url = '/admin/licensee/create';
-        $this->assertAdminOnly($url);
-        $this->assertAdminOnly($url, False);
+        $url = "/admin/licensee/" . self::TEST_SAISON_CURRENT . "/create";
+        $this->assertAdminOnly($url); // Get
+        $this->assertAdminOnly($url, False); // Post
 
         // Admin page: create a licensee
         $this->adminLogin();
@@ -97,7 +101,7 @@ class LicenseeControllerTest extends SLNTestCase
 
         $this->doLogout();
 
-        $url = '/admin/licensee/edit/2';
+        $url = '/admin/licensee/' . self::TEST_SAISON_CURRENT . '/edit/2';
         $this->assertAdminOnly($url);
         $this->assertAdminOnly($url, False);
 
@@ -110,40 +114,55 @@ class LicenseeControllerTest extends SLNTestCase
         // @todo check form
         // @todo check new values
         // @todo check on correct user
+        // @todo Register again through form
     }
 
 
     /**
      * Test licensee show
      */
-    public function testLicenseeShow() {
+    //public function testLicenseeShow() {
         // @todo /licensee/{id}
-    }
+    //}
 
 
     /**
      * Test inscription sheet (PDF) for a licensee
      */
     public function testLicenseeInscription() {
-        $url = "/admin/licensee/inscription/1";
-        $this->assertAdminOnly($url);
-         
-        $this->adminLogin();
+        // Licensee attached to standard user
+        $this->userLogin();
+        $url = "/licensee/" . self::TEST_SAISON_CURRENT . "/inscription/1";
+        ob_start();
+        $crawler = $this->client->request('GET', $url);
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertRegexp('/^%PDF-1\.7/', $content);
 
-        // Load file into a output buffer
-        // @todo check valid PDF ?
-        //$this->client->request('GET', $url);
-        //ob_start();
-        //$this->client->getResponse()->sendContent();
-        //$content = ob_get_contents();
-        //ob_end_clean();
+        // Licensee attached to admin user
+        $url = "/licensee/" . self::TEST_SAISON_CURRENT . "/inscription/4";
+        ob_start();
+        $crawler = $this->client->request('GET', $url);
+        ob_end_clean();
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+
+        // Licensee attached to standard user from admin
+        $this->adminLogin();
+        $url = "/licensee/" . self::TEST_SAISON_CURRENT . "/inscription/1";
+        ob_start();
+        $crawler = $this->client->request('GET', $url);
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertRegexp('/^%PDF-1\.7/', $content);
     }
 
 
     /**
-     * Test delete of a licensee (User and Admin)
+     * Test delete of a licensee (User)
      */
-    public function testLicenseeDelete() {
+    public function testLicenseeUserDelete() {
         // Not the correct user
         $this->userLogin();
         $url = '/licensee/delete/4';
@@ -151,35 +170,45 @@ class LicenseeControllerTest extends SLNTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
 
         // Correct user
-        $url = '/licensee/delete/1';
+        $crawler = $this->client->request('GET', '/'); // Will return to previous page
+
+        $url = '/licensee/delete/3';
         $crawler = $this->client->request('GET', $url);
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $crawler = $this->client->followRedirect();
         $homepage = $this->client->getContainer()->get('router')->generate('SLNRegisterBundle_homepage', array(), True);
         $this->assertTrue($this->client->getRequest()->getUri() == $homepage);
 
-        // Check that licensee does not exist anymore
-        $repository = $this->getDoctrineManager()->getRepository('SLNRegisterBundle:Licensee');
-        $this->assertTrue($repository->find(1) === null);
+        // Check that licensee does not exist anymore for open saison (saison-next)
+        $em = $this->getDoctrineManager();
+        $licensee = $em->getRepository('SLNRegisterBundle:Licensee')->find(3);
+        $saison   = $em->getRepository('SLNRegisterBundle:Saison')->find(self::TEST_SAISON_NEXT);
+        $this->assertTrue($licensee->getSaisonLink($saison) === null);
         $crawler = $this->client->request('GET', $url);
         $this->assertTrue($this->client->getResponse()->isNotFound());
+    }
 
-        $this->doLogout();
-
+    /**
+     * Test delete of a licensee (Admin)
+     */
+    public function testLicenseeAdminDelete() {
         // Admin delete
-        $url = '/licensee/delete/4';
-        $this->assertAdminOnly($url);
+        $crawler = $this->client->request('GET', '/admin/licensee/' . self::TEST_SAISON_NEXT . '/list'); // Will return to previous page
 
-        $url = '/licensee/delete/2';
+        $url = '/licensee/delete/3';
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $crawler = $this->client->followRedirect();
-        $this->assertTrue($this->client->getRequest()->getUri() == $homepage);
+        $licensee_list = $this->client->getContainer()->get('router')->generate('SLNRegisterBundle_admin_licensee_list', 
+                                                                                array('saison_id' => self::TEST_SAISON_NEXT), True);
+        $this->assertTrue($this->client->getRequest()->getUri() == $licensee_list);
 
         // Check that licensee does not exist anymore
-        $repository = $this->getDoctrineManager()->getRepository('SLNRegisterBundle:Licensee');
-        $this->assertTrue($repository->find(2) === null);
+        $em = $this->getDoctrineManager();
+        $licensee = $em->getRepository('SLNRegisterBundle:Licensee')->find(3);
+        $saison   = $em->getRepository('SLNRegisterBundle:Saison')->find(self::TEST_SAISON_NEXT);
+        $this->assertTrue($licensee->getSaisonLink($saison) === null);
         $crawler = $this->client->request('GET', $url);
         $this->assertTrue($this->client->getResponse()->isNotFound());
     }

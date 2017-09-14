@@ -84,6 +84,11 @@ class LoadLicenseeData extends AbstractFixture implements OrderedFixtureInterfac
 
         $saison_link = $this->addSaisonToLicensee($manager, $licensee, $this->getReference("saison-current"));
         $saison_link->setGroupe($this->getReference('groupe-loisirs'));
+        $saison_link->setGroupeJours(array(4));
+        $manager->persist($saison_link);
+        
+        $saison_link = $this->addSaisonToLicensee($manager, $licensee, $this->getReference("saison-next"));
+        $saison_link->setGroupe($this->getReference('groupe-competition'));
         $manager->persist($saison_link);
 
         $manager->flush();
