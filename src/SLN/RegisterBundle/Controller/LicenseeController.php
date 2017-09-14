@@ -202,6 +202,10 @@ class LicenseeController extends Controller
         $user = $this->getUserFromID($licensee->getUser()->getId());
         $saison = $em->getRepository('SLNRegisterBundle:Saison')->findOrOpen($saison_id);
 
+        if ($licensee->getSaisonLink($saison) === NULL) {
+            throw $this->createNotFoundException('Ce licencié n\'est pas inscrit pour cette saison.');
+        }
+
         $saison_link = $licensee->getSaisonLink($saison);
         $em->remove($saison_link);
         $em->flush();
