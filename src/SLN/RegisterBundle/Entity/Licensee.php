@@ -446,7 +446,7 @@ Site: http://stadelaurentinnatation.fr</p>');
             if ($multiple) {
                 $groupe_jours = $licensee->getGroupeJours($saison);
                 foreach ($days as $day) {
-                    if(in_array($day, $groupe_jours)) {
+                    if($groupe_jours && in_array($day, $groupe_jours)) {
                         $groupes[$groupe_nom]["jours"][$day]["licensees"][] = $licensee;
                         $groupes[$groupe_nom]["jours"][$day]["num"] += 1;
                     }
