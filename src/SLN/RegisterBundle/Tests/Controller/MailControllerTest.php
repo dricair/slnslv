@@ -15,6 +15,14 @@ use SLN\RegisterBundle\Tests\Controller\SLNTestCase;
 class MailControllerTest extends SLNTestCase
 {
     public function testMail() {
+        $em = $this->getDoctrineManager();
+        $url = "/admin/mail/" . self::TEST_SAISON_CURRENT . "/licensee";
+        $this->assertAdminOnly($url);
+        
+        $this->adminLogin();
+        $crawler = $this->client->request('GET', $url);
+        $this->assertTrue($crawler->filter('h1:contains("Envoi de mails")')->count() > 0);
+
         // @todo Edit and send mail
         // @todo Back from confirm to edit page
         // @todo Default licencee
