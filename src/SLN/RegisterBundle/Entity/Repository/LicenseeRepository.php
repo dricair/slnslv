@@ -236,11 +236,11 @@ class LicenseeRepository extends EntityRepository {
     public function userHasInGroup(Licensee $licensee, Saison $saison, $groupe_id) {
         $qb = $this->createQueryBuilder('l');
         $qb->select('COUNT(l)');
-        $qb = $this->selCompetitionGroup($qb, $groupe_id);
         $qb->andWhere('l.user = :user_id')
            ->setParameter('user_id', $licensee->getUser()->getId());
 
         $this->addSaison($qb, $saison);
+        $qb = $this->selCompetitionGroup($qb, $groupe_id);
 
         return $qb->getQuery()->getSingleScalarResult() > 0;
     }
