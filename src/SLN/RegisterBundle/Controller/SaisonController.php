@@ -116,18 +116,28 @@ class SaisonController extends Controller {
           'saisons' => $saisons));
     }
 
-    /* TODO: TEMPORARY */
+    /* TODO: TEMPORARY. Create a new saison, copy all the special functions to the new saison. */
     public function updateAction() {
+        // Comment following line to access function, once modified.
+        throw $this->createNotFoundException('Cette page n\'existe pas.');
+
         $em = $this->getDoctrine()->getManager();
 
-        $saison1 = $em->getRepository('SLNRegisterBundle:Saison')->find(1);
-        $saison2 = $em->getRepository('SLNRegisterBundle:Saison')->find(2);
+        $saison1 = $em->getRepository('SLNRegisterBundle:Saison')->find(2);
+        $saison2 = $em->getRepository('SLNRegisterBundle:Saison')->find(3);
+        if (!$saison2 !== NULL) {
+          $saison2 = new Saison();
+          $saison2->setNom("Janvier-Juin 2018");
+          $saison2->setStart(new \DateTime("2018-01-01"));
+          $saison2->setActivated(True);
+          $em->persist($saison2);
+        }
+
         $licensees = $em->getRepository('SLNRegisterBundle:Licensee')->findAll();
         
         foreach ($licensees as &$licensee) {
-            if ($licensee->getGroupeOld()) continue;
-            $saison_links = $licensee->getSaisonLinks();
-            if (count($saison_links) > 0) continue;
+            $saison_link = $licensee->getSaisonLink($saison1);
+            if (!$saison_link) continue;
             $fonctions = $licensee->getFonctions();
             if (count($fonctions) == 0) continue;
             
@@ -135,19 +145,13 @@ class SaisonController extends Controller {
 
             $saison_link = new LicenseeSaison();
             $saison_link->setLicensee($licensee);
-            $saison_link->setSaison($saison1);
-            $em->persist($saison_link);
-
-            $saison_link = new LicenseeSaison();
-            $saison_link->setLicensee($licensee);
             $saison_link->setSaison($saison2);
             $em->persist($saison_link);
-
         }
 
         $em->flush();
 
-        return $this->showAction(1);
+        return $this->showAction(3);
     }
 
 
