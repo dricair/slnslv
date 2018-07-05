@@ -123,15 +123,8 @@ class SaisonController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $saison1 = $em->getRepository('SLNRegisterBundle:Saison')->find(2);
-        $saison2 = $em->getRepository('SLNRegisterBundle:Saison')->find(3);
-        if (!$saison2 !== NULL) {
-          $saison2 = new Saison();
-          $saison2->setNom("Janvier-Juin 2018");
-          $saison2->setStart(new \DateTime("2018-01-01"));
-          $saison2->setActivated(True);
-          $em->persist($saison2);
-        }
+        $saison1 = $em->getRepository('SLNRegisterBundle:Saison')->find(3);
+        $saison2 = $em->getRepository('SLNRegisterBundle:Saison')->find(4);
 
         $licensees = $em->getRepository('SLNRegisterBundle:Licensee')->findAll();
         
@@ -139,7 +132,7 @@ class SaisonController extends Controller {
             $saison_link = $licensee->getSaisonLink($saison1);
             if (!$saison_link) continue;
             $fonctions = $licensee->getFonctions();
-            if (count($fonctions) == 0) continue;
+            if ($fonctions === NULL or count($fonctions) == 0) continue;
             
             dump($licensee);
 
@@ -151,7 +144,7 @@ class SaisonController extends Controller {
 
         $em->flush();
 
-        return $this->showAction(3);
+        return $this->showAction(4);
     }
 
 

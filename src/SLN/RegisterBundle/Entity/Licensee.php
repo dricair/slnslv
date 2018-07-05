@@ -891,6 +891,8 @@ Site: http://stadelaurentinnatation.fr</p>');
      */
     public function getFonctions()
     {
+        if ($this->fonctions === NULL)
+            $this->fonctions = array();
         return $this->fonctions;
     }
     /**
