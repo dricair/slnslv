@@ -51,7 +51,7 @@ class SaisonRepository extends EntityRepository
     public function getCurrent() {
         $qb = $this->createQueryBuilder('s')
                    ->select('s')
-                   ->where('DATE_DIFF(s.start, CURRENT_DATE()) < 0')
+                   ->where('DATE_DIFF(s.start, CURRENT_DATE()) <= 0')
                    ->addOrderBy('s.start', 'DESC');
 
         $results =  $qb->getQuery()->getResult();
