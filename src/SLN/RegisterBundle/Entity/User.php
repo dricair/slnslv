@@ -219,7 +219,7 @@ class User extends BaseUser
             }
         }
 
-        if (count($cotisations > 1)) {
+        if (count($cotisations) > 1) {
             // Sort from higher value to smaller
             usort($cotisations, array("SLN\RegisterBundle\Entity\User", "sort_cotisations"));
             $num = 1;
