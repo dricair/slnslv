@@ -112,10 +112,10 @@ class LicenseeRepository extends EntityRepository {
         $qb = $this->createQueryBuilder('l')
                    ->select('l')
                    ->addOrderBy('l.nom',  'ASC')
-                   ->addOrderBy('l.prenom', 'ASC')
-                   ->andWhere('l.groupe IS NULL');
+                   ->addOrderBy('l.prenom', 'ASC');
 
         $this->addSaison($qb, $saison);
+        $qb->andWhere('s.groupe IS NULL');
 
         if ($builder) return $qb;
         return $qb->getQuery()
