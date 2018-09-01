@@ -248,8 +248,9 @@ class LicenseeController extends Controller
                     $fonctions[$fonction][] = $licensee;
             }
 
-            if (count($licensee_fonctions) > 0)
+            if (count($licensee_fonctions) > 0) {
                 unset($no_group[$key]);
+            }
         }
 
         $licensees = $this->getLicenseeRepository()->getAllByGroups($saison);
