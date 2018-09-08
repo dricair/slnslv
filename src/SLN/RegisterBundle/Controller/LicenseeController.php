@@ -114,6 +114,8 @@ class LicenseeController extends Controller
                 $form_saison_link->setGroupe($new_groupe);
         }
         $licensee->setFormSaisonLink($form_saison_link);
+        if ($form_saison_link->certificatOk())
+            $form_saison_link->addInscription(LicenseeSaison::CERTIFICAT);
 
         $request     = $this->getRequest();
         $form        = $this->createForm(LicenseeType::class, $licensee, array("admin" => $admin, "defaultGroupe" => $form_saison_link->getGroupe()));
@@ -133,8 +135,8 @@ class LicenseeController extends Controller
             if ($admin) {
               // Send a mail to the user if group has changed
               $groupe = $licensee->getGroupe($saison);
-              if ($id != 0 and $groupe and ($previousGroupe != null and
-                                            $groupe->getId() != $previousGroupe->getId())) {
+              if ($id != 0 and $groupe and ($previous_groupe != null and
+                                            $groupe->getId() != $previous_groupe->getId())) {
                 
                 $to = array($user->getEmail());
                 if ($user->getSecondaryEmail())
@@ -175,6 +177,7 @@ class LicenseeController extends Controller
             'id' => $id,
             'user_id' => $user_id,
             'saison' => $saison,
+            'saison_link' => $form_saison_link,
             'admin' => $admin));
     }
 

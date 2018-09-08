@@ -141,6 +141,7 @@ class PaymentController extends Controller {
         return $this->render('SLNRegisterBundle:Payments:search.html.twig',
                              array('search' => $search,
                                    'saison' => $saison,
+                                   'certificat_val' => LicenseeSaison::CERTIFICAT,
                                    'payment_val' => LicenseeSaison::PAIEMENT,
                                    'users' => array_values($users),
                                    'inscription_names' => $inscription_names));

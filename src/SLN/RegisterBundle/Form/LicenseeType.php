@@ -56,6 +56,10 @@ class LicenseeType extends AbstractType
                                                                ->addOrderBy('u.nom', 'ASC');
                                                   },
                                                   "label" => "Rattaché au compte"))
+                    ->add('certificat', 'date', array("widget" => "single_text", 'format' => 'dd/MM/yyyy', 
+                                                      "years" => range(date('Y')-4, date('Y')),
+                                                      "label" => "Date du certificat",
+                                                      'required'=>false))
                     ->add('fonctions', 'choice', array(
                           'label' => 'Fonctions spéciales',
                           'choices' => Licensee::getFonctionNames(),

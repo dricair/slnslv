@@ -29,11 +29,11 @@ class PaymentRestController extends Controller {
      * @param int $saison_id Id of the saison
      * @param int $id Id of the licensee
      * @param int $inscription Inscription item index
-     * @param int $missing New missing value
+     * @param int $data New missing value or certificat date
      *
      * @return int New missing value
      */
-    public function editLicenseeInscriptionMissingAction(Request $request, $id, $inscription, $missing) {
+    public function editLicenseeInscriptionMissingAction(Request $request, $id, $inscription, $data) {
         if (!$this->getUser()->hasRole('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
         }
@@ -52,7 +52,14 @@ class PaymentRestController extends Controller {
         if (!$saison_link)
             throw $this->createNotFoundException("Cette saison n'existe pas pour ce licencié.");
 
-        $missing = $saison_link->setInscriptionMissing($inscription, $missing);
+        if ($inscription == LicenseeSaison::CERTIFICAT) {
+            $date = new \DateTime();
+            $date->setTimestamp($data);
+            $licensee->setCertificat($date);
+            $missing = !$saison_link->certificatOk();
+        } else {
+            $missing = $saison_link->setInscriptionMissing($inscription, $data);
+        }
         
         $em = $this->getDoctrine()->getManager();
         $em->persist($saison_link);

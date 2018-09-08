@@ -27,6 +27,7 @@
     <script src="{{ asset('bundles/slnregister/js/payments.js') }}"></script>
     <script type="text/javascript">
       $( document ).ready(function() { 
+        $('.datepicker').datetimepicker({format: 'DD/MM/YYYY', locale: 'fr', 'stepping': 1});
         setup_payments(); 
       });
     </script>

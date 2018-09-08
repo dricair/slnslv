@@ -32,7 +32,7 @@ function setup_payments() {
     $(this).data('missing', missing);
     url = restFunction.replace('__id__', id)
                       .replace('__inscr__', $(this).data('index'))
-                      .replace('__missing__', missing);
+                      .replace('__data__', missing);
     console.log('REST function: ' + url);
     icon.addClass('glyphicon-refresh glyphicon-refresh-animate');
 
@@ -47,10 +47,42 @@ function setup_payments() {
     .fail(function(data) {
       console.log('failure');
       missing = old_missing;
+    })
+    .complete(function() {
+      icon.removeClass('glyphicon-refresh glyphicon-refresh-animate');
+      icon.addClass(missing ? "text-danger glyphicon-remove" : "text-success glyphicon-ok");
     });
+  });
 
-    icon.removeClass('glyphicon-refresh glyphicon-refresh-animate');
-    icon.addClass(missing ? "text-danger glyphicon-remove" : "text-success glyphicon-ok");
+  $(".datepicker").on('dp.change', function(e) {
+    restFunction = inscription.data("licensee-function");
+    id = $(this).data('licensee');
+    console.log("date changed, date=" + moment(e.date).unix() + ', id=' + id);
+
+    statusElem = $(this).parent();
+    statusElem.removeClass("has-error has-success");
+    url = restFunction.replace('__id__', id)
+                      .replace('__inscr__', $(this).data('index'))
+                      .replace('__data__', moment(e.date).unix());
+    console.log('REST function: ' + url);
+
+    missing = true;
+    $.ajax({
+      url: url,
+      type: 'GET'
+    })
+    .done(function(data) {
+      missing = data;
+      console.log('success, missing=' + missing);
+    })
+    .fail(function(data) {
+      console.log('failure');
+      missing = true;
+    })
+    .always(function() {
+      console.log('complete, missing = ' + missing);
+      statusElem.addClass(missing ? "has-error" : "has-success");
+    });
   });
 
 }

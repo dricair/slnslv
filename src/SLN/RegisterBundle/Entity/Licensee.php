@@ -159,6 +159,14 @@ use SLN\RegisterBundle\Entity\LicenseeSaison;
     protected $updated;
 
     /**
+     * @var \Datetime $certificat Date du dernier certificat médical
+     * @ORM\Column(type="date", nullable=true)
+     *
+     * Note: validation constraint in LicenseeSaison to verify that certificat is not null if given
+     */
+    protected $certificat;
+
+    /**
      * @var User $user Connected User class
      * @ORM\ManyToOne(targetEntity="User", inversedBy="licensees", fetch="EAGER")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -197,6 +205,23 @@ use SLN\RegisterBundle\Entity\LicenseeSaison;
      * @var LicenseeSaison $form_saison_link Saison link used in forms
      */
     protected $form_saison_link;
+
+    /**
+     * Validate the values and throws an exception if this is not correct.
+     * @param ExecutionContextInterface $context Context
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context)
+    {
+        if ($this->form_saison_link and 
+            in_array(LicenseeSaison::CERTIFICAT, $this->form_saison_link->getInscription()) and
+            !$this->form_saison_link->certificatOk()) {
+            // Verify that certificat date is set if certificat is true in the inscription
+            $context->buildViolation('Si vous cocher le certificat, la date de certificat doit être valide.')
+              ->atPath('certificat')
+              ->addViolation();
+        }
+    }
 
     /**
      * Return Age in years
@@ -992,4 +1017,72 @@ Site: http://stadelaurentinnatation.fr</p>');
         return $this->inscription;
     }
 
+
+    /**
+     * Set inscription
+     *
+     * @param array $inscription
+     * @return Licensee
+     */
+    public function setInscription($inscription)
+    {
+        $this->inscription = $inscription;
+
+        return $this;
+    }
+
+    /**
+     * Set certificat
+     *
+     * @param \DateTime $certificat
+     * @return Licensee
+     */
+    public function setCertificat(\Datetime $certificat = null)
+    {
+        $this->certificat = $certificat;
+
+        return $this;
+    }
+
+    /**
+     * Get certificat
+     *
+     * @return \DateTime 
+     */
+    public function getCertificat()
+    {
+        // Hack as NULL value is stored as old date in DB
+        if ($this->certificat and $this->certificat->format("Y") <= 0)
+            $this->certificat = NULL;
+        return $this->certificat;
+    }
+
+    /**
+     *
+
+    /**
+     * Set groupe_jours
+     *
+     * @param array $groupeJours
+     * @return Licensee
+     */
+    public function setGroupeJours($groupeJours)
+    {
+        $this->groupe_jours = $groupeJours;
+
+        return $this;
+    }
+
+    /**
+     * Set groupe
+     *
+     * @param \SLN\RegisterBundle\Entity\Groupe $groupe
+     * @return Licensee
+     */
+    public function setGroupe(\SLN\RegisterBundle\Entity\Groupe $groupe = null)
+    {
+        $this->groupe = $groupe;
+
+        return $this;
+    }
 }

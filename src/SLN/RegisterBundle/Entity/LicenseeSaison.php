@@ -107,6 +107,10 @@ class LicenseeSaison {
      * @return int New missing value
      */
     public function setInscriptionMissing($index, $missing) {
+        // certificat depends on the certificat ok or not
+        if ($index == self::CERTIFICAT)
+            $missing = !$this->certificatOk();
+
         if ($missing and in_array($index, $this->inscription)) {
             $key = array_search($index, $this->inscription);
             unset($this->inscription[$key]);
@@ -118,6 +122,16 @@ class LicenseeSaison {
         }
 
         return !in_array($index, $this->inscription);
+    }
+
+    /* 
+     * Return true if certificat for licensee is ok (Less than 3 years
+     * after saison start)
+     */
+    public function certificatOk() {
+      $saison_start = $this->saison->getStart();
+      $certificat = $this->licensee->getCertificat();
+      return $certificat and $certificat->diff($saison_start)->y < 3;
     }
 
     /**
@@ -233,7 +247,7 @@ class LicenseeSaison {
      * Set inscription
      *
      * @param array $inscription
-     * @return Licensee
+     * @return LicenseeSaison
      */
     public function setInscription($inscription)
     {
@@ -243,12 +257,29 @@ class LicenseeSaison {
     }
 
     /**
+     * Add inscription
+     *
+     * @param $inscription_item
+     * @return LicenseeSaison
+     */
+    public function addInscription($inscription_item)
+    {
+        if (!in_array($inscription_item, $this->inscription))
+            $this->inscription[] = $inscription_item;
+
+        return $this;
+    }
+
+
+    /**
      * Get inscription
      *
      * @return array 
      */
     public function getInscription()
     {
+        // Certificat Ok depends on certificat date
+        $this->setInscriptionMissing(self::CERTIFICAT, NULL /* Unused */);
         return $this->inscription;
     }
 

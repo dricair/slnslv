@@ -31,6 +31,22 @@
   
       <p class='help'>En cas de renouvellement, indiquez le numéro de licence (IUF), si vous le connaissez:</p>
       {{ form_row(form.iuf) }}
+
+      {% if not admin %}
+          {% if not licensee.certificat %}
+          <div class="alert alert-warning fade in">
+            <p>Vous n'avez aucun certificat médical d'enregistré. Un certificat récent est nécessaire et sera valable 3 ans.</p>
+          </div>
+          {% elseif saison_link.certificatOk %}
+          <div class="alert alert-info fade in">
+            <p>Vous avez déposé un certificat en date du {{licensee.certificat|date('d/m/Y')}}. Ce certificat est encore valide pour cette saison.</p>
+          </div>
+          {% else %}
+          <div class="alert alert-warning fade in">
+            <p>Le certificat enregistré est daté du {{licensee.certificat|date('d/m/Y')}} et n'est plus valide. Vous devrez donc en fournir un nouveau.</p>
+          </div>
+          {% endif %}
+      {% endif %}
     </div>
   </div>
 
@@ -74,6 +90,12 @@
     <div class="panel-heading">Etat de l'inscription</div>
     <div class="panel-body">
     {{ form_row(form.form_saison_link.inscription) }}
+    {% if not saison_link.certificatOk() %}
+      <div class="alert alert-danger fade in">
+        <p>Le certificat médical n'est pas valide. Sélectionnez la date quand vous le recevez.</p>
+      </div>
+    {% endif %}
+    {{ form_row(form.certificat) }}
     </div>
   </div>
   {% endif %}

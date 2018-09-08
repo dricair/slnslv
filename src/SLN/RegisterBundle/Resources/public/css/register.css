@@ -26,6 +26,12 @@
     color: orange;
 }
 
+.certificat-date-edit { display: none; }
+.inscription_toggle:hover .certificat-date-edit { display: block; }
+
+.certificat-date-text { display: block; }
+.inscription_toggle:hover .certificat-date-text { display: none; }
+
 /* Animated icon for Ajax */
 glyphicon-refresh-animate {
     -animation: spin .7s infinite linear;
