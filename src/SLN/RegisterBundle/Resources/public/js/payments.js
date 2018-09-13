@@ -32,7 +32,7 @@ function setup_payments() {
     $(this).data('missing', missing);
     url = restFunction.replace('__id__', id)
                       .replace('__inscr__', $(this).data('index'))
-                      .replace('__data__', missing);
+                      .replace('__missing__', missing);
     console.log('REST function: ' + url);
     icon.addClass('glyphicon-refresh glyphicon-refresh-animate');
 
