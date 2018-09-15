@@ -76,7 +76,7 @@ class PaymentRestController extends Controller {
      *
      * @return int New missing value
      */
-    public function editUserPaymentMissingAction(Request $request, $id, $inscription, $missing) {
+    public function editUserPaymentMissingAction(Request $request, $id, $inscription, $data) {
         if (!$this->getUser()->hasRole('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException("Vous ne pouvez pas accéder cette page");
         }
@@ -97,7 +97,7 @@ class PaymentRestController extends Controller {
         foreach ($licensees as &$licensee) {
             $saison_link = $licensee->getSaisonLink($saison);
             if ($saison_link) {
-                $new_missing = $new_missing or $saison_link->setInscriptionMissing(LicenseeSaison::PAIEMENT, $missing);
+                $new_missing = $new_missing or $saison_link->setInscriptionMissing(LicenseeSaison::PAIEMENT, $data);
                 $em->persist($saison_link);
                 $em->flush();
             }

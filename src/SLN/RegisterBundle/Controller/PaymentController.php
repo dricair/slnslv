@@ -94,6 +94,7 @@ class PaymentController extends Controller {
             'saison' => $saison,
             'inscription_names' => $inscription_names, 
             'payment_val' => LicenseeSaison::PAIEMENT,
+            'certificat_val' => LicenseeSaison::CERTIFICAT,
             'payments' => $payments,
             'form' => $form->createView(),
             'admin' => TRUE

@@ -73,6 +73,7 @@ class HomeController extends Controller
                                                                                   'all_ok' => $all_ok,
                                                                                   'open_saison' => $open_saison,
                                                                                   'inscription_names' => LicenseeSaison::getInscriptionNames(),
+                                                                                  'certificat_val' => LicenseeSaison::CERTIFICAT,
                                                                                   'payment_val' => LicenseeSaison::PAIEMENT,
                                                                                   'payments_detail' => $details));
     }

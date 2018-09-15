@@ -11,7 +11,7 @@
 
   <table id="inscription_table" class="table" 
          data-licensee-function='{{ path('api_edit_licensee_inscription_missing', {'id': '__id__', 'inscription': '__inscr__', 'data': '__data__'}) }}'
-         data-payment-function='{{ path('api_edit_user_payment_missing', {'id': '__id__', 'inscription': '__inscr__', 'missing': '__missing__'}) }}'>
+         data-payment-function='{{ path('api_edit_user_payment_missing', {'id': '__id__', 'inscription': '__inscr__', 'data': '__data__'}) }}'>
   <tr>
     <th>Nom</th>
     {% for i, str in inscription_names if i != payment_val %}
