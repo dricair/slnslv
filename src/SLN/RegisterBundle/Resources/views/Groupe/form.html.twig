@@ -2,7 +2,7 @@
 {% set tr_close='</tr></td>' %}
 {% set td='</td><td>' %}
 
-<form action="{{ path('SLNRegisterBundle_groupe_edit', {'id': id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal" role="form">
+<form action="{{ path('SLNRegisterBundle_groupe_edit', {'id': id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
   {{ form_errors(form) }}
 
   <div class="panel panel-default">
@@ -80,7 +80,7 @@
   {{ form_rest(form) }}
   <div class="form-group">
     <div class="col-sm-offset-3 col-sm-7">
-      <input type="submit" class="btn btn-primary" type="submit" value="Envoyer" />
+      <input type="submit" class="btn btn-primary" value="Envoyer" />
     </div>
   </div>
 </form>

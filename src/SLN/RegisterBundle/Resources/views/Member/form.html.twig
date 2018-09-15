@@ -1,6 +1,6 @@
 <form action="{% if id == 0 %} {{ path('SLNRegisterBundle_member_create') }}
               {% else %} {{ path('SLNRegisterBundle_member_edit', {'id': id}) }} {% endif %}" method="post" {{ form_enctype(form) }} 
-              class="form form-horizontal" role="form">
+              class="form form-horizontal">
   {{ form_errors(form) }}
 
   <div class="panel panel-default">

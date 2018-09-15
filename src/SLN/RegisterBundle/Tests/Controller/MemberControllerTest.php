@@ -23,6 +23,7 @@ class MemberControllerTest extends SLNTestCase
 
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("member_list", $this->client);
         $this->assertTrue($crawler->filter('h1:contains("Liste des membres")')->count() > 0);
 
         // @todo check number of members
@@ -45,6 +46,7 @@ class MemberControllerTest extends SLNTestCase
         // Correct user
         $url = "/member/inscriptions/" . self::TEST_USER_ID;
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("member_inscriptions_user", $this->client);
         $this->assertTrue($crawler->filter("h1:contains(\"Imprimer les feuilles d'inscription\")")->count() > 0);
 
         $this->doLogout();
@@ -52,6 +54,7 @@ class MemberControllerTest extends SLNTestCase
         // Admin access
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("member_inscriptions_admin", $this->client);
         $this->assertTrue($crawler->filter("h1:contains(\"Imprimer les feuilles d'inscription\")")->count() > 0);
     }
 
@@ -95,6 +98,7 @@ class MemberControllerTest extends SLNTestCase
 
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("member_create", $this->client);
         $this->assertTrue($crawler->filter("h1:contains('Ajouter un membre')")->count() == 1);
         $this->assertTrue($crawler->filter("div.checkbox:contains('Administrateur')")->count() == 1);
         $this->assertTrue($crawler->filter("html:contains('Droits spéciaux')")->count() == 1);
@@ -120,6 +124,7 @@ class MemberControllerTest extends SLNTestCase
 
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("member_edit", $this->client);
         $this->assertTrue($crawler->filter("h1:contains('Modifier un membre')")->count() == 1);
         $this->assertTrue($crawler->filter("div.checkbox:contains('Administrateur')")->count() == 1);
         $this->assertTrue($crawler->filter("html:contains('Droits spéciaux')")->count() == 1);

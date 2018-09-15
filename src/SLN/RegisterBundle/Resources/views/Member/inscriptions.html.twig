@@ -8,8 +8,8 @@
 <p><a class="btn btn-primary btn-block" download="inscriptions.pdf" href="{{ path('SLNRegisterBundle_member_inscriptions_pdf', { user_id: member.id }) }}">Télécharger le fichier</a></p>
 <div class="row">
   <div class="col-sm-12">
-    <iframe src="{{ path('SLNRegisterBundle_member_inscriptions_pdf', { user_id: member.id }) }}" width="100%" height="600"></iframe>
+    <iframe src="{{ path('SLNRegisterBundle_member_inscriptions_pdf', { user_id: member.id }) }}" height="600"></iframe>
   </div>
-<div>
+</div>
 {% endblock %}
 

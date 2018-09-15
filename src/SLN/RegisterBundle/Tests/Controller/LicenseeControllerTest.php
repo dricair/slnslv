@@ -25,6 +25,7 @@ class LicenseeControllerTest extends SLNTestCase
         
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("licensee_list", $this->client);
 
         $title = "Liste des licenciés pour la saison " . $saison->getNom();
         $this->assertTrue($crawler->filter("h1:contains($title)")->count() > 0);
@@ -39,6 +40,7 @@ class LicenseeControllerTest extends SLNTestCase
         $this->assertTrue($crawler->filter('h2:contains("Entraineur")')->count() > 0);
 
         // @todo Register again through list
+        // @todo Verify number of entries 
     }
 
     /**
@@ -54,6 +56,7 @@ class LicenseeControllerTest extends SLNTestCase
         // Create with correct user
         $url = '/licensee/create/' . self::TEST_USER_ID;
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("licensee_create_user", $this->client);
         $this->assertTrue($crawler->filter('h1:contains("Ajouter un licencié")')->count() > 0);
         $this->assertTrue($crawler->filter('html:contains("Compte de rattachement")')->count() == 0);
         
@@ -70,6 +73,7 @@ class LicenseeControllerTest extends SLNTestCase
         // Admin page: create a licensee
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("licensee_create_admin", $this->client);
         $this->assertTrue($crawler->filter('h1:contains("Ajouter un licencié")')->count() > 0);
         $this->assertTrue($crawler->filter('html:contains("Compte de rattachement")')->count() > 0);
 
@@ -93,6 +97,7 @@ class LicenseeControllerTest extends SLNTestCase
         // Edit from correct user
         $url = '/licensee/edit/1';
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("licensee_edit_user", $this->client);
         $this->assertTrue($crawler->filter('h1:contains(\'Editer le licencié "Prenom1 Nom1"\')')->count() > 0);
         $this->assertTrue($crawler->filter('html:contains("Compte de rattachement")')->count() == 0);
 
@@ -108,6 +113,7 @@ class LicenseeControllerTest extends SLNTestCase
         // Admin page: edit a licensee
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("licensee_edit_admin", $this->client);
         $this->assertTrue($crawler->filter('h1:contains(\'Editer le licencié "Prenom2 Nom2"\')')->count() > 0);
         $this->assertTrue($crawler->filter('html:contains("Compte de rattachement")')->count() > 0);
 

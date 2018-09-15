@@ -26,6 +26,7 @@ class MiscControllerTest extends SLNTestCase
         $this->userLogin();
 
         $crawler = $this->client->request('GET', '/contact');
+        $this->verifyHTML5("contact", $this->client);
         $form = $crawler->selectButton('_submit')->form(array(
             "contact[subject]" => "Sujet du message",
             "contact[body]" => "Texte du message"

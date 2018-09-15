@@ -21,6 +21,7 @@ class MailControllerTest extends SLNTestCase
         
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("mail_edit", $this->client);
         $this->assertTrue($crawler->filter('h1:contains("Envoi de mails")')->count() > 0);
 
         // @todo Edit and send mail

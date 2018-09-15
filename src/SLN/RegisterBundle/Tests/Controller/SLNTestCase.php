@@ -7,6 +7,7 @@
 
 namespace SLN\RegisterBundle\Tests\Controller;
 
+use SLN\RegisterBundle\Tests\Controller\HTMLValidate;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 class SLNTestCase extends WebTestCase {
@@ -130,6 +131,42 @@ class SLNTestCase extends WebTestCase {
         $crawler = $this->client->request($is_get ? 'GET' : 'POST', $url);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
         $this->doLogout();
+     }
+
+
+     /**
+      * Check that the page is HTML5 compliant
+      */
+     public function verifyHTML5($filename, $client) {
+         $validator = new HTMLValidate();
+         $content = $client->getResponse()->getContent();
+         $result = $validator->Assert($content);
+
+         $post_waivers = array();
+         if (!$result) {
+             $waivers = array(// icon on li for menu
+                              "/Attribute \“icon\” not allowed on element \“li\” at this point./");
+
+             foreach (explode("\n", trim($validator->message)) as $line) {
+                 $waived = False;
+                 foreach ($waivers as $pattern) {
+                     if (preg_match($pattern, $line) == 1) {
+                         $waived = True;
+                         break;
+                     }
+                 }
+                 if (!$waived) $post_waivers[] = $line;
+             }
+
+             $result = count($post_waivers) == 0;
+         }
+
+         $filename = "output/$filename.html";
+         if (!$result) {
+             file_put_contents($filename, $content);
+         }
+
+         $this->assertTrue($result, "See file $filename: \n\n" . implode("\n", $post_waivers));
      }
 }
 

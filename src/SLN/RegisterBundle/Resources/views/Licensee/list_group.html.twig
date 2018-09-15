@@ -35,7 +35,7 @@
   <td>{{ licensee.naissance|date('d/m/Y') }}</td>
   <td>{{ licensee.getGroupe(saison) | default("Pas de groupe sélectionné") }}</td>
   <td>
-    <form action='{{ path('api_post_new_group', {'id': saison_link.id}) }}' method="post" {{ form_enctype(form) }} role='form' class='ajax_form'>
+    <form action='{{ path('api_post_new_group', {'id': saison_link.id}) }}' method="post" {{ form_enctype(form) }} class='ajax_form'>
       {{ form_widget(form.new_groupe) }} 
     </form>
   </td>

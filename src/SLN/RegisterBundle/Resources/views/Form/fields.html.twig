@@ -33,6 +33,7 @@
 
 {%- block date_widget -%}
     <div class="input-group date datepicker">
+      {% set no_control_form = true %}
       <input type="text" class="form-control datepicker" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}>
       <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
     </div>
@@ -40,6 +41,7 @@
 
 {%- block time_widget -%}
     <div class="input-group date timepicker">
+      {% set no_control_form = true %}
       <input type="text" class="form-control timepicker" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}>
       <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
     </div>

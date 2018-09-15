@@ -2,7 +2,7 @@
 {% set tr_close='</tr></td>' %}
 {% set td='</td><td>' %}
 
-<form action="{{ path('SLNRegisterBundle_saison_edit', {'id': id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal" role="form">
+<form action="{{ path('SLNRegisterBundle_saison_edit', {'id': id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
   {{ form_errors(form) }}
 
   <div class="panel panel-default">

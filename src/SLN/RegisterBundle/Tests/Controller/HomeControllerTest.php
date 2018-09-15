@@ -26,6 +26,7 @@ class HomeControllerTest extends SLNTestCase
     public function testIndexLogin()
     {
         $crawler = $this->client->request('GET', '/');
+        $this->verifyHTML5("home_index", $this->client);
         $this->assertTrue($crawler->filter('html:contains("S\'inscrire au club")')->count() > 0);
 
         foreach(array("/licensee/create/1",
@@ -85,6 +86,7 @@ class HomeControllerTest extends SLNTestCase
      */
     public function testCreateUser() {
         $crawler = $this->client->request('GET', '/register/');
+        $this->verifyHTML5("home_register", $this->client);
         $this->assertTrue($crawler->filter("div.checkbox:contains('Administrateur')")->count() == 0);
         $this->assertTrue($crawler->filter("html:contains('Droits spéciaux')")->count() == 0);
 
@@ -133,6 +135,7 @@ class HomeControllerTest extends SLNTestCase
         $this->client->request('GET', $confirmUrl);
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $crawler = $this->client->followRedirect();
+        $this->verifyHTML5("home_confirm", $this->client);
         $this->assertTrue($crawler->filter('html:contains("Félicitation test, votre compte est maintenant activé.")')->count() > 0);
     }
      
@@ -160,6 +163,7 @@ class HomeControllerTest extends SLNTestCase
         $manager->flush();
 
         $crawler = $this->client->request('GET', '/');
+        $this->verifyHTML5("home_edit", $this->client);
         $this->assertTrue($crawler->filter('form')->count() == 1);
 
         /**
@@ -187,6 +191,7 @@ class HomeControllerTest extends SLNTestCase
         $this->userLogin();
 
         $crawler = $this->client->request('GET', '/profile/edit');
+        $this->verifyHTML5("home_profile_edit", $this->client);
         $this->assertTrue($crawler->filter('html:contains("Modifier les informations de connection")')->count() > 0);
         $this->assertTrue($crawler->filter('html:contains("Modifier l\'identité")')->count() > 0);
         $this->assertTrue($crawler->filter('html:contains("Vérifier le mot de passe")')->count() > 0);
@@ -205,6 +210,7 @@ class HomeControllerTest extends SLNTestCase
         $this->userLogin();
 
         $crawler = $this->client->request('GET', '/profile/change-password');
+        $this->verifyHTML5("home_profile_password", $this->client);
         $this->assertTrue($crawler->filter('html:contains("Changement de mot de passe")')->count() > 0);
 
         /**

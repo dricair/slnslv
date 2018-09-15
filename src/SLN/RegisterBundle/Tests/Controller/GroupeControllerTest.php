@@ -24,6 +24,8 @@ class GroupeControllerTest extends SLNTestCase
 
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("groupe_list", $this->client);
+        
         $this->assertTrue($crawler->filter('h1:contains("Liste des groupes de natation")')->count() > 0);
         $this->assertTrue($crawler->filter('h2:contains("Ecole de natation")')->count() > 0);
         $this->assertTrue($crawler->filter('h2:contains("Sections compétition")')->count() > 0);
@@ -46,6 +48,7 @@ class GroupeControllerTest extends SLNTestCase
 
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("groupe_create", $this->client);
         $this->assertTrue($crawler->filter('h1:contains("Ajouter un groupe")')->count() > 0);
 
         /**
@@ -63,6 +66,7 @@ class GroupeControllerTest extends SLNTestCase
 
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("groupe_edit", $this->client);
         $this->assertTrue($crawler->filter('h1:contains("Editer ce groupe")')->count() > 0);
         /**
          * @todo check if user does not exist
@@ -80,6 +84,7 @@ class GroupeControllerTest extends SLNTestCase
 
         $this->adminLogin();
         $crawler = $this->client->request('GET', $url);
+        $this->verifyHTML5("groupe_show", $this->client);
         $this->assertTrue($crawler->filter('h1:contains("Groupe de natation: Otaries")')->count() > 0);
 
         /**

@@ -4,7 +4,7 @@
   <div class="panel-heading">Réinitialisez votre mot de passe</div>
   <div class="panel-body">
 
-    <form role="form" action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="form-horizontal">
+    <form action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="form-horizontal">
       {% if invalid_username is defined %}
       <div class='alert alert-danger'>{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}) }}</div>
       {% endif %}

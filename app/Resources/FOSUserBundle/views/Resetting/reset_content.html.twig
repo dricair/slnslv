@@ -4,7 +4,7 @@
   <div class="panel-heading">Changez le mot de passe</div>
   <div class="panel-body">
 
-    <form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="POST" class="form-horizontal" role="form">
+    <form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="POST" class="form-horizontal">
       {{ form_widget(form) }}
 
       <div class="form-group">

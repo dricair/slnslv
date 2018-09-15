@@ -9,7 +9,7 @@
 
 <p>Si vous n'avez pas encore créé de compte, entrez vos coordonnées sur <a href="{{ path('fos_user_registration_register') }}">cette page</a>.</p>
 
-<form action="{{ path('fos_user_security_check') }}" method="POST" class="form-horizontal" role="form">
+<form action="{{ path('fos_user_security_check') }}" method="POST" class="form-horizontal">
   <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 
   <div class="panel panel-default">

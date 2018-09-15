@@ -1,6 +1,6 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
-<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="form form-horizontal" role="form">
+<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="form form-horizontal">
   <div class="panel panel-default">  
 
   <div class="panel panel-default">
@@ -36,10 +36,8 @@
       <div class="col-sm-offset-3 col-sm-7">
         <input type="submit" class="btn btn-primary" value="{{ 'profile.edit.submit'|trans }}" />
       </div>
-      </div>
     </div>
+  </div>
 
-  
-
-
+  </div>
 </form>
