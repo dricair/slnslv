@@ -145,8 +145,11 @@ class SLNTestCase extends WebTestCase {
          $post_waivers = array();
          if (!$result) {
              $waivers = array(// icon on li for menu
-                              "/Attribute \“icon\” not allowed on element \“li\” at this point./");
+                              "/Attribute \“icon\” not allowed on element \“li\” at this point./",
+                              // Lang=en
+                              "/This document appears to be written in English. Consider adding.*lang/");
 
+             $result = true;
              foreach (explode("\n", trim($validator->message)) as $line) {
                  $waived = False;
                  foreach ($waivers as $pattern) {
@@ -155,10 +158,11 @@ class SLNTestCase extends WebTestCase {
                          break;
                      }
                  }
-                 if (!$waived) $post_waivers[] = $line;
+                 if (!$waived and trim($line) != "") {
+                     $post_waivers[] = $line;
+                     $result = false;
+                 }
              }
-
-             $result = count($post_waivers) == 0;
          }
 
          $filename = "output/$filename.html";
