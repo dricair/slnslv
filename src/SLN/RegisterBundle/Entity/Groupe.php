@@ -83,6 +83,8 @@ function cmpHoraire($a, $b) {
     const ECOLE=0;
     const COMPETITION=1;
     const LOISIR=2;
+    const ATTENTE=3;
+    const REFUS=4;
 
     /**
      * @var int $groupe_order Order to print to the screen
@@ -103,7 +105,9 @@ function cmpHoraire($a, $b) {
      * @return string[] list of categories
      */
     public static function getCategories() {
-        return array(self::ECOLE => "Ecole de natation", 
+        return array(self::ATTENTE => "En attente de tests",
+                     self::REFUS => "Refus",
+                     self::ECOLE => "Ecole de natation", 
                      self::COMPETITION => "Sections compétition",
                      self::LOISIR => "Ados et loisirs");
     }
