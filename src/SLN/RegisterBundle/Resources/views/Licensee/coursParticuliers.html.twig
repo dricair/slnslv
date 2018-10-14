@@ -1,0 +1,19 @@
+{% extends 'SLNRegisterBundle::mail.html.twig' %}
+{% set user=licensee.getUser %}
+
+{% block title %}Information pour les licenciés{% endblock %}
+
+{% block content %}
+<h2 style='color: #6495B3;'>Evaluation de {{ licensee.getPrenom }} {{ licensee.getNom }}</h2>
+
+<p>Après évaluation de {{ licensee.getPrenom }} {{ licensee.getNom }}, les entraîneurs ont décidé qu'il/elle n'était pas encore prêt(e) pour intégrer les sections du club.</p>
+
+<p>Nous vous conseillons de lui proposer d'abord des cours particuliers (Prendre contact auprès des maîtres nageurs de la piscine). Quelques cours lui permettront très vite
+   d'atteindre le niveau requis pour les cours collectifs.</p>
+
+<p>N'hésitez pas à nous recontacter même en milieu d'année afin de réviser cette évaluation et lui proposer d'intégrer un groupe.</p>
+
+<p>Cordialement<br/>
+Le Stade Laurentin Natation.</p>
+{% endblock %}
+
