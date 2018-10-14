@@ -31,16 +31,18 @@ class GroupeController extends Controller {
      * @return Response Rendered page
      */
     public function editAction($id=0) {
+        $em = $this->getDoctrine()->getManager();
         if ($id == 0) {
             $groupe = new Groupe();
         } else {
-          $em = $this->getDoctrine()->getManager();
           $groupe = $em->getRepository('SLNRegisterBundle:Groupe')->find($id);
 
           if (!is_object($groupe)) {
               throw $this->createNotFoundException('Ce groupe n\'existe pas dans la base de données.');
           }
         }
+
+        $saison = $em->getRepository('SLNRegisterBundle:Saison')->getCurrent();
 
         $request = $this->getRequest();
         $form    = $this->createForm(new GroupeType(), $groupe);
@@ -58,7 +60,8 @@ class GroupeController extends Controller {
             );
 
             return $this->redirect($this->generateUrl('SLNRegisterBundle_groupe_show', array(
-                'id' => $groupe->getId()
+                'id' => $groupe->getId(),
+                'saison_id' => $saison->getId()
             )));
         }
 
