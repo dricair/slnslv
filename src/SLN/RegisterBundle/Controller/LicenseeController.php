@@ -99,14 +99,15 @@ class LicenseeController extends Controller
         }
             
         $previous_saison = $em->getRepository('SLNRegisterBundle:Saison')->getBeforeOpen($saison_id);
-        $previous_groupe = $previous_saison ? $licensee->getGroupe($previous_saison) : NULL;
+        $previous_saison_groupe = $previous_saison ? $licensee->getGroupe($previous_saison) : NULL;
+        $previous_groupe = $licensee->getGroupe($saison);
 
         $form_saison_link = $licensee->getSaisonLink($saison);
         if (!$form_saison_link) {
             $form_saison_link = new LicenseeSaison();
             $form_saison_link->setLicensee($licensee);
             $form_saison_link->setSaison($saison);
-            $form_saison_link->setGroupe($previous_groupe);
+            $form_saison_link->setGroupe($previous_saison_groupe);
             $form_saison_link->setGroupeJours(array());
 
             $new_groupe = $licensee->getNewGroupe($previous_saison);
@@ -137,22 +138,35 @@ class LicenseeController extends Controller
               $groupe = $licensee->getGroupe($saison);
               if ($id != 0 and $groupe and ($previous_groupe != null and
                                             $groupe->getId() != $previous_groupe->getId())) {
+                $delivery_address = null;
+                if ($this->container->hasParameter('swiftmailer.disable_delivery') && $this->container->getParameter('swiftmailer.disable_delivery')) {
+                    $delivery_address = $this->container->getParameter('swiftmailer.delivery_address');
+                }
+
+                $template = $groupe->getCategorie() == Groupe::REFUS ? "coursParticuliers" : "changeGroupe"; 
                 
-                $to = array($user->getEmail());
-                if ($user->getSecondaryEmail())
-                    $to[] = $licensee->getUser()->getSecondaryEmail();
+                $email = new \SendGrid\Email();
+                $email->addTo($delivery_address ? $delivery_address : $user->getEmail())
+                      ->setFrom("mails@stadelaurentinnatation.fr")
+                      ->setFromName("Stade Laurentin Natation")
+                      ->setReplyTo("slnslv@free.fr")
+                      ->setSubject("Changement de groupe pour {$licensee->getPrenom()} {$licensee->getNom()}")
+                      ->setCc("slnslv@free.fr")
+                      ->setText($this->renderView("SLNRegisterBundle:Licensee:$template.txt.twig", 
+                                                  array('licensee' => $licensee, 'groupe' => $groupe)))
+                      ->setHtml($this->renderView("SLNRegisterBundle:Licensee:$template.html.twig", 
+                                                  array('licensee' => $licensee, 'groupe' => $groupe)));
 
-                $message = \Swift_Message::newInstance()
-                 ->setSubject("Changement de groupe pour {$licensee->getPrenom()} {$licensee->getNom()}")
-                 ->setFrom(array('slnslv@free.fr' => "Stade Laurentin Natation"))
-                 ->setTo($to)
-                 ->setCc(array('slnslv@free.fr' => "Stade Laurentin Natation"))
-                 ->setBody($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.txt.twig', 
-                                             array('licensee' => $licensee, 'groupe' => $groupe)), "text/plain")
-                 ->addPart($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.html.twig', 
-                                             array('licensee' => $licensee, 'groupe' => $groupe)), "text/html");
+                if ($user->getSecondaryEmail() and !$delivery_address)
+                    $email->addTo($licensee->getUser()->getSecondaryEmail());
 
-                $this->get('mailer')->send($message);
+                $sendgrid = new \SendGrid($this->container->getParameter('mailer_key'));
+                $sendgrid->send($email);
+
+                $this->get('session')->getFlashBag()->add(
+                  'notice',
+                  sprintf("Un mail de changement de groupe a été envoyé au licencié.")
+                );
               }
 
               return $this->redirect($this->generateUrl('SLNRegisterBundle_admin_licensee_edit', array(
