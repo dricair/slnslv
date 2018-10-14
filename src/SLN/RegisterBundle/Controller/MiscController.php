@@ -58,7 +58,7 @@ class MiscController extends Controller
                 // Perform some action, such as sending an email
                 $message = \Swift_Message::newInstance()
                   ->setSubject('Question du site d\'inscription')
-                  ->setFrom('slnslv@free.fr')
+                  ->setFrom('mails@stadelaurentinnatation.fr', 'Stade Laurentin Natation')
                   ->setTo($this->container->getParameter('sln_register.emails.contact_email'))
                   ->setCc('cairaud@gmail.com')
                   ->setReplyTo($enquiry->getEmail())

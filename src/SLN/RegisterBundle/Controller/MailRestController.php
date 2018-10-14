@@ -44,12 +44,6 @@ class MailRestController extends Controller {
             throw $this->createNotFoundException('Ce licencié n\'existe pas dans la base de données.');
         }
 
-        // Development version: force a destination address
-        $delivery_address = null;
-        if ($this->container->hasParameter('swiftmailer.disable_delivery') && $this->container->getParameter('swiftmailer.disable_delivery')) {
-            $delivery_address = $this->container->getParameter('swiftmailer.delivery_address');
-        }
-
         // Get session information
         $session = $request->getSession();
 
@@ -72,6 +66,12 @@ class MailRestController extends Controller {
         // Pop licensees from the list and send a mail
         $failures = array();
 
+        // Development version: force a destination address
+        $delivery_address = null;
+        if ($this->container->hasParameter('swiftmailer.disable_delivery') && $this->container->getParameter('swiftmailer.disable_delivery')) {
+            $delivery_address = $this->container->getParameter('swiftmailer.delivery_address');
+        }
+
         $sent = 0;
         for ($i = 0; $i < self::MAX_SENT and count($licensee_list) > 0; $i++) {
             $licensee_id = array_pop($licensee_list);
@@ -80,50 +80,32 @@ class MailRestController extends Controller {
             if (!is_object($licensee)) {
                 $failures[] = "Le licencié {$licensee_id} n'existe pas";
             } else {
-              if (self::USE_SENDGRID) {
-                $sendgrid = new \SendGrid($this->container->getParameter('mailer_key'));
-                $email = new \SendGrid\Email();
-                $email->addTo($delivery_address ? $delivery_address : $licensee->getUser()->getEmail())
-                      ->setFrom('slnslv@free.fr')
-                      ->setSubject($text_title)
-                      ->setHtml($this->renderView('SLNRegisterBundle:Mail:mail_content.html.twig', 
-                                                  array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $body)))
-                      ->setText($this->renderView('SLNRegisterBundle:Mail:mail_content.txt.twig', 
-                                                  array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $text_body)));
-
-                foreach ($mail->getFiles() as $uploadFile) {
-                    if (!$uploadFile->getInline())
-                        $email->addAttachment($uploadFile->getFile()->getRealPath(), $uploadFile->getFilename());
-                }
-
-                $sendgrid->send($email);
-
-                if ($licensee->getUser()->getSecondaryEmail()) {
-                    $email->setTos(array($delivery_address ? $delivery_address : $licensee->getUser()->getSecondaryEmail()));
-                    if ($delivery_address)
-                        $email->subject .= " (Dest: " . $licensee->getUser()->getSecondaryEmail() . ")";
-                    $sendgrid->send($email);
-                }
-
-              } else {
-                $message = \Swift_Message::newInstance()
-                 ->setSubject($text_title)
-                 ->setFrom('slnslv@free.fr')
-                 ->setTo($licensee->getUser()->getEmail())
-                 ->setBody($this->renderView('SLNRegisterBundle:Mail:mail_content.txt.twig', 
-                                             array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $text_body)), "text/plain")
-                 ->addPart($this->renderView('SLNRegisterBundle:Mail:mail_content.html.twig', 
-                                             array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $body)), "text/html");
-  
-                $fails = array();
-                $this->get('mailer')->send($message, $fails);
-  
-                if (count($fails) > 0) {
-                    $s = "";
-                    foreach ($fails as $f) { $s += "$f "; }
-                    $failures[] = "$licensee: erreur d'envoi pour les adresses: $s";
-                }
+              $delivery_address = null;
+              if ($this->container->hasParameter('swiftmailer.disable_delivery') && $this->container->getParameter('swiftmailer.disable_delivery')) {
+                  $delivery_address = $this->container->getParameter('swiftmailer.delivery_address');
               }
+
+              $email = new \SendGrid\Email();
+              $email->addTo($delivery_address ? $delivery_address : $licensee->getUser()->getEmail())
+                    ->setFrom("mails@stadelaurentinnatation.fr")
+                    ->setFromName("Stade Laurentin Natation")
+                    ->setReplyTo("slnslv@free.fr")
+                    ->setSubject($text_title)
+                    ->setHtml($this->renderView('SLNRegisterBundle:Mail:mail_content.html.twig', 
+                                                array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $body)))
+                    ->setText($this->renderView('SLNRegisterBundle:Mail:mail_content.txt.twig', 
+                                                array('licensee' => $licensee, 'title_value' => $title, 'body_value' => $text_body)));
+
+              if ($licensee->getUser()->getSecondaryEmail() and !$delivery_address)
+                  $email->addTo($licensee->getUser()->getSecondaryEmail());
+
+              foreach ($mail->getFiles() as $uploadFile) {
+                  if (!$uploadFile->getInline())
+                      $email->addAttachment($uploadFile->getFile()->getRealPath(), $uploadFile->getFilename());
+              }
+
+              $sendgrid = new \SendGrid($this->container->getParameter('mailer_key'));
+              $sendgrid->send($email);
             }
 
             $session->set("mail/licensees", $licensee_list);

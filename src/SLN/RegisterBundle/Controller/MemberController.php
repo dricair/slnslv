@@ -76,7 +76,8 @@ class MemberController extends Controller
 
                 $message = \Swift_Message::newInstance()
                  ->setSubject("Bienvenue {$user->getPrenom()}")
-                 ->setFrom('slnslv@free.fr')
+                 ->setFrom('mails@stadelaurentinnatation.fr', 'Stade Laurentin Natation')
+                 ->setReplyTo(array('slnslv@free.fr'))
                  ->setTo($user->getEmail())
                  ->setBody($this->renderView('SLNRegisterBundle:Member:createAccount.txt.twig', array('user' => $user)));
 

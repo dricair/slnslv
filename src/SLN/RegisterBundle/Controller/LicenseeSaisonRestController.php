@@ -62,7 +62,8 @@ class LicenseeSaisonRestController extends Controller {
 
         $message = \Swift_Message::newInstance()
          ->setSubject("Changement de groupe pour {$licensee->getPrenom()} {$licensee->getNom()}")
-         ->setFrom(array('slnslv@free.fr' => "Stade Laurentin Natation"))
+         ->setFrom(array('mails@stadelaurentinnatation.fr' => "Stade Laurentin Natation"))
+         ->setReplyTo(array("slnslv@free.fr"))
          ->setTo($to)
          ->setCc(array('slnslv@free.fr' => "Stade Laurentin Natation"))
          ->setBody($this->renderView('SLNRegisterBundle:Licensee:changeGroupe.txt.twig', 
